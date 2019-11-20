@@ -28,7 +28,7 @@ internal class ClientTests : PopKornTest() {
         assert(classNew !== interfaceNew)
         assertNotNull(classManual)
 
-        getPopKornController().removeInjectable(tmp)
+        getPopKornController().removeInjectable(tmp::class)
 
         getPopKornController().reset()
 

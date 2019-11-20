@@ -107,7 +107,7 @@ internal class ProviderTests :PopKornTest() {
     private fun testClassByManual(environment:String?) {
         val factory = Injector()
         val instance = TestClassNoProvider(environment)
-        factory.addInjectable(instance, environment)
+        factory.addInjectable(instance, environment = environment)
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassNoProvider::class, 1)
 
@@ -129,7 +129,7 @@ internal class ProviderTests :PopKornTest() {
         }
 
         //Once removed the instance, should fail
-        factory.removeInjectable(instance, environment)
+        factory.removeInjectable(instance::class, environment)
         assertFails { factory.inject(TestClassNoProvider::class, environment) }
 
         factory.assertNumberInstances(0)
@@ -143,8 +143,8 @@ internal class ProviderTests :PopKornTest() {
         val instanceDef = TestClassNoProvider(null)
         val instanceEnv = TestClassNoProvider(environment)
 
-        factory.addInjectable(instanceDef, null)
-        factory.addInjectable(instanceEnv, environment)
+        factory.addInjectable(instanceDef, environment = null)
+        factory.addInjectable(instanceEnv, environment = environment)
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassNoProvider::class, 2)
 
@@ -159,7 +159,7 @@ internal class ProviderTests :PopKornTest() {
         val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
         assert(inject === inject3)
 
-        factory.removeInjectable(instanceDef)
+        factory.removeInjectable(instanceDef::class)
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassNoProvider::class, 1)
 
@@ -174,7 +174,7 @@ internal class ProviderTests :PopKornTest() {
         val environment = randEnvironment()
 
         val instance = TestClassByApp(environment)
-        assertFails { factory.addInjectable(instance, environment) }
+        assertFails { factory.addInjectable(instance, environment = environment) }
 
         factory.assertNumberInstances(0)
     }
@@ -189,7 +189,7 @@ internal class ProviderTests :PopKornTest() {
         assertNull(inject.value)
 
         val instance = TestClassByApp(environment)
-        assertFails { factory.addInjectable(instance, environment) }
+        assertFails { factory.addInjectable(instance, environment = environment) }
 
         factory.assertNumberInstances(1)
     }
@@ -205,8 +205,8 @@ internal class ProviderTests :PopKornTest() {
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassByApp::class, 1)
 
-        factory.addInjectable(TestClassNoProvider(null), null)
-        factory.addInjectable(TestClassNoProvider(environment), environment)
+        factory.addInjectable(TestClassNoProvider(null), environment = null)
+        factory.addInjectable(TestClassNoProvider(environment), environment = environment)
         factory.assertNumberInstances(2)
         factory.assertNumberInstancesForClass(TestClassNoProvider::class, 2)
 
