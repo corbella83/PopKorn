@@ -1,0 +1,7 @@
+local.properties
+/popkorn/build/
+/popkorn-compiler/build/
+/popkorn-example/build/
+/.idea/
+/.gradle/
+/build/

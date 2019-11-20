@@ -1,0 +1,20 @@
+apply plugin: 'java-library'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'kotlin'
+
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kt_version"
+  implementation "org.jetbrains.kotlin:kotlin-reflect:$kt_version"
+
+  testImplementation "org.jetbrains.kotlin:kotlin-test:$kt_version"
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kt_version"
+}
+
+apply from: rootProject.file('publisher.gradle')

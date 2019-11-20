@@ -1,0 +1,15 @@
+package cc.popkorn.annotations
+
+/**
+ * Annotation to use a specific implementation (defined in any injectable class) of a constructor parameter
+ *
+ * constructor(param1:Interface, @Alias("name") param2:Interface)
+ * this will inject the default implementation of Interface as param1 and
+ * "name" implementation of Interface as param2
+ *
+ * @author Pau Corbella
+ * @since 1.0
+ */
+@Target(AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Alias(val value: String)
