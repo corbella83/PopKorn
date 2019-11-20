@@ -12,14 +12,14 @@ Get it with Maven:
 <dependency>
   <groupId>cc.popkorn</groupId>
   <artifactId>popkorn</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-implementation 'cc.popkorn:popkorn:1.0.0'
-kpt 'cc.popkorn:popkorn-compiler:1.0.0'
+implementation 'cc.popkorn:popkorn:1.0.1'
+kpt 'cc.popkorn:popkorn-compiler:1.0.1'
 ```
 
 Working with Scopes and Environments
@@ -47,6 +47,14 @@ class HelloWorld
 ...and inject it anywhere you want:
 ```kotlin
 val helloWorld = inject<HelloWorld>()
+
+or
+
+val helloWorld:HelloWorld = inject()
+
+or
+
+val helloWorld = HelloWorld::class.inject()
 ```
 
 By default `HelloWorld` will be  Scope.BY_APP, but we can change it:
