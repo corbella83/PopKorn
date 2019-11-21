@@ -17,6 +17,7 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kt_version"
   implementation "org.jetbrains.kotlin:kotlin-reflect:$kt_version"
   implementation "com.squareup:kotlinpoet:$kotlinpoet_version"
+  implementation "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinx_metadata_version"
 
   implementation "com.google.auto.service:auto-service:$auto_service_version"
   kapt "com.google.auto.service:auto-service:$auto_service_version"

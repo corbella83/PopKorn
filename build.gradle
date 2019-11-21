@@ -1,8 +1,8 @@
-apply plugin: 'kotlin'
 
 buildscript {
   ext.kt_version = '1.3.60'
   ext.kotlinpoet_version = '1.4.4'
+  ext.kotlinx_metadata_version = '0.1.0'
   ext.auto_service_version = '1.0-rc6'
   ext.dokka_version = '0.10.0'
 
@@ -17,7 +17,7 @@ buildscript {
 
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kt_version"
-    classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+    classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
   }
 
 }

@@ -1,6 +1,10 @@
 package cc.popkorn.compiler.utils
 
 import com.squareup.kotlinpoet.asTypeName
+import kotlinx.metadata.Flag
+import kotlinx.metadata.jvm.KotlinClassHeader
+import kotlinx.metadata.jvm.KotlinClassMetadata
+import kotlinx.metadata.jvm.moduleName
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.*
 import javax.lang.model.type.TypeMirror
@@ -42,6 +46,19 @@ internal fun TypeMirror.isSame(clazz : KClass<*>) : Boolean{
  * @return Returns if this Type is an interface
  */
 internal fun Element.isInterface() = kind==ElementKind.INTERFACE
+
+
+/**
+ * @return Returns if this Type is internal
+ */
+internal fun Element.isInternal() : Boolean{
+    return get(Metadata::class)
+        ?.run { KotlinClassHeader(kind, metadataVersion, bytecodeVersion, data1, data2, extraString, packageName, extraInt) }
+        ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
+        ?.let { Flag.IS_INTERNAL(it.toKmClass().flags) }
+        ?: false
+}
+
 
 
 /**

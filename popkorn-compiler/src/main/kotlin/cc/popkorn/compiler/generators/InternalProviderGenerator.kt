@@ -3,6 +3,7 @@ package cc.popkorn.compiler.generators
 import cc.popkorn.Scope
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
+import cc.popkorn.compiler.utils.*
 import cc.popkorn.compiler.utils.get
 import cc.popkorn.compiler.utils.getConstructors
 import cc.popkorn.compiler.utils.has
@@ -28,7 +29,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
         val creationCode = getCreationCode(clazz)
 
         val scope = clazz.get(Injectable::class)?.scope ?: return
-        val file = getFile(clazz.asType(), creationCode, scope)
+        val file = getFile(clazz.asType(), creationCode, scope, clazz.isInternal())
         file.writeTo(directory)
     }
 
@@ -77,7 +78,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
     }
 
 
-    private fun getFile(element:TypeMirror, creationCode:CodeBlock, scope: Scope) : FileSpec {
+    private fun getFile(element:TypeMirror, creationCode:CodeBlock, scope: Scope, int:Boolean) : FileSpec {
         val createFun = FunSpec.builder("create")
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
@@ -96,6 +97,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
             .addImport("cc.popkorn", "inject")
             .addType(
                 TypeSpec.classBuilder(pack.second)
+                    .apply { if (int) addModifiers(KModifier.INTERNAL) }
                     .addSuperinterface(Provider::class.asClassName().parameterizedBy(element.asTypeName()))
                     .addFunction(createFun)
                     .addFunction(scopeFun)
