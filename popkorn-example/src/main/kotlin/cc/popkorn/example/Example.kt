@@ -24,4 +24,5 @@ fun main() {
     getPopKornController().reset()
 
     println("ok")
+    ExampleCompat().execute()
 }
