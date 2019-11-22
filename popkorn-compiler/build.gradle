@@ -19,9 +19,6 @@ dependencies {
   implementation "com.squareup:kotlinpoet:$kotlinpoet_version"
   implementation "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinx_metadata_version"
 
-  implementation "com.google.auto.service:auto-service:$auto_service_version"
-  kapt "com.google.auto.service:auto-service:$auto_service_version"
-
   testImplementation "org.jetbrains.kotlin:kotlin-test:$kt_version"
   testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kt_version"
   testImplementation "com.google.testing.compile:compile-testing:$compile_test_version"

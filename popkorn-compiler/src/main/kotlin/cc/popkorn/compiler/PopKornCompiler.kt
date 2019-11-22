@@ -1,6 +1,5 @@
 package cc.popkorn.compiler
 
-import com.google.auto.service.AutoService
 import cc.popkorn.annotations.Exclude
 import cc.popkorn.annotations.ForEnvironments
 import cc.popkorn.annotations.Injectable
@@ -10,24 +9,19 @@ import cc.popkorn.compiler.generators.InternalProviderGenerator
 import cc.popkorn.compiler.generators.ResolverGenerator
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.*
-import cc.popkorn.compiler.utils.Logger
-import cc.popkorn.compiler.utils.get
-import cc.popkorn.compiler.utils.getAll
-import cc.popkorn.compiler.utils.has
-import cc.popkorn.compiler.utils.isSame
 import cc.popkorn.core.Provider
-import java.io.File
 import com.sun.tools.javac.code.Type.ClassType
-import javax.lang.model.SourceVersion
-import javax.lang.model.util.ElementFilter
-import javax.lang.model.element.TypeElement
-import java.util.ArrayList
+import java.io.File
+import java.util.*
 import javax.annotation.processing.*
+import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
 import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.ElementFilter
 
 
 /**
@@ -37,15 +31,20 @@ import javax.lang.model.type.TypeMirror
  * @since 1.0
  */
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@SupportedOptions(PopKornCompiler.KAPT_KOTLIN_GENERATED)
-@AutoService(Processor::class)
-@SupportedAnnotationTypes("cc.popkorn.annotations.Injectable", "cc.popkorn.annotations.InjectableProvider","cc.popkorn.annotations.Exclude")
 internal class PopKornCompiler : AbstractProcessor() {
     private lateinit var directory : File
     private lateinit var logger : Logger
 
     companion object {
         const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
+    }
+
+    override fun getSupportedOptions(): MutableSet<String> {
+        return mutableSetOf(KAPT_KOTLIN_GENERATED)
+    }
+
+    override fun getSupportedAnnotationTypes(): MutableSet<String?> {
+        return mutableSetOf(Injectable::class.qualifiedName, InjectableProvider::class.qualifiedName, Exclude::class.qualifiedName)
     }
 
     override fun init(processingEnv: ProcessingEnvironment) {
