@@ -30,7 +30,6 @@ import javax.lang.model.util.ElementFilter
  * @author Pau Corbella
  * @since 1.0
  */
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 internal class PopKornCompiler : AbstractProcessor() {
     private lateinit var directory : File
     private lateinit var logger : Logger
@@ -47,6 +46,10 @@ internal class PopKornCompiler : AbstractProcessor() {
         return mutableSetOf(Injectable::class.qualifiedName, InjectableProvider::class.qualifiedName, Exclude::class.qualifiedName)
     }
 
+    override fun getSupportedSourceVersion(): SourceVersion {
+        return SourceVersion.latestSupported()
+    }
+
     override fun init(processingEnv: ProcessingEnvironment) {
         super.init(processingEnv)
         directory = processingEnv
@@ -58,6 +61,8 @@ internal class PopKornCompiler : AbstractProcessor() {
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
+        if (roundEnv.processingOver()) return false
+
         val internalProviderClasses = roundEnv.getInjectableClasses()
         val externalProviderClasses = roundEnv.getProviderClasses()
         val excludedInterfaces = roundEnv.getExcludedInterfaces()
@@ -71,7 +76,9 @@ internal class PopKornCompiler : AbstractProcessor() {
 
         val resolverGenerator = ResolverGenerator(directory)
         val interfaces = getInterfaces(internalProviderClasses, externalProviderClasses, excludedInterfaces)
-        interfaces.forEach { (i, c) -> resolverGenerator.write(i, c) }
+        interfaces.forEach { (i, c) ->
+            logger.warning("Resolver: $i to ${c.joinToString()}")
+            resolverGenerator.write(i, c) }
 
         return true
     }
@@ -165,7 +172,9 @@ internal class PopKornCompiler : AbstractProcessor() {
 
     private fun TypeElement.getHierarchyElements(exclusions:List<TypeMirror>) : List<TypeMirror>{
         return this.interfaces
-            .filterNot { exclusions.contains(it) }
+            .filterNot { type ->
+                exclusions.any { processingEnv.typeUtils.isSameType(type, it) }
+            }
 
         //All interfaces including those from superclass
 //        val s = this.superclass?.let { processingEnv.typeUtils.asElement(it) as? TypeElement }?.let { it.getHierarchyElements() } ?: arrayListOf()
