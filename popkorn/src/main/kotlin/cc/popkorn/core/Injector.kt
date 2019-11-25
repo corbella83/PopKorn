@@ -3,13 +3,13 @@ package cc.popkorn.core
 
 import cc.popkorn.PopKornController
 import cc.popkorn.Scope
-import cc.popkorn.pools.InnerResolverPool
-import cc.popkorn.pools.InnerProviderPool
 import cc.popkorn.instances.*
 import kotlin.reflect.KClass
 import cc.popkorn.instances.Instances
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
+import mapping.ReflectionProviderMapping
+import mapping.ReflectionResolverMapping
 
 
 /**
@@ -19,16 +19,18 @@ import cc.popkorn.pools.ResolverPool
  * @since 1.0
  */
 internal class Injector : PopKornController {
-    private val resolverPools = arrayListOf<ResolverPool>()
-    private val providerPools = arrayListOf<ProviderPool>()
+    private val resolverPools = ResolverPool().apply { addMapping(ReflectionResolverMapping()) }
+    private val providerPools = ProviderPool().apply { addMapping(ReflectionProviderMapping()) }
 
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
 
 
     init {
-        //TODO version 1.1 should take all module pools to avoid proguard
-        resolverPools.add(InnerResolverPool())
-        providerPools.add(InnerProviderPool())
+        //TODO version 1.1 should take all module mappings to avoid proguard
+
+//        resolverPools.addMapping(Class.forName("cc.popkorn.ResolverMapping").newInstance() as Mapping)
+//        providerPools.addMapping(Class.forName("cc.popkorn.ProviderMapping").newInstance() as Mapping)
+
     }
 
 
@@ -45,7 +47,7 @@ internal class Injector : PopKornController {
      *                    will be injectable by all environments
      */
     override fun <T:Any> addInjectable(instance : T, type:KClass<out T>, environment:String?){
-        if (type.isInPool()) throw RuntimeException("You are trying to add an injectable that is already defined")
+        if (providerPools.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
 
         instances.getOrPut(type, {ProvidedInstances<T>()})
             .let { it as? ProvidedInstances<T> }
@@ -103,22 +105,16 @@ internal class Injector : PopKornController {
 
 
     private fun <T: Any> KClass<T>.getImplementation(environment:String?) : KClass<out T>{
-        //FIXME getting only first
-        return resolverPools.first().resolve(this, environment)
+        return resolverPools.resolve(this, environment)
     }
 
     private fun <T: Any> KClass<T>.getInstances() : Instances<T>{
-        //FIXME getting only first
-        val provider = providerPools.first().create(this)
+        val provider = providerPools.create(this)
         return when(provider.scope()){
             Scope.BY_APP -> PersistentInstances(provider)
             Scope.BY_USE -> VolatileInstances(provider)
             Scope.BY_NEW -> NewInstances(provider)
         }
-    }
-
-    private fun <T: Any> KClass<T>.isInPool() : Boolean{
-        return providerPools.any{ it.supports(this) }
     }
 
 }

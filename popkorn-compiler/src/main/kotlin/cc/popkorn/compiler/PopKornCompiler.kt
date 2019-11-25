@@ -6,6 +6,7 @@ import cc.popkorn.annotations.Injectable
 import cc.popkorn.annotations.InjectableProvider
 import cc.popkorn.compiler.generators.ExternalProviderGenerator
 import cc.popkorn.compiler.generators.InternalProviderGenerator
+import cc.popkorn.compiler.generators.MappingGenerator
 import cc.popkorn.compiler.generators.ResolverGenerator
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.*
@@ -63,6 +64,8 @@ internal class PopKornCompiler : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         if (roundEnv.processingOver()) return false
 
+        val moduleName = "App"
+
         val internalProviderClasses = roundEnv.getInjectableClasses()
         val externalProviderClasses = roundEnv.getProviderClasses()
         val excludedInterfaces = roundEnv.getExcludedInterfaces()
@@ -76,9 +79,11 @@ internal class PopKornCompiler : AbstractProcessor() {
 
         val resolverGenerator = ResolverGenerator(directory)
         val interfaces = getInterfaces(internalProviderClasses, externalProviderClasses, excludedInterfaces)
-        interfaces.forEach { (i, c) ->
-            logger.warning("Resolver: $i to ${c.joinToString()}")
-            resolverGenerator.write(i, c) }
+        interfaces.forEach { (i, c) -> resolverGenerator.write(i, c) }
+
+        val mappingGenerator = MappingGenerator(directory)
+        mappingGenerator.writeResolvers(moduleName, interfaces.keys)
+        mappingGenerator.writeProviders(moduleName, internalProviderClasses + externalProviderClasses.keys.toList())
 
         return true
     }

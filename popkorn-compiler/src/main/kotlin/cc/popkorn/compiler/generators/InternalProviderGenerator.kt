@@ -92,7 +92,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
             .addCode("return Scope.$scope")
             .build()
 
-        val pack = "${element}_Provider".splitPackage()
+        val pack = "${element}_$PROVIDER_SUFFIX".splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addImport("cc.popkorn", "inject")
             .addType(

@@ -1,17 +1,41 @@
+@file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.pools
 
+import cc.popkorn.core.Resolver
+import mapping.Mapping
+import kotlin.collections.LinkedHashSet
 import kotlin.reflect.KClass
 
 /**
- * Interface that gets the implementation of a certain interface
+ * Implementation to get implementation of an interface via reflection
  *
  * @author Pau Corbella
  * @since 1.0
  */
-interface ResolverPool {
+internal class ResolverPool(private val mappings:LinkedHashSet<Mapping> = linkedSetOf()) {
+    private val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
 
-     fun <T:Any> supports(clazz:KClass<T>) : Boolean
+    fun <T : Any> isPresent(clazz: KClass<T>) =  mappings.any{ it.isPresent(clazz) }
 
-     fun <T:Any> resolve(clazz:KClass<T>, environment:String?) : KClass<out T>
+    fun addMapping(mapping: Mapping) = mappings.add(mapping)
+
+    fun <T : Any> resolve(clazz: KClass<T>, environment: String?): KClass<out T> {
+        return resolvers.getOrPut(clazz, { createResolver(clazz) })
+            .resolve(environment) as KClass<out T>
+    }
+
+    private fun <T : Any> createResolver(clazz: KClass<T>): Resolver<T> {
+        return findResolver(clazz)
+            ?.newInstance()
+            ?.let { it as? Resolver<T> }
+            ?: throw RuntimeException("Could not find Resolver for this class: ${clazz.qualifiedName}. Is this interface being used by an Injectable class?")
+    }
+
+    private fun findResolver(original:KClass<*>) : Class<*>?{
+        mappings.forEach { map ->
+            map.find(original)?.also { return it.java }
+        }
+        return null
+    }
 
 }

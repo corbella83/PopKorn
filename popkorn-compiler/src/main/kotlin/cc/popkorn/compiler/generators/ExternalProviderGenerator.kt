@@ -2,6 +2,7 @@ package cc.popkorn.compiler.generators
 
 import cc.popkorn.core.Provider
 import cc.popkorn.Scope
+import cc.popkorn.compiler.utils.PROVIDER_SUFFIX
 import cc.popkorn.compiler.utils.splitPackage
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -44,7 +45,7 @@ internal class ExternalProviderGenerator(private val directory: File) {
             .addCode("return ${property.name}.scope()\n")
             .build()
 
-        val pack = "${element}_Provider".splitPackage()
+        val pack = "${element}_$PROVIDER_SUFFIX".splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addImport("cc.popkorn", "inject")
             .addType(

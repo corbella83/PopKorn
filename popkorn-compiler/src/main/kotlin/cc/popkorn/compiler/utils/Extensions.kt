@@ -4,7 +4,6 @@ import com.squareup.kotlinpoet.asTypeName
 import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassHeader
 import kotlinx.metadata.jvm.KotlinClassMetadata
-import kotlinx.metadata.jvm.moduleName
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.*
 import javax.lang.model.type.TypeMirror

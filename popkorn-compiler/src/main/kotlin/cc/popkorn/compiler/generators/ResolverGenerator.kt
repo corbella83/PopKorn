@@ -2,6 +2,7 @@ package cc.popkorn.compiler.generators
 
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
+import cc.popkorn.compiler.utils.RESOLVER_SUFFIX
 import cc.popkorn.compiler.utils.splitPackage
 import cc.popkorn.core.Resolver
 import com.squareup.kotlinpoet.*
@@ -55,7 +56,7 @@ internal class ResolverGenerator(private val directory: File) {
             .addCode(creationCode)
             .build()
 
-        val pack = "${element}_Resolver".splitPackage()
+        val pack = "${element}_$RESOLVER_SUFFIX".splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addType(
                 TypeSpec.classBuilder(pack.second)
