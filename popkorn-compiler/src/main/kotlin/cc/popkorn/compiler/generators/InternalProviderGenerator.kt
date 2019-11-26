@@ -1,5 +1,6 @@
 package cc.popkorn.compiler.generators
 
+import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.Scope
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException

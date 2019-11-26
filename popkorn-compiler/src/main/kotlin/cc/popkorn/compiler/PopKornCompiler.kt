@@ -1,5 +1,9 @@
 package cc.popkorn.compiler
 
+import cc.popkorn.PROVIDER_MAPPINGS
+import cc.popkorn.PROVIDER_SUFFIX
+import cc.popkorn.RESOLVER_MAPPINGS
+import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.annotations.Exclude
 import cc.popkorn.annotations.ForEnvironments
 import cc.popkorn.annotations.Injectable
@@ -14,7 +18,10 @@ import cc.popkorn.core.Provider
 import com.sun.tools.javac.code.Type.ClassType
 import java.io.File
 import java.util.*
-import javax.annotation.processing.*
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Filer
+import javax.annotation.processing.ProcessingEnvironment
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
@@ -23,6 +30,7 @@ import javax.lang.model.type.MirroredTypeException
 import javax.lang.model.type.MirroredTypesException
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.ElementFilter
+import javax.tools.StandardLocation
 
 
 /**
@@ -64,8 +72,6 @@ internal class PopKornCompiler : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         if (roundEnv.processingOver()) return false
 
-        val moduleName = "App"
-
         val internalProviderClasses = roundEnv.getInjectableClasses()
         val externalProviderClasses = roundEnv.getProviderClasses()
         val excludedInterfaces = roundEnv.getExcludedInterfaces()
@@ -81,9 +87,15 @@ internal class PopKornCompiler : AbstractProcessor() {
         val interfaces = getInterfaces(internalProviderClasses, externalProviderClasses, excludedInterfaces)
         interfaces.forEach { (i, c) -> resolverGenerator.write(i, c) }
 
+        //TODO
+        val moduleName = internalProviderClasses.first().getModuleName().replace("-", "")
+
         val mappingGenerator = MappingGenerator(directory)
-        mappingGenerator.writeResolvers(moduleName, interfaces.keys)
-        mappingGenerator.writeProviders(moduleName, internalProviderClasses + externalProviderClasses.keys.toList())
+        val mapResolver = "cc.popkorn.mapping.$moduleName${RESOLVER_SUFFIX}Mapping".also { mappingGenerator.writeResolvers(it, interfaces.keys) }
+        val mapProvider = "cc.popkorn.mapping.$moduleName${PROVIDER_SUFFIX}Mapping".also { mappingGenerator.writeProviders(it, internalProviderClasses + externalProviderClasses.keys.toList()) }
+
+        processingEnv.filer.writeMappings(RESOLVER_MAPPINGS, mapResolver)
+        processingEnv.filer.writeMappings(PROVIDER_MAPPINGS, mapProvider)
 
         return true
     }
@@ -198,5 +210,12 @@ internal class PopKornCompiler : AbstractProcessor() {
         }
     }
 
+
+    private fun Filer.writeMappings(resource:String, content:String){
+        createResource(StandardLocation.CLASS_OUTPUT, "", resource)
+            .openWriter()
+            .also { it.write(content) }
+            .close()
+    }
 
 }

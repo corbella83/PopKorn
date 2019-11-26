@@ -1,15 +1,20 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.core
 
+import cc.popkorn.PROVIDER_MAPPINGS
 import cc.popkorn.PopKornController
+import cc.popkorn.RESOLVER_MAPPINGS
 import cc.popkorn.Scope
 import cc.popkorn.instances.*
 import kotlin.reflect.KClass
 import cc.popkorn.instances.Instances
+import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
-import mapping.ReflectionProviderMapping
-import mapping.ReflectionResolverMapping
+import cc.popkorn.mapping.ReflectionProviderMapping
+import cc.popkorn.mapping.ReflectionResolverMapping
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 /**
@@ -18,19 +23,19 @@ import mapping.ReflectionResolverMapping
  * @author Pau Corbella
  * @since 1.0
  */
-internal class Injector : PopKornController {
-    private val resolverPools = ResolverPool().apply { addMapping(ReflectionResolverMapping()) }
-    private val providerPools = ProviderPool().apply { addMapping(ReflectionProviderMapping()) }
+internal class Injector(private val debug:Boolean=false) : PopKornController {
+    private val resolverPool = ResolverPool()
+    private val providerPool = ProviderPool()
 
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
 
 
     init {
-        //TODO version 1.1 should take all module mappings to avoid proguard
+        loadMappings(RESOLVER_MAPPINGS).forEach { resolverPool.addMapping(it) }
+        resolverPool.addMapping(ReflectionResolverMapping())
 
-//        resolverPools.addMapping(Class.forName("cc.popkorn.ResolverMapping").newInstance() as Mapping)
-//        providerPools.addMapping(Class.forName("cc.popkorn.ProviderMapping").newInstance() as Mapping)
-
+        loadMappings(PROVIDER_MAPPINGS).forEach { providerPool.addMapping(it) }
+        providerPool.addMapping(ReflectionProviderMapping())
     }
 
 
@@ -47,7 +52,7 @@ internal class Injector : PopKornController {
      *                    will be injectable by all environments
      */
     override fun <T:Any> addInjectable(instance : T, type:KClass<out T>, environment:String?){
-        if (providerPools.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
+        if (providerPool.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
 
         instances.getOrPut(type, {ProvidedInstances<T>()})
             .let { it as? ProvidedInstances<T> }
@@ -105,16 +110,34 @@ internal class Injector : PopKornController {
 
 
     private fun <T: Any> KClass<T>.getImplementation(environment:String?) : KClass<out T>{
-        return resolverPools.resolve(this, environment)
+        return resolverPool.resolve(this, environment)
     }
 
     private fun <T: Any> KClass<T>.getInstances() : Instances<T>{
-        val provider = providerPools.create(this)
+        val provider = providerPool.create(this)
         return when(provider.scope()){
             Scope.BY_APP -> PersistentInstances(provider)
             Scope.BY_USE -> VolatileInstances(provider)
             Scope.BY_NEW -> NewInstances(provider)
         }
+    }
+
+
+    private fun loadMappings(resource:String) : List<Mapping>{
+        val list = arrayListOf<Mapping>()
+        javaClass.classLoader.getResources(resource)
+            .iterator()
+            .forEach {
+                try {
+                    val qualifiedName = String(Files.readAllBytes(Paths.get(it.toURI())))
+                    val mapping = Class.forName(qualifiedName).newInstance() as Mapping
+                    list.add(mapping)
+                    if (debug) println("Successfully mapping loaded : ${mapping.javaClass}")
+                }catch (e:Exception){
+                    if (debug) println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
+                }
+            }
+        return list
     }
 
 }

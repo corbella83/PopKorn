@@ -29,7 +29,7 @@ Scopes are the way to define the life span of an instance. There are 3 types of 
 * Scope.BY_USE -> Instance will be created if no one is using it, meaning that will live as long as others are using it. Normally for classes that are just like helpers (datasources, repositories, usecases, etc..)
 * Scope.BY_NEW -> Instance will be created every time is needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, screens, etc...)
 
-Environments allows you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom
+Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom
 ```kotlin
 val r1 = inject<Retrofit>("pro") //This will inject a persistent instance of Retrofit attached to "pro"
 val r2 = inject<Retrofit>("des") //This will inject a persistent instance of Retrofit attached to "des"
@@ -55,6 +55,11 @@ val helloWorld:HelloWorld = inject()
 or
 
 val helloWorld = HelloWorld::class.inject()
+```
+
+If you are using java code, you can call it this way
+```java
+val helloWorld = PopKornCompat.inject(HelloWorld.class);
 ```
 
 By default `HelloWorld` will be  Scope.BY_APP, but we can change it:
@@ -91,6 +96,7 @@ val helloWorld = inject<HelloWorld>("usa") // will inject a HelloWorld instance 
 
 
 ####Using Interfaces
+
 Let's now define an interface:
 ```kotlin
 interface Hello
@@ -166,6 +172,12 @@ class MyApplication : Application() {
 }
 ```
 
+Obfuscation (R8, Proguard...)
+--------
+If you are using obfuscation, you will have to add this rule
+```pro
+-keep class * implements cc.popkorn.mapping.Mapping
+```
 
 More Examples
 --------

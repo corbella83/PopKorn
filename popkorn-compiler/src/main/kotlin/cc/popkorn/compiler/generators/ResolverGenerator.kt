@@ -2,7 +2,7 @@ package cc.popkorn.compiler.generators
 
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
-import cc.popkorn.compiler.utils.RESOLVER_SUFFIX
+import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.compiler.utils.splitPackage
 import cc.popkorn.core.Resolver
 import com.squareup.kotlinpoet.*

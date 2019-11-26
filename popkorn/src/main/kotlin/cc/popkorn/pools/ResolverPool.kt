@@ -2,7 +2,7 @@
 package cc.popkorn.pools
 
 import cc.popkorn.core.Resolver
-import mapping.Mapping
+import cc.popkorn.mapping.Mapping
 import kotlin.collections.LinkedHashSet
 import kotlin.reflect.KClass
 
@@ -26,14 +26,13 @@ internal class ResolverPool(private val mappings:LinkedHashSet<Mapping> = linked
 
     private fun <T : Any> createResolver(clazz: KClass<T>): Resolver<T> {
         return findResolver(clazz)
-            ?.newInstance()
             ?.let { it as? Resolver<T> }
             ?: throw RuntimeException("Could not find Resolver for this class: ${clazz.qualifiedName}. Is this interface being used by an Injectable class?")
     }
 
-    private fun findResolver(original:KClass<*>) : Class<*>?{
+    private fun findResolver(original:KClass<*>) : Any?{
         mappings.forEach { map ->
-            map.find(original)?.also { return it.java }
+            map.find(original)?.also { return it }
         }
         return null
     }

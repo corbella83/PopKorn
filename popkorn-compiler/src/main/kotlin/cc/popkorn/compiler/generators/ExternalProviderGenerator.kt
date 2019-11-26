@@ -2,7 +2,7 @@ package cc.popkorn.compiler.generators
 
 import cc.popkorn.core.Provider
 import cc.popkorn.Scope
-import cc.popkorn.compiler.utils.PROVIDER_SUFFIX
+import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.compiler.utils.splitPackage
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy

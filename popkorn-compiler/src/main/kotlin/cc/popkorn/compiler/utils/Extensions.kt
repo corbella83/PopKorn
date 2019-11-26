@@ -4,6 +4,7 @@ import com.squareup.kotlinpoet.asTypeName
 import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassHeader
 import kotlinx.metadata.jvm.KotlinClassMetadata
+import kotlinx.metadata.jvm.moduleName
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.*
 import javax.lang.model.type.TypeMirror
@@ -84,3 +85,14 @@ internal fun String.splitPackage(): Pair<String, String>{
     }
 }
 
+
+
+internal fun Element.getModuleName(): String{
+    //TODO improve
+    return get(Metadata::class)
+        ?.run { KotlinClassHeader(kind, metadataVersion, bytecodeVersion, data1, data2, extraString, packageName, extraInt) }
+        ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
+        ?.toKmClass()
+        ?.moduleName
+        ?: ""
+}
