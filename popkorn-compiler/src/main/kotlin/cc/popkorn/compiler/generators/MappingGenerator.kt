@@ -19,18 +19,20 @@ import kotlin.reflect.KClass
 internal class MappingGenerator(private val directory: File, private val filer:Filer) {
     private val moduleName = getModuleName()
 
-    fun write(values : HashMap<TypeElement, String>, classSuffix:String, resMapping:String) : String {
+    fun write(values : HashMap<TypeElement, String>, classSuffix:String, resMapping:String) : Boolean {
+        if (values.size==0) return false
+
         val filePackage = "cc.popkorn.mapping.$moduleName${classSuffix}Mapping"
         val code = getCode(values)
         val file = getFile(filePackage, code)
         file.writeTo(directory)
 
-        filer.createResource(StandardLocation.CLASS_OUTPUT, "", "META-INF/services/$resMapping")
+        filer.createResource(StandardLocation.CLASS_OUTPUT, "", "META-INF/$resMapping")
             .openWriter()
             .also { it.write("$filePackage;") }
             .close()
 
-        return filePackage
+        return true
     }
 
 

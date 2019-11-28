@@ -7,6 +7,7 @@ Version 1.1.0 *(2019-UNKNOWN)*
 * New: Supports `internal` modifier for Injectable classes
 * New: Supports incremental annotation processing
 * New: Add support for Obfuscation. Only needs one rule: `-keep class * implements cc.popkorn.mapping.Mapping`
+* Fix: Interfaces of Injectable classes can be inner classes now
 * New: Downgrade JAVA support to java6 onwards
 
 Version 1.0.1 *(2019-11-20)*

@@ -124,7 +124,7 @@ internal class Injector(private val debug:Boolean=false) : PopKornController {
 
     private fun loadMappings(resource:String) : List<Mapping>{
         val list = arrayListOf<Mapping>()
-        javaClass.classLoader.getResources("META-INF/services/$resource")
+        javaClass.classLoader.getResources("META-INF/$resource")
             .iterator()
             .forEach { url ->
                 try {

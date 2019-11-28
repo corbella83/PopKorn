@@ -172,12 +172,24 @@ class MyApplication : Application() {
 }
 ```
 
-Obfuscation (R8, Proguard...)
+Using Android
 --------
-If you are using obfuscation, you will have to add this rule
+If you are using doing an android app, PopKorn will automatically add the proguard rule. If not, here it is:
 ```pro
 -keep class * implements cc.popkorn.mapping.Mapping
 ```
+
+Also, as APK doesn't support multiple resources with the same name, you will need to merge them (if using multiple modules)
+
+```groovy
+android{
+    packagingOptions {
+        merge 'META-INF/popkorn.provider.mappings'
+        merge 'META-INF/popkorn.resolver.mappings'
+    }
+}
+```
+    
 
 More Examples
 --------
