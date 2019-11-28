@@ -20,9 +20,9 @@ class D7: DiC, DiG
 
 class D8: DiC
 
-@Injectable(exclude = [DiB::class]) class D9: DiD, DiG, DiB
+@Injectable(exclude = [DiB::class]) class D9: Wrapper.DiD, DiG, DiB
 
-class D10: DiD
+class D10: Wrapper.DiD
 
 
 

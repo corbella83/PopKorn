@@ -8,7 +8,9 @@ interface DiB
 
 interface DiC
 
-interface DiD
+interface Wrapper{
+    interface DiD
+}
 
 
 @Exclude

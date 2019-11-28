@@ -13,8 +13,7 @@ import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
 import cc.popkorn.mapping.ReflectionProviderMapping
 import cc.popkorn.mapping.ReflectionResolverMapping
-import java.nio.file.Files
-import java.nio.file.Paths
+import org.apache.commons.io.IOUtils
 
 
 /**
@@ -125,14 +124,24 @@ internal class Injector(private val debug:Boolean=false) : PopKornController {
 
     private fun loadMappings(resource:String) : List<Mapping>{
         val list = arrayListOf<Mapping>()
-        javaClass.classLoader.getResources(resource)
+        javaClass.classLoader.getResources("META-INF/services/$resource")
             .iterator()
-            .forEach {
+            .forEach { url ->
                 try {
-                    val qualifiedName = String(Files.readAllBytes(Paths.get(it.toURI())))
-                    val mapping = Class.forName(qualifiedName).newInstance() as Mapping
-                    list.add(mapping)
-                    if (debug) println("Successfully mapping loaded : ${mapping.javaClass}")
+                    val mappers = IOUtils.toString(url, "UTF-8")
+                    mappers.replace("\n", "")
+                        .split(";")
+                        .filter { it.isNotEmpty() }
+                        .forEach {
+                            try {
+                                val mapping = Class.forName(it).newInstance() as Mapping
+                                list.add(mapping)
+                                if (debug) println("Successfully mapping loaded : ${mapping.javaClass}")
+                            } catch (e: Exception) {
+                                if (debug) println("Warning: PopKorn mapping ($it) could not be loaded. Might not work if using obfuscation")
+                            }
+                        }
+
                 }catch (e:Exception){
                     if (debug) println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
                 }
