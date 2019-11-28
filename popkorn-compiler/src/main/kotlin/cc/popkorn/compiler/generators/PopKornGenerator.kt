@@ -53,18 +53,18 @@ internal class PopKornGenerator(generatedSourcesDir:File, private val filer: Fil
         val interfacesClasses = getInterfaces(internalProviderClasses, externalProviderClasses, roundEnv.getExcludedInterfaces())
         val aliasMapper = getAliasMapper(internalProviderClasses, externalProviderClasses)
 
-        logger.warning("Writing Injectable Classes: ${internalProviderClasses.size + externalProviderClasses.size}")
+        logger.message("Writing Injectable Classes: ${internalProviderClasses.size + externalProviderClasses.size}")
         internalProviderClasses.forEach { providerMappings[it] = internalProviderGenerator.write(it, aliasMapper) }
         externalProviderClasses.forEach { providerMappings[it.key] = externalProviderGenerator.write(it.key, it.value) }
         interfacesClasses.forEach { (i, c) -> resolverMappings[i] = resolverGenerator.write(i, c) }
-        logger.warning("Done writing Injectable Classes")
+        logger.message("Done writing Injectable Classes")
 
         //If its the last round, write mappings
         if (roundEnv.processingOver()){
-            logger.warning("Writing Mappings")
+            logger.message("Writing Mappings")
             mappingGenerator.write(resolverMappings, RESOLVER_SUFFIX, RESOLVER_MAPPINGS)
             mappingGenerator.write(providerMappings, PROVIDER_SUFFIX, PROVIDER_MAPPINGS)
-            logger.warning("Done writing Mappings")
+            logger.message("Done writing Mappings")
 
             filer.createResource(StandardLocation.CLASS_OUTPUT, "", "META-INF/proguard/popkorn.pro")
                 .openWriter()

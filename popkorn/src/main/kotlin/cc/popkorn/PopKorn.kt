@@ -12,8 +12,7 @@ import kotlin.reflect.KClass
  */
 
 
-//TODO testing
-internal val injector = Injector(true)
+internal val injector = Injector()
 
 fun getPopKornController() : PopKornController = injector
 
