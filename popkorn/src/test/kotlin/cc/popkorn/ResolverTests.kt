@@ -19,7 +19,7 @@ internal class ResolverTests :PopKornTest() {
     }
 
     private fun testInterfaceWithoutResolver(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
         assertFails { factory.inject(TestInterfaceNoResolver::class, environment) }
 
     }
@@ -27,7 +27,7 @@ internal class ResolverTests :PopKornTest() {
 
     @Test
     fun testInterface() {
-        val factory = Injector()
+        val factory = Injector(true)
 
         //For every correct environment, should return the correct class
         availableEnvironments.forEach {

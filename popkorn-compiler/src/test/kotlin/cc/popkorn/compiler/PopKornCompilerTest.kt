@@ -1,5 +1,7 @@
 package cc.popkorn.compiler
 
+import cc.popkorn.PROVIDER_SUFFIX
+import cc.popkorn.RESOLVER_SUFFIX
 import com.google.testing.compile.Compilation
 import com.google.testing.compile.CompilationSubject
 import com.google.testing.compile.Compiler
@@ -54,9 +56,9 @@ abstract class PopKornCompilerTest {
         val listFiles = File("$generatedFolder/$packDash").listFiles()?.map { it.nameWithoutExtension } ?: throw RuntimeException("No generated files")
         classes.map {
             if (it.isPublicClass()){
-                "${it.simpleName()}_Provider"
+                "${it.simpleName()}_$PROVIDER_SUFFIX"
             }else{
-                "${it.simpleName()}_Resolver"
+                "${it.simpleName()}_$RESOLVER_SUFFIX"
             }
         }.forEach {
             if (!listFiles.contains(it)) throw RuntimeException("Some providers/resolvers have not been generated")

@@ -23,7 +23,7 @@ internal class ProviderTests :PopKornTest() {
 
 
     private fun testClassWithoutProvider(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
 
         assertFails { factory.inject(TestClassNoProvider::class, environment) }
 
@@ -39,7 +39,7 @@ internal class ProviderTests :PopKornTest() {
     }
 
     private fun testClassByApp(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
 
         val inject = factory.inject(TestClassByApp::class, environment)
         assertEquals(inject.value, environment)
@@ -60,7 +60,7 @@ internal class ProviderTests :PopKornTest() {
     }
 
     private fun testClassByUse(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
 
         val inject = factory.inject(TestClassByUse::class, environment)
         assertEquals(inject.value, environment)
@@ -81,7 +81,7 @@ internal class ProviderTests :PopKornTest() {
     }
 
     private fun testClassByNew(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
 
         val inject = factory.inject(TestClassByNew::class, environment)
         assertEquals(inject.value, environment)
@@ -105,7 +105,7 @@ internal class ProviderTests :PopKornTest() {
 
 
     private fun testClassByManual(environment:String?) {
-        val factory = Injector()
+        val factory = Injector(true)
         val instance = TestClassNoProvider(environment)
         factory.addInjectable(instance, environment = environment)
         factory.assertNumberInstances(1)
@@ -138,7 +138,7 @@ internal class ProviderTests :PopKornTest() {
 
     @Test
     fun testClassByManualTogether() {
-        val factory = Injector()
+        val factory = Injector(true)
         val environment = randEnvironment()
         val instanceDef = TestClassNoProvider(null)
         val instanceEnv = TestClassNoProvider(environment)
@@ -170,7 +170,7 @@ internal class ProviderTests :PopKornTest() {
 
     @Test
     fun testClassByManualWithExistingProviderFile() {
-        val factory = Injector()
+        val factory = Injector(true)
         val environment = randEnvironment()
 
         val instance = TestClassByApp(environment)
@@ -182,7 +182,7 @@ internal class ProviderTests :PopKornTest() {
 
     @Test
     fun testClassByManualWithExistingProviderInstance() {
-        val factory = Injector()
+        val factory = Injector(true)
         val environment = randEnvironment()
 
         val inject = factory.inject(TestClassByApp::class, null)
@@ -197,7 +197,7 @@ internal class ProviderTests :PopKornTest() {
 
     @Test
     fun testReset() {
-        val factory = Injector()
+        val factory = Injector(true)
         val environment = randEnvironment()
 
         val inject = factory.inject(TestClassByApp::class, null)

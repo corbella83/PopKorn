@@ -1,8 +1,10 @@
 package cc.popkorn.compiler.generators
 
+import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.Scope
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
+import cc.popkorn.compiler.utils.*
 import cc.popkorn.compiler.utils.get
 import cc.popkorn.compiler.utils.getConstructors
 import cc.popkorn.compiler.utils.has
@@ -22,28 +24,30 @@ import javax.lang.model.util.Types
  * @author Pau Corbella
  * @since 1.0
  */
-internal class InternalProviderGenerator(private val directory: File, private val typeUtils: Types, private val namesMapper: Map<String, TypeMirror>) {
+internal class InternalProviderGenerator(private val directory: File, private val typeUtils: Types) {
 
-    fun write(clazz: TypeElement) {
-        val creationCode = getCreationCode(clazz)
+    fun write(clazz: TypeElement, namesMapper: Map<String, TypeMirror>) : String {
+        val creationCode = getCreationCode(clazz, namesMapper)
 
-        val scope = clazz.get(Injectable::class)?.scope ?: return
-        val file = getFile(clazz.asType(), creationCode, scope)
+        val filePackage = "${clazz.qualifiedName}_$PROVIDER_SUFFIX"
+        val scope = clazz.get(Injectable::class)?.scope ?: Scope.BY_APP
+        val file = getFile(filePackage, clazz.asClassName(), creationCode, scope, clazz.isInternal())
         file.writeTo(directory)
+        return filePackage
     }
 
-    private fun getCreationCode(clazz: TypeElement) : CodeBlock {
+    private fun getCreationCode(clazz: TypeElement, namesMapper: Map<String, TypeMirror>) : CodeBlock {
         val environments = clazz.getAvailableEnvironments()
 
         val codeBlock = CodeBlock.builder()
         if (environments.isEmpty()) { //If no environments are defined, return the default constructor
-            codeBlock.add("return ${create(clazz)}")
+            codeBlock.add("return ${create(clazz, namesMapper)}")
         } else {
             codeBlock.add("return when(environment){\n")
             environments.forEach { env ->
-                codeBlock.add("    \"$env\" -> ${create(clazz, env)}\n")
+                codeBlock.add("    \"$env\" -> ${create(clazz, namesMapper, env)}\n")
             }
-            codeBlock.add("    else -> ${create(clazz)}\n")
+            codeBlock.add("    else -> ${create(clazz, namesMapper)}\n")
             codeBlock.add("}\n")
         }
 
@@ -51,7 +55,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
     }
 
 
-    private fun create(element: TypeElement, environment: String? = null): String {
+    private fun create(element: TypeElement, namesMapper: Map<String, TypeMirror>, environment: String? = null): String {
         val constructor = if (environment == null) element.getDefaultConstructor() else element.getConstructor(environment)
 
         val params = constructor.parameters.map { param ->
@@ -77,11 +81,11 @@ internal class InternalProviderGenerator(private val directory: File, private va
     }
 
 
-    private fun getFile(element:TypeMirror, creationCode:CodeBlock, scope: Scope) : FileSpec {
+    private fun getFile(filePackage:String, className:ClassName, creationCode:CodeBlock, scope: Scope, int:Boolean) : FileSpec {
         val createFun = FunSpec.builder("create")
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
-            .returns(element.asTypeName())
+            .returns(className)
             .addCode(creationCode)
             .build()
 
@@ -91,12 +95,13 @@ internal class InternalProviderGenerator(private val directory: File, private va
             .addCode("return Scope.$scope")
             .build()
 
-        val pack = "${element}_Provider".splitPackage()
+        val pack = filePackage.splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addImport("cc.popkorn", "inject")
             .addType(
                 TypeSpec.classBuilder(pack.second)
-                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(element.asTypeName()))
+                    .apply { if (int) addModifiers(KModifier.INTERNAL) }
+                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(className))
                     .addFunction(createFun)
                     .addFunction(scopeFun)
                     .build()

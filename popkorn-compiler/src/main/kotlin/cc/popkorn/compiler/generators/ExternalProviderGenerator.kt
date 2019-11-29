@@ -2,12 +2,13 @@ package cc.popkorn.compiler.generators
 
 import cc.popkorn.core.Provider
 import cc.popkorn.Scope
+import cc.popkorn.PROVIDER_SUFFIX
+import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.io.File
 import javax.lang.model.element.*
-import javax.lang.model.type.TypeMirror
 
 /**
  * Class to generate Provider files based on @InjectableProvider annotation
@@ -17,24 +18,26 @@ import javax.lang.model.type.TypeMirror
  */
 internal class ExternalProviderGenerator(private val directory: File) {
 
-    fun write(clazz: TypeElement, provider: TypeElement) {
-        val property = PropertySpec.builder("inner", provider.asType().asTypeName())
+    fun write(clazz: TypeElement, provider: TypeElement) : String {
+        val property = PropertySpec.builder("inner", provider.asClassName())
+            .addModifiers(KModifier.PRIVATE)
             .delegate("lazy { ${provider.simpleName}() }")
             .build()
 
-        val file = getFile(clazz.asType(), property)
+        val filePackage = "${clazz.qualifiedName}_$PROVIDER_SUFFIX"
+        val file = getFile(filePackage, clazz.asClassName(), property, clazz.isInternal())
         file.writeTo(directory)
-
+        return filePackage
     }
 
 
 
-    private fun getFile(element:TypeMirror, property:PropertySpec) : FileSpec {
+    private fun getFile(filePackage:String, className:ClassName, property:PropertySpec, int:Boolean) : FileSpec {
 
         val createFun = FunSpec.builder("create")
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
-            .returns(element.asTypeName())
+            .returns(className)
             .addCode("return ${property.name}.create(environment)\n")
             .build()
 
@@ -44,12 +47,13 @@ internal class ExternalProviderGenerator(private val directory: File) {
             .addCode("return ${property.name}.scope()\n")
             .build()
 
-        val pack = "${element}_Provider".splitPackage()
+        val pack = filePackage.splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addImport("cc.popkorn", "inject")
             .addType(
                 TypeSpec.classBuilder(pack.second)
-                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(element.asTypeName()))
+                    .apply { if (int) addModifiers(KModifier.INTERNAL) }
+                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(className))
                     .addProperty(property)
                     .addFunction(createFun)
                     .addFunction(scopeFun)

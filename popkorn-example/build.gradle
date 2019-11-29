@@ -11,7 +11,7 @@ dependencies {
   implementation project(':popkorn')
   kapt project(':popkorn-compiler')
 
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kt_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kt_version"
 
 }
 
