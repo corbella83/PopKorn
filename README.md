@@ -26,7 +26,7 @@ Working with Scopes and Environments
 --------
 Scopes are the way to define the life span of an instance. There are 3 types of scopes:
 * Scope.BY_APP (default) -> Instance will be created only once, for hence will live forever. Normally for classes that have heavy construction or saves states (Retrofit, OkHttp, RoomDB, etc)
-* Scope.BY_USE -> Instance will be created if no one is using it, meaning that will live as long as others are using it. Normally for classes that are just like helpers (datasources, repositories, usecases, etc..)
+* Scope.BY_USE -> Instance will be created if no one is using it, meaning that will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc..)
 * Scope.BY_NEW -> Instance will be created every time is needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, screens, etc...)
 
 Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom
@@ -172,15 +172,9 @@ class MyApplication : Application() {
 }
 ```
 
-Using Android
+Using Android (and Obfuscation)
 --------
-If you are using doing an android app, PopKorn will automatically add the proguard rule. If not, here it is:
-```pro
--keep class * implements cc.popkorn.mapping.Mapping
-```
-
-Also, as APK doesn't support multiple resources with the same name, you will need to merge them (if using multiple modules)
-
+To prevent you to exclude lots of classes from obfuscation, PopKorn saves some mappings that needs to be merged when generating the APK. If you are using multiple modules, Android will take only the last one by default (or throw a compilation error depending on the Gradle version), unless the following option is set in the `build.gradle`:
 ```groovy
 android{
     packagingOptions {
@@ -188,6 +182,12 @@ android{
         merge 'META-INF/popkorn.resolver.mappings'
     }
 }
+```
+This is the error that the above fixes:
+```text
+Execution failed for task ':app:mergeDebugJavaResource'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+   > More than one file was found with OS independent path 'META-INF/popkorn.provider.mappings'
 ```
     
 

@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 internal class ResolverGenerator(private val directory: File) {
 
     fun write(inter:TypeElement, classes:List<DefaultImplementation>) : String {
-        val resolverCode = getResolverCode(classes)
+        val resolverCode = getResolverCode(inter, classes)
 
         val filePackage = "${getGenerationName(inter)}_$RESOLVER_SUFFIX"
         val file = getFile(filePackage, inter.asClassName(), resolverCode, inter.isInternal())
@@ -30,18 +30,18 @@ internal class ResolverGenerator(private val directory: File) {
         return filePackage
     }
 
-    private fun getResolverCode(classes:List<DefaultImplementation>) : CodeBlock {
+    private fun getResolverCode(inter:TypeElement, classes:List<DefaultImplementation>) : CodeBlock {
         val environments = classes.getAvailableEnvironments()
 
         val codeBlock = CodeBlock.builder()
         if (environments.isEmpty()) { //If no environments are defined, return the default constructor
-            codeBlock.add("return ${classes.getDefaultImplementation()}::class")
+            codeBlock.add("return ${classes.getDefaultImplementation(inter)}::class")
         } else {
             codeBlock.add("return when(environment){\n")
             environments.forEach { env ->
-                codeBlock.add("    \"$env\" -> ${classes.getImplementation(env)}::class\n")
+                codeBlock.add("    \"$env\" -> ${classes.getImplementation(inter, env)}::class\n")
             }
-            codeBlock.add("    else -> ${classes.getDefaultImplementation()}::class\n")
+            codeBlock.add("    else -> ${classes.getDefaultImplementation(inter)}::class\n")
             codeBlock.add("}\n")
         }
 
@@ -83,23 +83,23 @@ internal class ResolverGenerator(private val directory: File) {
         return list.takeIf { HashSet(list).size == it.size } ?: throw PopKornException("Environment must be unique among ${this.map { it.element }.joinToString()}")
     }
 
-    private fun List<DefaultImplementation>.getDefaultImplementation() : TypeElement {
+    private fun List<DefaultImplementation>.getDefaultImplementation(inter:TypeElement) : TypeElement {
         val elements = this
             .filter { it.environments.contains(null) }
 
-        if (elements.isEmpty()) throw PopKornException("Default Injectable not found: ${this.map { it.element }.joinToString()}")
-        return elements.singleOrNull()?.element ?: throw PopKornException("More than one class is default Injectable: ${this.map { it.element }.joinToString()}")
+        if (elements.isEmpty()) throw PopKornException("Default Injectable not found for $inter: ${this.map { it.element }.joinToString()}")
+        return elements.singleOrNull()?.element ?: throw PopKornException("$inter has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
     }
 
 
-    private fun List<DefaultImplementation>.getImplementation(environment:String) : TypeElement {
+    private fun List<DefaultImplementation>.getImplementation(inter:TypeElement, environment:String) : TypeElement {
         val elements = this
             .filter { it.environments.contains(environment) }
 
         return when (elements.size){
-            0 -> getDefaultImplementation()
+            0 -> getDefaultImplementation(inter)
             1 -> elements.single().element
-            else -> throw PopKornException("Environment must be unique among ${this.map { it.element }.joinToString()}")
+            else -> throw PopKornException("$inter has more than one class for environment $environment: ${this.map { it.element }.joinToString()}")
         }
     }
 

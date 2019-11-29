@@ -1,6 +1,5 @@
 package cc.popkorn.compiler
 
-import cc.popkorn.annotations.Exclude
 import cc.popkorn.annotations.Injectable
 import cc.popkorn.annotations.InjectableProvider
 import cc.popkorn.compiler.generators.PopKornGenerator
@@ -31,7 +30,7 @@ internal class PopKornCompiler : AbstractProcessor() {
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String?> {
-        return mutableSetOf(Injectable::class.qualifiedName, InjectableProvider::class.qualifiedName, Exclude::class.qualifiedName)
+        return mutableSetOf(Injectable::class.qualifiedName, InjectableProvider::class.qualifiedName)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {

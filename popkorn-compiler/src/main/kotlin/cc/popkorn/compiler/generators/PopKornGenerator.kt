@@ -50,7 +50,7 @@ internal class PopKornGenerator(generatedSourcesDir:File, private val filer: Fil
     fun process(roundEnv: RoundEnvironment) {
         val internalProviderClasses = roundEnv.getInjectableClasses()
         val externalProviderClasses = roundEnv.getInjectableProviderClasses()
-        val interfacesClasses = getInterfaces(internalProviderClasses, externalProviderClasses, roundEnv.getExcludedInterfaces())
+        val interfacesClasses = getInterfaces(internalProviderClasses, externalProviderClasses)
         val aliasMapper = getAliasMapper(internalProviderClasses, externalProviderClasses)
 
         logger.message("Writing Injectable Classes: ${internalProviderClasses.size + externalProviderClasses.size}")
@@ -94,7 +94,7 @@ internal class PopKornGenerator(generatedSourcesDir:File, private val filer: Fil
             .groupBy { element ->
                 element.takeUnless { it.isInterface() } ?: throw PopKornException("InjectableProvider cannot be interfaces: $element")
 
-                //TODO version 1.2 should accept injectable parameters to the providers
+                //TODO version 1.2.0 should accept injectable parameters to the providers
                 element.getConstructors().singleOrNull()?.takeIf { it.parameters.size==0 } ?: throw PopKornException(
                     "InjectableProvider can't have parametrized constructor: $element"
                 )
@@ -116,13 +116,6 @@ internal class PopKornGenerator(generatedSourcesDir:File, private val filer: Fil
         return injectableElements
     }
 
-
-
-    private fun RoundEnvironment.getExcludedInterfaces() : List<TypeMirror>{
-        return getAll(Exclude::class)
-            .filter { it.kind == ElementKind.INTERFACE }
-            .map { it.asType() }
-    }
 
 
     private fun getAliasMapper(int: List<TypeElement>, ext:Map<TypeElement, TypeElement>) : Map<String, TypeMirror>{
@@ -147,36 +140,38 @@ internal class PopKornGenerator(generatedSourcesDir:File, private val filer: Fil
     }
 
 
-    private fun getInterfaces(int: List<TypeElement>, ext:Map<TypeElement, TypeElement>, exclusions:List<TypeMirror>) : Map<TypeElement, List<DefaultImplementation>>{
+    private fun getInterfaces(int: List<TypeElement>, ext:Map<TypeElement, TypeElement>) : Map<TypeElement, List<DefaultImplementation>>{
         val map = hashMapOf<TypeElement, ArrayList<DefaultImplementation>>()
-        int.forEach { map.addInjectableInterfaces(it, it, exclusions) }
-        ext.forEach { map.addInjectableInterfaces(it.key, it.value, exclusions) }
+        int.forEach { map.addInjectableInterfaces(it, it) }
+        ext.forEach { map.addInjectableInterfaces(it.key, it.value) }
         return map
     }
 
-    private fun HashMap<TypeElement, ArrayList<DefaultImplementation>>.addInjectableInterfaces(element: TypeElement, container:TypeElement, exclusions:List<TypeMirror>) {
+    private fun HashMap<TypeElement, ArrayList<DefaultImplementation>>.addInjectableInterfaces(element: TypeElement, container:TypeElement) {
         val environments = ArrayList<String?>()
         container.get(ForEnvironments::class)?.value?.takeIf { it.isNotEmpty() }?.also { environments.addAll(it) } ?: environments.add(null)
-        val hereExclusions = element.get(Injectable::class)?.getExclusions() ?: arrayListOf()
+        val exclusions = element.get(Injectable::class)?.getExclusions() ?: arrayListOf()
 
         val envElem = DefaultImplementation(element, environments)
-        element.getHierarchyElements(exclusions + hereExclusions).forEach { this.getOrPut(it) { arrayListOf() }.add(envElem) }
+        element.getHierarchyElements(exclusions).forEach { this.getOrPut(it) { arrayListOf() }.add(envElem) }
     }
 
 
     private fun TypeElement.getHierarchyElements(exclusions:List<TypeMirror>) : List<TypeElement>{
-        return this.interfaces
-            .filterNot { type ->
-                exclusions.any { types.isSameType(type, it) }
-            }.mapNotNull {
-                types.asElement(it) as? TypeElement
-            }
-
-        //All interfaces including those from superclass
-//        val s = this.superclass?.let { processingEnv.typeUtils.asElement(it) as? TypeElement }?.let { it.getHierarchyElements() } ?: arrayListOf()
-//        val i = this.interfaces
-//        return s + i
+        return this.getAllInterfaces()
+            .toSet()
+            .filterNot { type -> exclusions.any { types.isSameType(type, it) } }
+            .mapNotNull { types.asElement(it) as? TypeElement }
+            .filterNot { it.has(Exclude::class) }
     }
+
+    private fun TypeElement.getAllInterfaces() : List<TypeMirror>{
+        val s = this.superclass?.let { types.asElement(it) as? TypeElement }?.getAllInterfaces() ?: arrayListOf()
+        val i = this.interfaces
+        val iMore = this.interfaces.mapNotNull { types.asElement(it) as? TypeElement }.map { it.getAllInterfaces() }.flatten()
+        return s + i + iMore
+    }
+
 
 
     private fun Injectable.getExclusions() : List<TypeMirror>{
