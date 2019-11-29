@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.2.0 *(UNKNOWN)*
+-----------------------------
+
+
 Version 1.1.0 *(2019-11-29)*
 -----------------------------
 * New: Add PopKornCompat to use PopKorn from java code
