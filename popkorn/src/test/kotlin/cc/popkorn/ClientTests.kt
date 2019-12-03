@@ -10,7 +10,7 @@ import kotlin.test.assertNotNull
 internal class ClientTests : PopKornTest() {
 
     @Test
-    fun testInterfaceWithoutResolver() {
+    fun testWhole() {
         val tmp = TestClassNoProvider(randEnvironment())
         getPopKornController().addInjectable(tmp)
 

@@ -5,6 +5,7 @@ import cc.popkorn.Scope
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
+import cc.popkorn.core.Injector
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.io.File
@@ -35,10 +36,11 @@ internal class ExternalProviderGenerator(private val directory: File) {
     private fun getFile(filePackage:String, className:ClassName, property:PropertySpec, int:Boolean) : FileSpec {
 
         val createFun = FunSpec.builder("create")
+            .addParameter("injector", Injector::class)
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
             .returns(className)
-            .addCode("return ${property.name}.create(environment)\n")
+            .addCode("return ${property.name}.create(injector, environment)\n")
             .build()
 
         val scopeFun = FunSpec.builder("scope")
@@ -49,7 +51,6 @@ internal class ExternalProviderGenerator(private val directory: File) {
 
         val pack = filePackage.splitPackage()
         return FileSpec.builder(pack.first, pack.second)
-            .addImport("cc.popkorn", "inject")
             .addType(
                 TypeSpec.classBuilder(pack.second)
                     .apply { if (int) addModifiers(KModifier.INTERNAL) }

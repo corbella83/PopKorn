@@ -22,7 +22,7 @@ import org.apache.commons.io.IOUtils
  * @author Pau Corbella
  * @since 1.0
  */
-internal class Injector(private val debug:Boolean=false) : PopKornController {
+class Injector(private val debug:Boolean=false) : PopKornController {
     private val resolverPool = ResolverPool()
     private val providerPool = ProviderPool()
 
@@ -91,7 +91,7 @@ internal class Injector(private val debug:Boolean=false) : PopKornController {
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
-    fun <T:Any> inject(clazz: KClass<T>, environment:String?) : T {
+    fun <T:Any> inject(clazz: KClass<T>, environment:String?=null) : T {
         return if (clazz.isInterface()){
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
@@ -115,9 +115,9 @@ internal class Injector(private val debug:Boolean=false) : PopKornController {
     private fun <T: Any> KClass<T>.getInstances() : Instances<T>{
         val provider = providerPool.create(this)
         return when(provider.scope()){
-            Scope.BY_APP -> PersistentInstances(provider)
-            Scope.BY_USE -> VolatileInstances(provider)
-            Scope.BY_NEW -> NewInstances(provider)
+            Scope.BY_APP -> PersistentInstances(this@Injector, provider)
+            Scope.BY_USE -> VolatileInstances(this@Injector, provider)
+            Scope.BY_NEW -> NewInstances(this@Injector, provider)
         }
     }
 

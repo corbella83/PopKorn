@@ -3,7 +3,7 @@ Change Log
 
 Version 1.2.0 *(UNKNOWN)*
 -----------------------------
-
+* New: Free `Injector` from it's internal modifier. Now can be used.
 
 Version 1.1.0 *(2019-11-29)*
 -----------------------------

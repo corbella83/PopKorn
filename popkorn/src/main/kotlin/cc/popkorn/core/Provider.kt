@@ -11,7 +11,7 @@ import cc.popkorn.Scope
  */
 interface Provider<T:Any> {
 
-     fun create(environment:String?) : T
+     fun create(injector:Injector, environment:String?) : T
 
      fun scope() : Scope
 

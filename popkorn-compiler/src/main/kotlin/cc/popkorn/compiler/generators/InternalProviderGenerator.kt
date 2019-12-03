@@ -9,6 +9,7 @@ import cc.popkorn.compiler.utils.get
 import cc.popkorn.compiler.utils.getConstructors
 import cc.popkorn.compiler.utils.has
 import cc.popkorn.compiler.utils.splitPackage
+import cc.popkorn.core.Injector
 import cc.popkorn.core.Provider
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -71,9 +72,9 @@ internal class InternalProviderGenerator(private val directory: File, private va
                 ?: param.asType().asTypeName().toString()
 
             if (nextEnv != null) {
-                "inject<$impl>(\"$nextEnv\")"
+                "injector.inject($impl::class, \"$nextEnv\")"
             } else {
-                "inject<$impl>()"
+                "injector.inject($impl::class)"
             }
         }
 
@@ -83,6 +84,7 @@ internal class InternalProviderGenerator(private val directory: File, private va
 
     private fun getFile(filePackage:String, className:ClassName, creationCode:CodeBlock, scope: Scope, int:Boolean) : FileSpec {
         val createFun = FunSpec.builder("create")
+            .addParameter("injector", Injector::class)
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
             .returns(className)
@@ -97,7 +99,6 @@ internal class InternalProviderGenerator(private val directory: File, private va
 
         val pack = filePackage.splitPackage()
         return FileSpec.builder(pack.first, pack.second)
-            .addImport("cc.popkorn", "inject")
             .addType(
                 TypeSpec.classBuilder(pack.second)
                     .apply { if (int) addModifiers(KModifier.INTERNAL) }
