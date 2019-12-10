@@ -154,12 +154,12 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
 
     // Checks that a TypeElement is a valid class to be used by PopKorn
-    private fun TypeElement.checkIsPopKornValid(needsConstructor:Boolean){
+    private fun TypeElement.checkIsPopKornValid(needsToBeCreated:Boolean){
         if (isInterface()) throw PopKornException("$this can not be an interface. Only classes are allowed")
         if (isInner()) throw PopKornException("$this can not be an inner class")
-        if (isAbstract()) throw PopKornException("$this can not be an abstract class")
+        if (needsToBeCreated && isAbstract()) throw PopKornException("$this can not be an abstract class")
         if (isPrivate()) throw PopKornException("$this cannot be a private class")
-        if (needsConstructor && getConstructors().isEmpty()) throw PopKornException("Could not find any public constructor of $this")
+        if (needsToBeCreated && getConstructors().isEmpty()) throw PopKornException("Could not find any public constructor of $this")
     }
 
 
