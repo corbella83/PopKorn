@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+Version 1.3.0 *(XXXXXX)*
+-----------------------------
+
 Version 1.2.0 *(2019-12-10)*
 -----------------------------
 * New: Free `Injector` from it's internal modifier. Now can be used.
