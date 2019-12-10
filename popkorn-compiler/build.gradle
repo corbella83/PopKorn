@@ -10,8 +10,6 @@ repositories {
 
 
 dependencies {
-  implementation files("${System.properties['java.home']}/../lib/tools.jar")
-
   implementation project(':popkorn')
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kt_version"
   implementation "org.jetbrains.kotlin:kotlin-reflect:$kt_version"

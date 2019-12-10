@@ -6,7 +6,7 @@ package cc.popkorn.instances
  * will throw a RuntimeException
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ProvidedInstances<T:Any>: Instances<T> {
     private val instances = HashMap<String?, T>()

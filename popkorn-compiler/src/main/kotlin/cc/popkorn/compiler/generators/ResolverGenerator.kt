@@ -1,8 +1,8 @@
 package cc.popkorn.compiler.generators
 
+import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
-import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
 import cc.popkorn.core.Resolver
@@ -17,31 +17,31 @@ import kotlin.reflect.KClass
  * Class to generate Resolver files based on interfaces of @Injectable and @InjectableProvider classes
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ResolverGenerator(private val directory: File) {
 
-    fun write(inter:TypeElement, classes:List<DefaultImplementation>) : String {
-        val resolverCode = getResolverCode(inter, classes)
+    // Writes a resolver from an element
+    fun write(element:TypeElement, classes:List<DefaultImplementation>) : String {
+        val resolverCode = getResolverCode(element, classes)
 
-        val filePackage = "${getGenerationName(inter)}_$RESOLVER_SUFFIX"
-        val file = getFile(filePackage, inter.asClassName(), resolverCode, inter.isInternal())
+        val file = element.getResolverFile(resolverCode)
         file.writeTo(directory)
-        return filePackage
+        return "${file.packageName}.${file.name}"
     }
 
-    private fun getResolverCode(inter:TypeElement, classes:List<DefaultImplementation>) : CodeBlock {
+    private fun getResolverCode(element:TypeElement, classes:List<DefaultImplementation>) : CodeBlock {
         val environments = classes.getAvailableEnvironments()
 
         val codeBlock = CodeBlock.builder()
         if (environments.isEmpty()) { //If no environments are defined, return the default constructor
-            codeBlock.add("return ${classes.getDefaultImplementation(inter)}::class")
+            codeBlock.add("return ${classes.getDefaultImplementation(element)}::class")
         } else {
             codeBlock.add("return when(environment){\n")
             environments.forEach { env ->
-                codeBlock.add("    \"$env\" -> ${classes.getImplementation(inter, env)}::class\n")
+                codeBlock.add("    \"$env\" -> ${classes.getImplementation(element, env)}::class\n")
             }
-            codeBlock.add("    else -> ${classes.getDefaultImplementation(inter)}::class\n")
+            codeBlock.add("    else -> ${classes.getDefaultImplementation(element)}::class\n")
             codeBlock.add("}\n")
         }
 
@@ -49,8 +49,43 @@ internal class ResolverGenerator(private val directory: File) {
     }
 
 
-    private fun getFile(filePackage:String, className:ClassName, creationCode:CodeBlock, int:Boolean) : FileSpec {
-        val producerOf = WildcardTypeName.producerOf(className)
+
+
+
+    private fun List<DefaultImplementation>.getAvailableEnvironments(): List<String> {
+        val list = map { it.environments }
+            .flatten()
+            .filterNotNull()
+            .sorted()
+
+        return list.takeIf { it.size == it.distinct().size } ?: throw PopKornException("Environment must be unique among ${this.map { it.element }.joinToString()}")
+    }
+
+    private fun List<DefaultImplementation>.getDefaultImplementation(element:TypeElement) : TypeElement {
+        val elements = filter { it.environments.contains(null) }
+
+        if (elements.isEmpty()) throw PopKornException("Default Injectable not found for $element: ${this.map { it.element }.joinToString()}")
+        return elements.singleOrNull()?.element ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
+    }
+
+
+    private fun List<DefaultImplementation>.getImplementation(element:TypeElement, environment:String) : TypeElement {
+        val elements = filter { it.environments.contains(environment) }
+
+        return when (elements.size){
+            0 -> getDefaultImplementation(element)
+            1 -> elements.single().element
+            else -> throw PopKornException("$element has more than one class for environment $environment: ${this.map { it.element }.joinToString()}")
+        }
+    }
+
+
+
+
+    private fun TypeElement.getResolverFile(creationCode:CodeBlock) : FileSpec {
+        val filePackage = "${getGenerationName()}_$RESOLVER_SUFFIX"
+
+        val producerOf = WildcardTypeName.producerOf(asClassName())
 
         val create = FunSpec.builder("resolve")
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
@@ -63,8 +98,8 @@ internal class ResolverGenerator(private val directory: File) {
         return FileSpec.builder(pack.first, pack.second)
             .addType(
                 TypeSpec.classBuilder(pack.second)
-                    .apply { if (int) addModifiers(KModifier.INTERNAL) }
-                    .addSuperinterface(Resolver::class.asClassName().parameterizedBy(className))
+                    .apply { if (isInternal()) addModifiers(KModifier.INTERNAL) }
+                    .addSuperinterface(Resolver::class.asClassName().parameterizedBy(asClassName()))
                     .addFunction(create)
                     .build()
             )
@@ -73,44 +108,14 @@ internal class ResolverGenerator(private val directory: File) {
 
 
 
-    private fun List<DefaultImplementation>.getAvailableEnvironments(): List<String> {
-        val list = this
-            .map { it.environments }
-            .flatten()
-            .filterNotNull()
-            .sorted()
-
-        return list.takeIf { HashSet(list).size == it.size } ?: throw PopKornException("Environment must be unique among ${this.map { it.element }.joinToString()}")
-    }
-
-    private fun List<DefaultImplementation>.getDefaultImplementation(inter:TypeElement) : TypeElement {
-        val elements = this
-            .filter { it.environments.contains(null) }
-
-        if (elements.isEmpty()) throw PopKornException("Default Injectable not found for $inter: ${this.map { it.element }.joinToString()}")
-        return elements.singleOrNull()?.element ?: throw PopKornException("$inter has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
-    }
-
-
-    private fun List<DefaultImplementation>.getImplementation(inter:TypeElement, environment:String) : TypeElement {
-        val elements = this
-            .filter { it.environments.contains(environment) }
-
-        return when (elements.size){
-            0 -> getDefaultImplementation(inter)
-            1 -> elements.single().element
-            else -> throw PopKornException("$inter has more than one class for environment $environment: ${this.map { it.element }.joinToString()}")
-        }
-    }
-
-
-    private fun getGenerationName(element:TypeElement) : String{
-        val parent = element.enclosingElement?.takeIf { it.kind == ElementKind.INTERFACE || it.kind == ElementKind.CLASS }
+    private fun TypeElement.getGenerationName() : String{
+        val parent = enclosingElement?.takeIf { it.kind == ElementKind.INTERFACE || it.kind == ElementKind.CLASS }
         return if (parent==null){ //If the class its on its own
-            element.toString()
+            toString()
         }else{
-            "${parent}_${element.simpleName}"
+            "${parent}_${simpleName}"
         }
     }
+
 
 }

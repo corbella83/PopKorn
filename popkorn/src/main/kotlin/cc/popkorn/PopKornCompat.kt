@@ -5,7 +5,7 @@ package cc.popkorn
  * Use it like PopKornCompat.inject(class)
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 class PopKornCompat {
 
@@ -42,12 +42,15 @@ class PopKornCompat {
             injector.removeInjectable(type.kotlin)
         }
 
-
         @JvmStatic
         fun reset(){
             injector.reset()
         }
 
+        @JvmStatic
+        fun purge(){
+            injector.purge()
+        }
 
         @JvmStatic
         fun <T:Any> inject(clazz:Class<T>, environment:String) = injector.inject(clazz.kotlin, environment)

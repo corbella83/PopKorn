@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
  * Interface that creates gets the cc.popkorn.mapping of a certain class
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 interface Mapping {
 

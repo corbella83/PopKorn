@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  * T must be an interface, while 'out T' must be a class
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 interface Resolver<T:Any> {
 

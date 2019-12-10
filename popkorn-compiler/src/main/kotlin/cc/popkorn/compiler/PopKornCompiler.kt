@@ -2,7 +2,7 @@ package cc.popkorn.compiler
 
 import cc.popkorn.annotations.Injectable
 import cc.popkorn.annotations.InjectableProvider
-import cc.popkorn.compiler.generators.PopKornGenerator
+import cc.popkorn.compiler.generators.MainGenerator
 import cc.popkorn.compiler.utils.*
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
@@ -13,13 +13,13 @@ import javax.lang.model.element.TypeElement
 
 
 /**
- * AbstractProcessor to process all PopKorn annotations and generates the necessary source code files
+ * AbstractProcessor to handle all PopKorn annotations and generate the necessary source code files
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class PopKornCompiler : AbstractProcessor() {
-    private lateinit var popKornGenerator: PopKornGenerator
+    private lateinit var mainGenerator: MainGenerator
 
     companion object {
         const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
@@ -44,12 +44,13 @@ internal class PopKornCompiler : AbstractProcessor() {
             ?.let { File(it) }
             ?.apply { mkdir() }
             ?: throw PopKornException("Can't find the target directory for generated Kotlin files.")
-        val logger = Logger(processingEnv.messager)
-        popKornGenerator = PopKornGenerator(directory, processingEnv.filer, processingEnv.typeUtils, processingEnv.elementUtils, logger)
+        mainGenerator = MainGenerator(directory, processingEnv.filer, processingEnv.typeUtils, processingEnv.elementUtils, Logger(processingEnv.messager))
+        mainGenerator.init()
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        popKornGenerator.process(roundEnv)
+        mainGenerator.process(roundEnv)
+        if (roundEnv.processingOver()) mainGenerator.end()
         return true
     }
 

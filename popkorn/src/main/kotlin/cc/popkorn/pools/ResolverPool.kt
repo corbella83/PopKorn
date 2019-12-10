@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * Implementation to get implementation of an interface via reflection
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ResolverPool(private val mappings:LinkedHashSet<Mapping> = linkedSetOf()) {
     private val resolvers = hashMapOf<KClass<*>, Resolver<*>>()

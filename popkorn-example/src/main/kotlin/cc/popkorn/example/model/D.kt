@@ -1,12 +1,12 @@
 package cc.popkorn.example.model
 
+import cc.popkorn.Propagation
 import cc.popkorn.annotations.*
-import cc.popkorn.core.Provider
 import cc.popkorn.Scope
 
-@Injectable(alias = "is1") @ForEnvironments("env1") class D1: DiA, DiG
+@Injectable(alias = "is1", propagation = Propagation.DIRECT) @ForEnvironments("env1") class D1: DiA, DiG
 
-@Injectable(alias = "is2") class D2: DiA, DiG
+@Injectable(alias = "is2", propagation = Propagation.DIRECT) class D2: DiA, DiG
 
 @Injectable(scope = Scope.BY_APP) @ForEnvironments("env1") class D3: DiB, DiG
 
@@ -25,23 +25,23 @@ class D8: DiC
 class D10: Wrapper.DiD
 
 
-
-@InjectableProvider(alias = "is6")
+@InjectableProvider(scope = Scope.BY_NEW, propagation = Propagation.DIRECT,alias = "is6")
 @ForEnvironments("env1", "env2", "env3")
-class DCustom6 : Provider<D6> {
-    override fun create(environment: String?) = D6()
-    override fun scope() =  Scope.BY_NEW
+class DCustom6 {
+    fun create(d0:DiA) = D6()
+
+    @ForEnvironments("env2")
+    fun createEnv2() = D6()
+
 }
 
-@InjectableProvider(alias = "is7")
+@InjectableProvider(scope = Scope.BY_USE, propagation = Propagation.DIRECT, alias = "is7")
 @ForEnvironments("env4")
-class DCustom7 : Provider<D7> {
-    override fun create(environment: String?) = D7()
-    override fun scope() =  Scope.BY_USE
+class DCustom7 {
+    fun create() = D7()
 }
 
-@InjectableProvider(alias = "is8")
-class DCustom8 : Provider<D8> {
-    override fun create(environment: String?) = D8()
-    override fun scope() =  Scope.BY_APP
+@InjectableProvider(scope = Scope.BY_APP, propagation = Propagation.DIRECT, alias = "is8")
+class DCustom8 {
+    fun create() = D8()
 }

@@ -6,11 +6,17 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import kotlin.test.assertNotNull
 
+/**
+ * Class to test injectable classes end to end
+ *
+ * @author Pau Corbella
+ * @since 1.0.0
+ */
 @RunWith(JUnit4::class)
 internal class ClientTests : PopKornTest() {
 
     @Test
-    fun testInterfaceWithoutResolver() {
+    fun testWhole() {
         val tmp = TestClassNoProvider(randEnvironment())
         getPopKornController().addInjectable(tmp)
 
