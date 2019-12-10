@@ -136,14 +136,16 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
         direct.forEach {
             val environments = it.get(ForEnvironments::class).toList()
             val exclusions = it.get(Injectable::class).getExclusions()
+            val propagation = it.get(Injectable::class)?.propagation ?: Propagation.ALL
             val envElem = DefaultImplementation(it, environments)
-            it.getHierarchyElements(exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
+            it.getHierarchyElements(propagation, exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
         }
         provided.forEach {
             val environments = it.value.get(ForEnvironments::class).toList()
             val exclusions = it.value.get(InjectableProvider::class).getExclusions()
+            val propagation = it.value.get(InjectableProvider::class)?.propagation ?: Propagation.NONE
             val envElem = DefaultImplementation(it.key, environments)
-            it.key.getHierarchyElements(exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
+            it.key.getHierarchyElements(propagation, exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
         }
         return map
     }
@@ -161,9 +163,15 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
 
-    // Gets a list of all interfaces of an Element (taking into account Exclusion)
-    private fun TypeElement.getHierarchyElements(exclusions:List<TypeMirror>) : List<TypeElement>{
-        return getAllInterfaces()
+    // Gets a list of all interfaces of an Element (taking into account the Propagation and Exclusion)
+    private fun TypeElement.getHierarchyElements(propagation:Propagation, exclusions:List<TypeMirror>) : List<TypeElement>{
+        val parents = when(propagation) {
+            Propagation.NONE -> arrayListOf()
+            Propagation.DIRECT -> interfaces
+            Propagation.ALL -> getAllInterfaces()
+        }
+
+        return parents
             .toSet()
             .filterNot { type -> exclusions.any { types.isSameType(type, it) } }
             .mapNotNull { types.asElement(it) as? TypeElement }
