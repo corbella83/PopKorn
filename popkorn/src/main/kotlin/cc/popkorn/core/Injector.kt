@@ -86,6 +86,16 @@ class Injector(private val debug:Boolean=false) : PopKornController {
 
 
     /**
+     * Frees memory that is not needed anymore
+     *
+     * */
+    override fun purge(){
+        instances.mapNotNull { it.value as? VolatileInstances }
+            .forEach { it.purge() }
+    }
+
+
+    /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
      *
      * @param clazz Class or Interface that you want to retrieve

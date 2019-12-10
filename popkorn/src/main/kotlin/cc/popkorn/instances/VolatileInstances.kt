@@ -15,11 +15,16 @@ import java.lang.ref.WeakReference
  */
 internal class VolatileInstances<T:Any>(private val injector: Injector, private val provider: Provider<T>): Instances<T> {
     private val instances = HashMap<String?, WeakReference<T>>()
-    
+
+    @Synchronized
     override fun get(environment:String?) : T{
         return instances[environment]?.get() ?: provider.create(injector, environment).also { instances[environment] = WeakReference(it) }
     }
 
+    @Synchronized
     override fun size() = instances.size
+
+    @Synchronized
+    fun purge() = instances.filter { it.value.get()==null }.forEach { instances.remove(it.key) }
 
 }

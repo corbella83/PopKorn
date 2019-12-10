@@ -16,4 +16,6 @@ interface PopKornController {
 
      fun reset()
 
+     fun purge()
+
 }

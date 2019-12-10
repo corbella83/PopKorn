@@ -12,6 +12,10 @@ fun main() {
     inject<R3i>()
     inject<R4i>("envX")
     inject<R5i>()
+
+    System.gc()
+    getPopKornController().purge()
+
     inject<R6i>()
     inject<R7i>()
     inject<R8i>()
