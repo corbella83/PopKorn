@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.2.0 *(2019-12-XX)*
+Version 1.2.0 *(2019-12-10)*
 -----------------------------
 * New: Free `Injector` from it's internal modifier. Now can be used.
 * New: Now can use parametrized methods when injecting through `InjectableProvider`  
