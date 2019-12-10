@@ -7,6 +7,7 @@ Version 1.2.0 *(2019-12-XX)*
 * New: Now can use parametrized methods when injecting through `InjectableProvider`  
 * New: Add propagation strategy at `Injectable` and `InjectableProvider`
 * New: Now an Injector can be purged to free memory
+* Fix: String, Bool (boolean), Int (int), etc.. no longer give a compilation error when used in an `InjectableProvider` 
 
 Version 1.1.0 *(2019-11-29)*
 -----------------------------

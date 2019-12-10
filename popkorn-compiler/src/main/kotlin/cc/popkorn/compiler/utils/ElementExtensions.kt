@@ -78,3 +78,9 @@ internal fun Element.getMethods() : List<ExecutableElement>{
 }
 
 
+/**
+ * @return Returns if this element represents a kotlin class
+ */
+internal fun TypeElement.isKotlinClass() = has(Metadata::class)
+
+

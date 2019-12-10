@@ -17,11 +17,18 @@ public class ExampleCompat {
         D10 d10 = new D10();
         PopKornCompat.addInjectable(d10);
 
+        PopKornCompat.inject(String.class);
+        PopKornCompat.inject(Integer.class);
+
         PopKornCompat.inject(R1i.class);
         PopKornCompat.inject(R2i.class);
         PopKornCompat.inject(R3i.class);
         PopKornCompat.inject(R4i.class,"envX");
         PopKornCompat.inject(R5i.class);
+
+        System.gc();
+        PopKornCompat.purge();
+
         PopKornCompat.inject(R6i.class);
         PopKornCompat.inject(R7i.class);
         PopKornCompat.inject(R8i.class);
@@ -35,5 +42,6 @@ public class ExampleCompat {
 
         System.out.println("ok compat");
     }
+
 
 }

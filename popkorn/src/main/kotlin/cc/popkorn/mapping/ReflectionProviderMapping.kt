@@ -1,5 +1,6 @@
 package cc.popkorn.mapping
 
+import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import kotlin.reflect.KClass
 
@@ -13,7 +14,8 @@ class ReflectionProviderMapping : Mapping {
 
      override fun find(original: KClass<out Any>): Any? {
           return try {
-               Class.forName("${original.java.name}_$PROVIDER_SUFFIX").newInstance()
+               val name = "${original.java.name}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+               Class.forName(name).newInstance()
           } catch (e:Throwable){
                null
           }

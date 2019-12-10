@@ -1,5 +1,6 @@
 package cc.popkorn.compiler.generators
 
+import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.Scope
 import cc.popkorn.annotations.*
@@ -16,6 +17,8 @@ import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Types
+import kotlin.reflect.jvm.internal.impl.builtins.jvm.JavaToKotlinClassMap
+import kotlin.reflect.jvm.internal.impl.name.FqName
 
 /**
  * Class to generate Provider files based on classes annotated with @Injectable and @InjectableProvider
@@ -111,13 +114,15 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
 
     private fun TypeElement.getProviderFile(property: PropertySpec?, creationCode: CodeBlock, scope: Scope) : FileSpec {
-        val filePackage = "${qualifiedName}_$PROVIDER_SUFFIX"
+        val filePackage = "${qualifiedName}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+
+        val className = supportClassName()
 
         val createFun = FunSpec.builder("create")
             .addParameter("injector", Injector::class)
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
-            .returns(asClassName())
+            .returns(className)
             .addCode(creationCode)
             .build()
 
@@ -132,7 +137,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             .addType(
                 TypeSpec.classBuilder(pack.second)
                     .apply { if (isInternal()) addModifiers(KModifier.INTERNAL) }
-                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(asClassName()))
+                    .addSuperinterface(Provider::class.asClassName().parameterizedBy(className))
                     .apply { if (property!=null) addProperty(property) }
                     .addFunction(createFun)
                     .addFunction(scopeFun)
@@ -140,5 +145,14 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             )
             .build()
     }
+
+    private fun TypeElement.supportClassName() : ClassName{
+        return this.takeUnless { isKotlinClass() }
+            ?.let { JavaToKotlinClassMap.INSTANCE.mapJavaToKotlin(FqName(it.toString())) }
+            ?.asSingleFqName()
+            ?.let { ClassName.bestGuess(it.asString()) }
+            ?: asClassName()
+    }
+
 
 }

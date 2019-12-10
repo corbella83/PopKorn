@@ -42,12 +42,15 @@ class PopKornCompat {
             injector.removeInjectable(type.kotlin)
         }
 
-
         @JvmStatic
         fun reset(){
             injector.reset()
         }
 
+        @JvmStatic
+        fun purge(){
+            injector.purge()
+        }
 
         @JvmStatic
         fun <T:Any> inject(clazz:Class<T>, environment:String) = injector.inject(clazz.kotlin, environment)
