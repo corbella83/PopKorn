@@ -60,7 +60,7 @@ abstract class PopKornCompilerTest {
     private fun assertFiles(vararg classes: JavaClass){
         classes.mapNotNull { it.getGeneratedFile()?.replace(".", "/") }
             .map { File("$generatedFolder/$it.kt") }
-            .takeIf { it.all { it.exists() } }
+            .takeIf { files -> files.all { it.exists() } }
             ?: throw RuntimeException("Some providers/resolvers have not been generated")
     }
 

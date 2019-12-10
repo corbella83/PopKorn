@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
  * Implementation to get the provider via reflection
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ProviderPool(private val mappings:LinkedHashSet<Mapping> = linkedSetOf()) {
 

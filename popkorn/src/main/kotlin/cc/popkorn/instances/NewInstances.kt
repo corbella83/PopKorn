@@ -9,7 +9,7 @@ import cc.popkorn.core.Provider
  * Doesn't matter the number of times get() is called, it will always return a new instance
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class NewInstances<T:Any>(private val injector: Injector, private val provider: Provider<T>): Instances<T> {
 

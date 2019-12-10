@@ -7,7 +7,7 @@ package cc.popkorn
  * BY_NEW -> Instance will be created every time is needed, so won't live at all
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 enum class Scope {
     BY_APP,

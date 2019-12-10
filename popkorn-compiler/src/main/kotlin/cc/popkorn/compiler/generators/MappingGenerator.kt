@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
  * Class to generate Mappings for this module
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 internal class MappingGenerator(private val directory: File, private val filer:Filer) {
     private val moduleName = getModuleName()

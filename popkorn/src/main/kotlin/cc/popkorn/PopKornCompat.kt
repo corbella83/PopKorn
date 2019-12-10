@@ -5,7 +5,7 @@ package cc.popkorn
  * Use it like PopKornCompat.inject(class)
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 class PopKornCompat {
 

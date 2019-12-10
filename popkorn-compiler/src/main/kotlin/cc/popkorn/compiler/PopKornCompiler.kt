@@ -16,7 +16,7 @@ import javax.lang.model.element.TypeElement
  * AbstractProcessor to handle all PopKorn annotations and generate the necessary source code files
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class PopKornCompiler : AbstractProcessor() {
     private lateinit var mainGenerator: MainGenerator

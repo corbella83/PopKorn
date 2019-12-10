@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
  * Interface with the available methods to manage injections
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 interface PopKornController {
 

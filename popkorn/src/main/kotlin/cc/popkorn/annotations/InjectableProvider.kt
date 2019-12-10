@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  * Also, if not defined, takes the scope BY_APP by default
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)

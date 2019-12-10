@@ -6,7 +6,7 @@ package cc.popkorn.annotations
  * to define the method to be used when injecting an @InjectableProvider class
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

@@ -7,7 +7,7 @@ import cc.popkorn.Scope
  * T cannot be an interface, only classes
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 interface Provider<T:Any> {
 

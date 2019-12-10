@@ -21,7 +21,7 @@ import javax.lang.model.util.Types
  * Class to generate Provider files based on classes annotated with @Injectable and @InjectableProvider
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ProviderGenerator(private val directory: File, private val typeUtils: Types) {
 

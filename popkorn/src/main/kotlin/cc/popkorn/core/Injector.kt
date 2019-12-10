@@ -20,7 +20,7 @@ import org.apache.commons.io.IOUtils
  * Main class to perform injections
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 class Injector(private val debug:Boolean=false) : PopKornController {
     private val resolverPool = ResolverPool()

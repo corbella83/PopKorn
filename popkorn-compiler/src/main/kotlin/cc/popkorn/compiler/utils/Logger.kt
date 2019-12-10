@@ -7,7 +7,7 @@ import javax.tools.Diagnostic
  * Logger to print compile time messages
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class Logger(private val messenger: Messager) {
 

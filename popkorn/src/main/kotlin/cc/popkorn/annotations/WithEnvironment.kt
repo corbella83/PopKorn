@@ -8,7 +8,7 @@ package cc.popkorn.annotations
  * the implementation of Interface in the environment PRO as param2
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.SOURCE)

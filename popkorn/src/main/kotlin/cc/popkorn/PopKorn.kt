@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * PopKorn DI
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 
 

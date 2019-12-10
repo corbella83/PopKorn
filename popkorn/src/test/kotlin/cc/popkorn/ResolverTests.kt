@@ -8,6 +8,12 @@ import org.junit.runners.JUnit4
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
+/**
+ * Class to test resolvers
+ *
+ * @author Pau Corbella
+ * @since 1.0.0
+ */
 @RunWith(JUnit4::class)
 internal class ResolverTests :PopKornTest() {
     private val availableEnvironments = hashMapOf(null to TestClassByApp::class, "app" to TestClassByApp::class, "use" to TestClassByUse::class, "new" to TestClassByNew::class)

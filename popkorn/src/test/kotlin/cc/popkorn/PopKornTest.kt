@@ -5,6 +5,12 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals
 
+/**
+ * Parent class of all injectable tests
+ *
+ * @author Pau Corbella
+ * @since 1.0.0
+ */
 internal abstract class PopKornTest {
     private val random = Random()
     private val alphabet = StringBuffer("ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmptwxyz")

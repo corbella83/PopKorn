@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
  * Class to generate Resolver files based on interfaces of @Injectable and @InjectableProvider classes
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class ResolverGenerator(private val directory: File) {
 

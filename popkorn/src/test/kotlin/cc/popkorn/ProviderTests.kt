@@ -12,6 +12,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertNull
 
+/**
+ * Class to test providers
+ *
+ * @author Pau Corbella
+ * @since 1.0.0
+ */
 @RunWith(JUnit4::class)
 internal class ProviderTests :PopKornTest() {
 

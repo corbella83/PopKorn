@@ -7,7 +7,7 @@ import kotlin.reflect.KClass
  * Implementation of Mapping for Providers using Reflection
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 class ReflectionProviderMapping : Mapping {
 

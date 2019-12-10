@@ -9,7 +9,7 @@ import cc.popkorn.core.Provider
  * Calling get() for the same environment and T::class will return always the same instance
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 internal class PersistentInstances<T:Any>(private val injector: Injector, private val provider: Provider<T>): Instances<T> {
     private val instances = HashMap<String?, T>()

@@ -27,7 +27,7 @@ import javax.tools.StandardLocation
  * Class to handle all PopKorn annotations and generates the necessary source code files
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.1.0
  */
 internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer, private val types: Types, private val elements: Elements, private val logger:Logger) {
     private val providerGenerator = ProviderGenerator(generatedSourcesDir, types)
@@ -50,9 +50,9 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
         val interfacesClasses = getInterfaces(directInjectableClasses, providedInjectableClasses)
         val aliasMapper = getAliasMapper(directInjectableClasses, providedInjectableClasses)
 
-        logger.message("Generating ${directInjectableClasses.size} providers of direct injectables")
+        logger.message("Generating providers of ${directInjectableClasses.size} direct injectable classes")
         directInjectableClasses.forEach { providerMappings[it] = providerGenerator.write(it, aliasMapper) }
-        logger.message("Generating ${providedInjectableClasses.size} providers of provided injectables")
+        logger.message("Generating providers of ${providedInjectableClasses.size} provided injectable classes")
         providedInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.write(it.key, it.value, aliasMapper) }
         logger.message("Generating ${interfacesClasses.size} resolvers")
         interfacesClasses.forEach { (i, c) -> resolverMappings[i] = resolverGenerator.write(i, c) }

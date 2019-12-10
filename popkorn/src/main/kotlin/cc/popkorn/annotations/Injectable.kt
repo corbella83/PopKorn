@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
  * If you want to exclude some of them, do it through parameter 'exclude'
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)

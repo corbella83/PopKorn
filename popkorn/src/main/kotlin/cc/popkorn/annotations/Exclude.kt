@@ -6,7 +6,7 @@ package cc.popkorn.annotations
  * when compiling
  *
  * @author Pau Corbella
- * @since 1.0
+ * @since 1.0.0
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
