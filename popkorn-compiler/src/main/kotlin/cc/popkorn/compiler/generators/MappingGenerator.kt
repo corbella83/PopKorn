@@ -19,6 +19,7 @@ import kotlin.reflect.KClass
 internal class MappingGenerator(private val directory: File, private val filer:Filer) {
     private val moduleName = getModuleName()
 
+    // Writes a mapping and the resource that points it
     fun write(values : HashMap<TypeElement, String>, classSuffix:String, resMapping:String) : Boolean {
         if (values.size==0) return false
 
@@ -77,15 +78,5 @@ internal class MappingGenerator(private val directory: File, private val filer:F
         }
         return "Unknown"
     }
-
-//    internal fun Element.getModuleName(): String{
-//        return get(Metadata::class)
-//            ?.run { KotlinClassHeader(kind, metadataVersion, bytecodeVersion, data1, data2, extraString, packageName, extraInt) }
-//            ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
-//            ?.toKmClass()
-//            ?.moduleName
-//            ?: ""
-//    }
-
 
 }

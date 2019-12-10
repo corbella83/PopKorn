@@ -23,5 +23,4 @@ internal class Logger(private val messenger: Messager) {
         messenger.printMessage(Diagnostic.Kind.ERROR, text)
     }
 
-
 }

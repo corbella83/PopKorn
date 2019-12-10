@@ -17,7 +17,7 @@ import org.apache.commons.io.IOUtils
 
 
 /**
- * Main class to perform the injections
+ * Main class to perform injections
  *
  * @author Pau Corbella
  * @since 1.0

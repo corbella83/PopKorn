@@ -129,12 +129,17 @@ val hello = inject<Hello>() // this will return an instance of HelloWorld
 
 Injecting External Classes
 --------
-If you want to inject a class that is out of your code, just define a `Provider` and annotate it with `@InjectableProvider`:
+If you want to inject a class that is out of your code, just define a class and annotate it with `@InjectableProvider`. Notice that you can use as many injectable objects as you need defining them as parameters of your method
 ```kotlin
-@InjectableProvider
-class MyOkHttpProvider : Provider<OkHttp> {
-    override fun create(environment: String?) = OkHttpClient.Builder().build()
-    override fun scope() =  Scope.BY_APP
+@InjectableProvider(scope=Scope.BY_APP)
+class MyRetrofitProvider {
+
+    fun createRetrofit(client : OkHttp) : Retrofit{
+        return Retrofit.Builder()
+            .baseUrl("my.url")
+            .client(client)
+            .build()
+    }
 }
 ```
 
