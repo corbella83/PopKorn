@@ -19,7 +19,7 @@ Get it with Maven:
 or Gradle:
 ```groovy
 implementation 'cc.popkorn:popkorn:1.2.0'
-kpt 'cc.popkorn:popkorn-compiler:1.2.0'
+kapt 'cc.popkorn:popkorn-compiler:1.2.0'
 ```
 
 Working with Scopes and Environments
@@ -95,7 +95,7 @@ val helloWorld = inject<HelloWorld>("usa") // will inject a HelloWorld instance 
 ```
 
 
-####Using Interfaces
+###Using Interfaces
 
 Let's now define an interface:
 ```kotlin
@@ -145,7 +145,7 @@ class MyRetrofitProvider {
 
 and use it the same way:
 ```kotlin
-val hello = inject<OkHttp>() //This will inject a persistent instance of OkHttp
+val hello = inject<Retrofit>() //This will inject a persistent instance of Retrofit
 ```
 
 
