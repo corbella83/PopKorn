@@ -1,6 +1,7 @@
 package cc.popkorn.compiler.generators
 
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
+import cc.popkorn.Environment
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.Scope
 import cc.popkorn.annotations.*
@@ -86,6 +87,10 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
         val params = parameters.map { param ->
+            if (param.asType().asTypeName() == Environment::class.asTypeName()){
+                return@map "${param.asType().asTypeName()}(environment)"
+            }
+
             val nextEnv = param.get(WithEnvironment::class)?.value
             val impl = param.get(Alias::class)?.value
                 ?.let {

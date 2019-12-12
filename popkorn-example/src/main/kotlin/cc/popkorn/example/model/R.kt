@@ -1,5 +1,6 @@
 package cc.popkorn.example.model
 
+import cc.popkorn.Environment
 import cc.popkorn.annotations.Alias
 import cc.popkorn.annotations.ForEnvironments
 import cc.popkorn.annotations.Injectable
@@ -9,7 +10,7 @@ import cc.popkorn.annotations.WithEnvironment
 
 @Injectable class R2(d1:D5, d2:D6, d3:D7, d4:D8, d5:D9) : R2i
 
-@Injectable class R3(@WithEnvironment("env1") d1:DiA, @WithEnvironment("envX") d2:DiA, d3:DiA) : R3i
+@Injectable class R3(env:Environment, @WithEnvironment("env1") d1:DiA, @WithEnvironment("envX") d2:DiA, d3:DiA) : R3i
 
 @Injectable class R4(@WithEnvironment("env1") d1:DiB, @WithEnvironment("env2") d2:DiB, d3:DiB) : R4i
 

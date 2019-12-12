@@ -1,5 +1,6 @@
 package cc.popkorn.example.model
 
+import cc.popkorn.Environment
 import cc.popkorn.Propagation
 import cc.popkorn.annotations.*
 import cc.popkorn.Scope
@@ -38,7 +39,7 @@ class DCustom6 {
 @InjectableProvider(scope = Scope.BY_USE, propagation = Propagation.DIRECT, alias = "is7")
 @ForEnvironments("env4")
 class DCustom7 {
-    fun create() = D7()
+    fun create(environment: Environment) = D7()
 }
 
 @InjectableProvider(scope = Scope.BY_APP, propagation = Propagation.DIRECT, alias = "is8")
