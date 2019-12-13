@@ -4,6 +4,7 @@ Change Log
 Version 1.3.0 *(XXXXXX)*
 -----------------------------
 * New: Can get the current environment in any injectable constructor / method by defining `Environment` parameter
+* Fix: Multiple environments in a constructor/method result in an invalid compilation file 
 
 Version 1.2.0 *(2019-12-10)*
 -----------------------------

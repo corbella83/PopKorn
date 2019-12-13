@@ -75,7 +75,8 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         }else{
             codeBlock.add("return when(environment){\n")
             others.forEach { (exe, env) ->
-                codeBlock.add("    \"${env.joinToString()}\" -> ${exe.getCreationString(namesMapper)}\n")
+                val environmentsList = env.joinToString { "\"$it\"" }
+                codeBlock.add("    $environmentsList -> ${exe.getCreationString(namesMapper)}\n")
             }
             codeBlock.add("    else -> ${default.getCreationString(namesMapper)}\n")
             codeBlock.add("}\n")
