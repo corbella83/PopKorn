@@ -1,18 +1,16 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.core
 
-import cc.popkorn.PROVIDER_MAPPINGS
-import cc.popkorn.PopKornController
-import cc.popkorn.RESOLVER_MAPPINGS
-import cc.popkorn.Scope
+import cc.popkorn.*
 import cc.popkorn.instances.*
 import kotlin.reflect.KClass
 import cc.popkorn.instances.Instances
 import cc.popkorn.mapping.Mapping
-import cc.popkorn.pools.ProviderPool
-import cc.popkorn.pools.ResolverPool
-import cc.popkorn.mapping.ReflectionProviderMapping
-import cc.popkorn.mapping.ReflectionResolverMapping
+import cc.popkorn.pools.*
+import cc.popkorn.pools.ReflectionResolverPool
+import cc.popkorn.pools.ResourcesProviderPool
+import cc.popkorn.pools.ResourcesResolverPool
+import cc.popkorn.resolvers.RuntimeResolver
 import org.apache.commons.io.IOUtils
 
 
@@ -22,20 +20,29 @@ import org.apache.commons.io.IOUtils
  * @author Pau Corbella
  * @since 1.0.0
  */
-class Injector(private val debug:Boolean=false) : PopKornController {
-    private val resolverPool = ResolverPool()
-    private val providerPool = ProviderPool()
+class Injector : PopKornController {
+    private val resolverPool:ResolverPool
+    private val providerPool:ProviderPool
 
     internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
 
 
-    init {
-        loadMappings(RESOLVER_MAPPINGS).forEach { resolverPool.addMapping(it) }
-        resolverPool.addMapping(ReflectionResolverMapping())
+    constructor(resolverPool:ResolverPool, providerPool:ProviderPool){
+        this.resolverPool = resolverPool
+        this.providerPool = providerPool
+    }
 
-        loadMappings(PROVIDER_MAPPINGS).forEach { providerPool.addMapping(it) }
-        providerPool.addMapping(ReflectionProviderMapping())
+    constructor(debug : Boolean = false){
+        this.resolverPool = loadMappings(RESOLVER_MAPPINGS, debug)
+            .takeIf { it.isNotEmpty() }
+            ?.let { ResourcesResolverPool(it) }
+            ?: ReflectionResolverPool()
+
+        this.providerPool = loadMappings(PROVIDER_MAPPINGS, debug)
+            .takeIf { it.isNotEmpty() }
+            ?.let { ResourcesProviderPool(it) }
+            ?: ReflectionProviderPool()
     }
 
 
@@ -55,7 +62,7 @@ class Injector(private val debug:Boolean=false) : PopKornController {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
 
         if (type.isInterface()) {
-            resolvers.getOrPut(type, {RuntimeResolver()})
+            resolvers.getOrPut(type, { RuntimeResolver() })
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
                 ?: throw RuntimeException("You are trying to add an injectable that is already defined")
@@ -156,8 +163,8 @@ class Injector(private val debug:Boolean=false) : PopKornController {
     }
 
 
-    private fun loadMappings(resource:String) : List<Mapping>{
-        val list = arrayListOf<Mapping>()
+    private fun loadMappings(resource:String, debug : Boolean) : Set<Mapping>{
+        val set = hashSetOf<Mapping>()
         javaClass.classLoader.getResources("META-INF/$resource")
             .iterator()
             .forEach { url ->
@@ -169,7 +176,7 @@ class Injector(private val debug:Boolean=false) : PopKornController {
                         .forEach {
                             try {
                                 val mapping = Class.forName(it).newInstance() as Mapping
-                                list.add(mapping)
+                                set.add(mapping)
                                 if (debug) println("Successfully mapping loaded : ${mapping.javaClass}")
                             } catch (e: Exception) {
                                 if (debug) println("Warning: PopKorn mapping ($it) could not be loaded. Might not work if using obfuscation")
@@ -180,7 +187,7 @@ class Injector(private val debug:Boolean=false) : PopKornController {
                     if (debug) println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
                 }
             }
-        return list
+        return set
     }
 
 }

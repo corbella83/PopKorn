@@ -1,12 +1,10 @@
 package cc.popkorn
 
-import cc.popkorn.core.Injector
 import cc.popkorn.data.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 /**
  * Class to test injectable classes end to end

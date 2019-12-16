@@ -1,10 +1,6 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
-import cc.popkorn.data.TestClassByApp
-import cc.popkorn.data.TestClassByNew
-import cc.popkorn.data.TestClassByUse
-import cc.popkorn.data.TestClassNoProvider
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4

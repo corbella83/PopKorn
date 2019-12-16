@@ -2,7 +2,6 @@
 package cc.popkorn.pools
 
 import cc.popkorn.core.Provider
-import cc.popkorn.mapping.Mapping
 import kotlin.reflect.KClass
 
 /**
@@ -11,24 +10,10 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class ProviderPool(private val mappings:LinkedHashSet<Mapping> = linkedSetOf()) {
+interface ProviderPool {
 
-    fun <T : Any> isPresent(clazz: KClass<T>) =  mappings.any{ it.isPresent(clazz) }
+    fun <T : Any> isPresent(clazz: KClass<T>) : Boolean
 
-    fun addMapping(mapping: Mapping) = mappings.add(mapping)
-
-    fun <T : Any> create(clazz: KClass<T>): Provider<T> {
-        return findProvider(clazz)
-            ?.let { it as? Provider<T> }
-            ?: throw RuntimeException("Could not find Provider for this class: ${clazz.qualifiedName}. Did you forget to add @Injectable?")
-    }
-
-
-    private fun findProvider(original:KClass<*>) : Any?{
-        mappings.forEach { map ->
-            map.find(original)?.also { return it }
-        }
-        return null
-    }
+    fun <T : Any> create(clazz: KClass<T>): Provider<T>
 
 }

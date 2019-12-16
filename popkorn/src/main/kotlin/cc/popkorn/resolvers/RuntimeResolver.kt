@@ -1,5 +1,6 @@
-package cc.popkorn.core
+package cc.popkorn.resolvers
 
+import cc.popkorn.core.Resolver
 import kotlin.reflect.KClass
 
 /**
