@@ -150,7 +150,7 @@ val hello = inject<Retrofit>() //This will inject a persistent instance of Retro
 
 
 
-Injecting Existing Instances
+Injecting Runtime Instances
 --------
 There is also a way to use custom injection. You can take control of when an instance is injectable and when is not:
 ```kotlin

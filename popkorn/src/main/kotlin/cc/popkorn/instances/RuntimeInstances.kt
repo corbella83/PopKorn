@@ -8,7 +8,7 @@ package cc.popkorn.instances
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class ProvidedInstances<T:Any>: Instances<T> {
+internal class RuntimeInstances<T:Any>: Instances<T> {
     private val instances = HashMap<String?, T>()
 
     override fun get(environment:String?) : T{

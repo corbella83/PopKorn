@@ -13,18 +13,12 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 internal class ResolverPool(private val mappings:LinkedHashSet<Mapping> = linkedSetOf()) {
-    private val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
 
     fun <T : Any> isPresent(clazz: KClass<T>) =  mappings.any{ it.isPresent(clazz) }
 
     fun addMapping(mapping: Mapping) = mappings.add(mapping)
 
-    fun <T : Any> resolve(clazz: KClass<T>, environment: String?): KClass<out T> {
-        return resolvers.getOrPut(clazz, { createResolver(clazz) })
-            .resolve(environment) as KClass<out T>
-    }
-
-    private fun <T : Any> createResolver(clazz: KClass<T>): Resolver<T> {
+    fun <T : Any> create(clazz: KClass<T>): Resolver<T> {
         return findResolver(clazz)
             ?.let { it as? Resolver<T> }
             ?: throw RuntimeException("Could not find Resolver for this class: ${clazz.qualifiedName}. Is this interface being used by an Injectable class?")

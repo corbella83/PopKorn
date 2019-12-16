@@ -26,6 +26,7 @@ class Injector(private val debug:Boolean=false) : PopKornController {
     private val resolverPool = ResolverPool()
     private val providerPool = ProviderPool()
 
+    internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
 
 
@@ -51,10 +52,17 @@ class Injector(private val debug:Boolean=false) : PopKornController {
      *                    will be injectable by all environments
      */
     override fun <T:Any> addInjectable(instance : T, type:KClass<out T>, environment:String?){
-        if (providerPool.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
+        if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
 
-        instances.getOrPut(type, {ProvidedInstances<T>()})
-            .let { it as? ProvidedInstances<T> }
+        if (type.isInterface()) {
+            resolvers.getOrPut(type, {RuntimeResolver()})
+                .let { it as? RuntimeResolver }
+                ?.apply { put(environment, type) }
+                ?: throw RuntimeException("You are trying to add an injectable that is already defined")
+        }
+
+        instances.getOrPut(type, {RuntimeInstances<T>()})
+            .let { it as? RuntimeInstances<T> }
             ?.apply { put(environment, instance) }
             ?: throw RuntimeException("You are trying to add an injectable that is already defined")
     }
@@ -67,8 +75,16 @@ class Injector(private val debug:Boolean=false) : PopKornController {
      * @param environment The environment the instance is attached to
      */
     override fun <T:Any> removeInjectable(type : KClass<T>, environment:String?){
+        if (type.isInterface()) {
+            resolvers[type]
+                ?.let { it as? RuntimeResolver }
+                ?.apply { remove(environment) }
+                ?.takeIf { it.size()==0 }
+                ?.also { resolvers.remove(type) }
+        }
+
         instances[type]
-            ?.let { it as? ProvidedInstances<T> }
+            ?.let { it as? RuntimeInstances<T> }
             ?.apply { remove(environment) }
             ?.takeIf { it.size()==0 }
             ?.also { instances.remove(type) }
@@ -82,6 +98,7 @@ class Injector(private val debug:Boolean=false) : PopKornController {
      */
     override fun reset(){
         instances.clear()
+        resolvers.clear()
     }
 
 
@@ -90,6 +107,12 @@ class Injector(private val debug:Boolean=false) : PopKornController {
      *
      * */
     override fun purge(){
+        resolvers.filter { it.value is RuntimeResolver }
+            .also {
+                resolvers.clear()
+                resolvers.putAll(it)
+            }
+
         instances.mapNotNull { it.value as? VolatileInstances }
             .forEach { it.purge() }
     }
@@ -119,7 +142,8 @@ class Injector(private val debug:Boolean=false) : PopKornController {
 
 
     private fun <T: Any> KClass<T>.getImplementation(environment:String?) : KClass<out T>{
-        return resolverPool.resolve(this, environment)
+        return resolvers.getOrPut(this, { resolverPool.create(this) })
+            .resolve(environment) as KClass<out T>
     }
 
     private fun <T: Any> KClass<T>.getInstances() : Instances<T>{
