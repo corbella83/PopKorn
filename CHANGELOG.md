@@ -3,6 +3,7 @@ Change Log
 
 Version 1.3.0 *(XXXXXX)*
 -----------------------------
+* New: `InjectableProvider` can provide an Interface now
 * New: Custom `Injector` can use custom pools
 * Fix: Runtime injectable can now be an interface
 * New: Can get the current environment in any injectable constructor / method by defining `Environment` parameter

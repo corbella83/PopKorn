@@ -74,15 +74,15 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
     private fun RoundEnvironment.getDirectInjectableClasses() : List<TypeElement>{
         val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
-        injectableElements.forEach { it.checkIsPopKornValid(true) }
+        injectableElements.forEach { it.checkConstruction() }
         return injectableElements.toList()
     }
 
     private fun RoundEnvironment.getProvidedInjectableClasses() : Map<TypeElement, TypeElement>{
         return ElementFilter.typesIn(getElementsAnnotatedWith(InjectableProvider::class.java))
             .groupBy { element ->
-                element.checkIsPopKornValid(true)
-                resolveType(element).also { it.checkIsPopKornValid(false) }
+                element.checkConstruction()
+                resolveType(element).also { it.checkVisibility() }
             }
             .mapValues { it.value.singleOrNull() ?: throw PopKornException("Only one InjectableProvider per type is allowed: ${it.value.joinToString()} are providing the same class: ${it.key}") }
     }
@@ -152,15 +152,20 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
 
 
-
-    // Checks that a TypeElement is a valid class to be used by PopKorn
-    private fun TypeElement.checkIsPopKornValid(needsToBeCreated:Boolean){
+    // Checks that a TypeElement can be constructed
+    private fun TypeElement.checkConstruction(){
+        checkVisibility()
         if (isInterface()) throw PopKornException("$this can not be an interface. Only classes are allowed")
-        if (isInner()) throw PopKornException("$this can not be an inner class")
-        if (needsToBeCreated && isAbstract()) throw PopKornException("$this can not be an abstract class")
-        if (isPrivate()) throw PopKornException("$this cannot be a private class")
-        if (needsToBeCreated && getConstructors().isEmpty()) throw PopKornException("Could not find any public constructor of $this")
+        if (isAbstract()) throw PopKornException("$this can not be an abstract class")
+        if (getConstructors().isEmpty()) throw PopKornException("Could not find any public constructor of $this")
     }
+
+    // Checks that a TypeElement is visible to be used
+    private fun TypeElement.checkVisibility(){
+        if (isInner()) throw PopKornException("$this can not be an inner class")
+        if (isPrivate()) throw PopKornException("$this cannot be a private class")
+    }
+
 
 
     // Gets a list of all interfaces of an Element (taking into account the Propagation and Exclusion)
@@ -176,6 +181,10 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
             .filterNot { type -> exclusions.any { types.isSameType(type, it) } }
             .mapNotNull { types.asElement(it) as? TypeElement }
             .filterNot { it.has(Exclude::class) }
+            .let {
+                if (this.isInterface()) it + this
+                else it
+            }
     }
 
     // Gets a list of all interfaces of an element

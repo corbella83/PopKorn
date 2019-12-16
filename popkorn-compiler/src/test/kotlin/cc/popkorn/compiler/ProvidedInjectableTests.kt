@@ -97,4 +97,17 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
     }
 
+    @Test
+    fun testPublicClassWithInterface(){
+        val inter = JavaClass("interface").modifiers("public")
+        val impl = JavaClass("class").modifiers("public").implements(inter.qualifiedName())
+
+        val test = JavaClass().modifiers("public")
+            .injectableProvider()
+            .method(JavaMethod("testFun").modifiers("public").returns(inter.qualifiedName(), "new ${impl.qualifiedName()}()"))
+
+        assertCompileSuccess(inter, impl, test)
+
+    }
+
 }

@@ -1,10 +1,7 @@
 package cc.popkorn.example.model
 
 import cc.popkorn.Environment
-import cc.popkorn.annotations.Alias
-import cc.popkorn.annotations.ForEnvironments
-import cc.popkorn.annotations.Injectable
-import cc.popkorn.annotations.WithEnvironment
+import cc.popkorn.annotations.*
 
 @Injectable class R1(d1:D1, d2:D2, d3:D3, d4:D4) : R1i
 
@@ -22,7 +19,7 @@ import cc.popkorn.annotations.WithEnvironment
 
 @Injectable
 @ForEnvironments("env1", "env2", "env3", "env4")
-class R8 private constructor() : R8i{
+class R8A private constructor() : R8i{
 
     @ForEnvironments("env3")
     constructor(@Alias("is1") d1:DiG, @Alias("is2") d2:DiG): this()
@@ -34,4 +31,12 @@ class R8 private constructor() : R8i{
 
 }
 
-@Injectable class R9 : R8i
+@Injectable class R8B : R8i
+
+class R9 : R9i
+
+@InjectableProvider
+class RCustom {
+    fun create(d0:DiA): R9i = R9()
+
+}

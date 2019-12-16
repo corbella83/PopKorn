@@ -161,7 +161,7 @@ internal class ProviderTests :PopKornTest() {
         assertEquals(inject2.value, environment)
 
         //If any other environment must return the default one
-        val secondaryEnvironment = environment + randEnvironment()
+        val secondaryEnvironment = "${environment}_secondary"
         val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
         assert(inject === inject3)
 
