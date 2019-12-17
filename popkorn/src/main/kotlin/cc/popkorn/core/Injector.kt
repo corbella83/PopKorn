@@ -1,21 +1,19 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.core
 
-import cc.popkorn.*
+import cc.popkorn.PROVIDER_MAPPINGS
+import cc.popkorn.PopKornController
+import cc.popkorn.RESOLVER_MAPPINGS
+import cc.popkorn.Scope
 import cc.popkorn.exceptions.AlreadyInjectableException
 import cc.popkorn.exceptions.InstanceNotFoundException
 import cc.popkorn.exceptions.ProviderNotFoundException
 import cc.popkorn.exceptions.ResolverNotFoundException
 import cc.popkorn.instances.*
-import kotlin.reflect.KClass
-import cc.popkorn.instances.Instances
 import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.*
-import cc.popkorn.pools.ReflectionResolverPool
-import cc.popkorn.pools.ResourcesProviderPool
-import cc.popkorn.pools.ResourcesResolverPool
 import cc.popkorn.resolvers.RuntimeResolver
-import org.apache.commons.io.IOUtils
+import kotlin.reflect.KClass
 
 
 /**
@@ -182,7 +180,7 @@ class Injector : PopKornController {
             .iterator()
             .forEach { url ->
                 try {
-                    val mappers = IOUtils.toString(url, "UTF-8")
+                    val mappers = url.readText()
                     mappers.replace("\n", "")
                         .split(";")
                         .filter { it.isNotEmpty() }
