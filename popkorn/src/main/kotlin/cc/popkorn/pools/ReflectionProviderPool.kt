@@ -4,6 +4,7 @@ package cc.popkorn.pools
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.core.Provider
+import cc.popkorn.exceptions.ProviderNotFoundException
 import kotlin.reflect.KClass
 
 /**
@@ -22,7 +23,7 @@ internal class ReflectionProviderPool : ProviderPool {
         return findClass(clazz)
             ?.newInstance()
             ?.let { it as? Provider<T> }
-            ?: throw RuntimeException("Could not find Provider for this class: ${clazz.qualifiedName}. Did you forget to add @Injectable?")
+            ?: throw ProviderNotFoundException(clazz)
     }
 
     private fun findClass(original: KClass<*>): Class<*>? {

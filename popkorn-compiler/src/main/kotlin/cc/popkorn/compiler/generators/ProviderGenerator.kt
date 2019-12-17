@@ -12,6 +12,7 @@ import cc.popkorn.core.Injector
 import cc.popkorn.core.Provider
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import org.jetbrains.annotations.Nullable
 import java.io.File
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.ExecutableElement
@@ -102,10 +103,11 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                 ?: param.asType()
             
             val name = impl.asTypeName().toString()
+            val method = if (param.has(Nullable::class)) "injectNullable" else "inject"
             if (nextEnv != null) {
-                "injector.inject($name::class, \"$nextEnv\")"
+                "injector.$method($name::class, \"$nextEnv\")"
             } else {
-                "injector.inject($name::class)"
+                "injector.$method($name::class)"
             }
         }
 

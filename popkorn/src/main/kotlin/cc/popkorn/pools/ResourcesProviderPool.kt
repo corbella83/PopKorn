@@ -2,6 +2,7 @@
 package cc.popkorn.pools
 
 import cc.popkorn.core.Provider
+import cc.popkorn.exceptions.ProviderNotFoundException
 import cc.popkorn.mapping.Mapping
 import kotlin.reflect.KClass
 
@@ -18,7 +19,7 @@ internal class ResourcesProviderPool(private val mappings:Set<Mapping>) : Provid
     override fun <T : Any> create(clazz: KClass<T>): Provider<T> {
         return findProvider(clazz)
             ?.let { it as? Provider<T> }
-            ?: throw RuntimeException("Could not find Provider for this class: ${clazz.qualifiedName}. Did you forget to add @Injectable?")
+            ?: throw ProviderNotFoundException(clazz)
     }
 
     private fun findProvider(original:KClass<*>) : Any?{

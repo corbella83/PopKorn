@@ -3,6 +3,7 @@ package cc.popkorn.pools
 
 import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.core.Resolver
+import cc.popkorn.exceptions.ResolverNotFoundException
 import kotlin.reflect.KClass
 
 /**
@@ -21,7 +22,7 @@ internal class ReflectionResolverPool : ResolverPool {
         return findClass(clazz)
             ?.newInstance()
             ?.let { it as? Resolver<T> }
-            ?: throw RuntimeException("Could not find Resolver for this class: ${clazz.qualifiedName}. Is this interface being used by an Injectable class?")
+            ?: throw ResolverNotFoundException(clazz)
     }
 
     private fun findClass(original: KClass<*>): Class<*>? {

@@ -3,10 +3,11 @@ Change Log
 
 Version 1.3.0 *(XXXXXX)*
 -----------------------------
+* New: Constructor/method parameters of Injectable classes can now be nullable
 * New: `InjectableProvider` can provide an Interface now
 * New: Custom `Injector` can use custom pools
 * Fix: Runtime injectable can now be an interface
-* New: Can get the current environment in any injectable constructor / method by defining `Environment` parameter
+* New: Can get the current environment in any injectable constructor/method by defining `Environment` parameter
 * Fix: Multiple environments in a constructor/method result in an invalid compilation file 
 
 Version 1.2.0 *(2019-12-10)*

@@ -15,7 +15,7 @@ import cc.popkorn.annotations.*
 
 @Injectable class R6(@WithEnvironment("env4") d1:DiC, @WithEnvironment("env4") d2:DiC, @Alias("is7") d3:DiC, @Alias("is8") d4:DiC) : R6i
 
-@Injectable class R7(d1: Wrapper.DiD, @WithEnvironment("envX") d2: Wrapper.DiD, d3:D10) : R7i
+@Injectable class R7(tmp: R0i?,d1: Wrapper.DiD, @WithEnvironment("envX") d2: Wrapper.DiD, d3:D10) : R7i
 
 @Injectable
 @ForEnvironments("env1", "env2", "env3", "env4")

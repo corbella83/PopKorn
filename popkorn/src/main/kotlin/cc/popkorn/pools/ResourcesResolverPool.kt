@@ -2,6 +2,7 @@
 package cc.popkorn.pools
 
 import cc.popkorn.core.Resolver
+import cc.popkorn.exceptions.ResolverNotFoundException
 import cc.popkorn.mapping.Mapping
 import kotlin.reflect.KClass
 
@@ -18,7 +19,7 @@ internal class ResourcesResolverPool(private val mappings:Set<Mapping>) : Resolv
     override fun <T : Any> create(clazz: KClass<T>): Resolver<T> {
         return findResolver(clazz)
             ?.let { it as? Resolver<T> }
-            ?: throw RuntimeException("Could not find Resolver for this class: ${clazz.qualifiedName}. Is this interface being used by an Injectable class?")
+            ?: throw ResolverNotFoundException(clazz)
     }
 
     private fun findResolver(original:KClass<*>) : Any?{

@@ -2,6 +2,10 @@
 package cc.popkorn.core
 
 import cc.popkorn.*
+import cc.popkorn.exceptions.AlreadyInjectableException
+import cc.popkorn.exceptions.InstanceNotFoundException
+import cc.popkorn.exceptions.ProviderNotFoundException
+import cc.popkorn.exceptions.ResolverNotFoundException
 import cc.popkorn.instances.*
 import kotlin.reflect.KClass
 import cc.popkorn.instances.Instances
@@ -59,19 +63,19 @@ class Injector : PopKornController {
      *                    will be injectable by all environments
      */
     override fun <T:Any> addInjectable(instance : T, type:KClass<out T>, environment:String?){
-        if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw RuntimeException("You are trying to add an injectable that is already defined")
+        if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
         if (type.isInterface()) {
             resolvers.getOrPut(type, { RuntimeResolver() })
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
-                ?: throw RuntimeException("You are trying to add an injectable that is already defined")
+                ?: throw AlreadyInjectableException()
         }
 
         instances.getOrPut(type, {RuntimeInstances<T>()})
             .let { it as? RuntimeInstances<T> }
             ?.apply { put(environment, instance) }
-            ?: throw RuntimeException("You are trying to add an injectable that is already defined")
+            ?: throw AlreadyInjectableException()
     }
 
 
@@ -139,6 +143,15 @@ class Injector : PopKornController {
             provide(clazz, environment)
         }
     }
+
+
+    fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?=null) : T? {
+        return try{ inject(clazz, environment) }
+               catch (e : ProviderNotFoundException){ null }
+               catch (e : ResolverNotFoundException){ null }
+               catch (e : InstanceNotFoundException){ null }
+    }
+
 
     private fun <T:Any> provide(clazz: KClass<T>, environment:String?) : T{
         return instances.getOrPut(clazz, { clazz.getInstances() })
