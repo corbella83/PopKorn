@@ -99,12 +99,13 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                     if (!typeUtils.isAssignable(alternate, param.asType())) throw PopKornException("Parameter specified as $it (${alternate}) is not assignable to ${param.asType()} while creating $this")
                     alternate
                 }
-                ?: param.asType().asTypeName().toString()
-
+                ?: param.asType()
+            
+            val name = impl.asTypeName().toString()
             if (nextEnv != null) {
-                "injector.inject($impl::class, \"$nextEnv\")"
+                "injector.inject($name::class, \"$nextEnv\")"
             } else {
-                "injector.inject($impl::class)"
+                "injector.inject($name::class)"
             }
         }
 
