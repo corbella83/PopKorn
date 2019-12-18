@@ -14,6 +14,10 @@ interface PopKornController {
 
      fun <T:Any> removeInjectable(type:KClass<T>, environment:String?=null)
 
+     fun <T:Any> inject(clazz: KClass<T>, environment:String?=null) : T
+
+     fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?=null) : T?
+
      fun reset()
 
      fun purge()

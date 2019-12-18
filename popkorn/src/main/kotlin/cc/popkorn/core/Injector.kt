@@ -133,7 +133,7 @@ class Injector : PopKornController {
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
-    fun <T:Any> inject(clazz: KClass<T>, environment:String?=null) : T {
+    override fun <T:Any> inject(clazz: KClass<T>, environment:String?) : T {
         return if (clazz.isInterface()){
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
@@ -143,7 +143,14 @@ class Injector : PopKornController {
     }
 
 
-    fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?=null) : T? {
+    /**
+     * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
+     * If fails getting it, will return null
+     *
+     * @param clazz Class or Interface that you want to retrieve
+     * @param environment The environment in which you would like to retrieve the object
+     */
+    override fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?) : T? {
         return try{ inject(clazz, environment) }
                catch (e : ProviderNotFoundException){ null }
                catch (e : ResolverNotFoundException){ null }
