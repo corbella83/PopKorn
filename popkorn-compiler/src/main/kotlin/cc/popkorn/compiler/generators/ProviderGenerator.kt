@@ -7,6 +7,7 @@ import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.core.Injector
 import cc.popkorn.core.Scope
+import cc.popkorn.core.model.Empty
 import cc.popkorn.core.model.Environment
 import cc.popkorn.providers.Provider
 import com.squareup.kotlinpoet.*
@@ -88,6 +89,8 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         val params = parameters.map { param ->
             if (param.asType().asTypeName() == Environment::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}(environment)"
+            } else if (param.asType().asTypeName() == Empty::class.asTypeName()) {
+                return@map "${param.asType().asTypeName()}()"
             }
 
             val nextEnv = param.get(WithEnvironment::class)?.value

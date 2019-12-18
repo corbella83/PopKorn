@@ -3,6 +3,7 @@ Change Log
 
 Version 1.3.0 *(XXXXXX)*
 -----------------------------
+* New: Can use `Empty` parameter at any constructor/method to 'fake overload'
 * New: Constructor/method parameters of Injectable classes can now be nullable
 * New: `InjectableProvider` can provide an Interface now
 * New: Custom `Injector` can use custom pools
