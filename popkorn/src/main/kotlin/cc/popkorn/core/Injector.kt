@@ -5,10 +5,7 @@ package cc.popkorn.core
 import cc.popkorn.PROVIDER_MAPPINGS
 import cc.popkorn.PopKornController
 import cc.popkorn.RESOLVER_MAPPINGS
-import cc.popkorn.core.exceptions.AlreadyInjectableException
-import cc.popkorn.core.exceptions.InstanceNotFoundException
-import cc.popkorn.core.exceptions.ProviderNotFoundException
-import cc.popkorn.core.exceptions.ResolverNotFoundException
+import cc.popkorn.core.exceptions.*
 import cc.popkorn.instances.*
 import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.*
@@ -159,6 +156,12 @@ class Injector : PopKornController {
         } catch (e: ResolverNotFoundException) {
             null
         } catch (e: InstanceNotFoundException) {
+            null
+        } catch (e: DefaultImplementationNotFoundException) {
+            null
+        } catch (e: DefaultConstructorNotFoundException) {
+            null
+        } catch (e: DefaultMethodNotFoundException) {
             null
         }
     }

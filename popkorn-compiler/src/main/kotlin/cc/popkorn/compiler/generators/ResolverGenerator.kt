@@ -5,6 +5,7 @@ import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
+import cc.popkorn.core.exceptions.DefaultImplementationNotFoundException
 import cc.popkorn.resolvers.Resolver
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -35,13 +36,13 @@ internal class ResolverGenerator(private val directory: File) {
 
         val codeBlock = CodeBlock.builder()
         if (environments.isEmpty()) { //If no environments are defined, return the default constructor
-            codeBlock.add("return ${classes.getDefaultImplementation(element)}::class")
+            codeBlock.add("return ${classes.getDefaultImplementation(element)}")
         } else {
             codeBlock.add("return when(environment){\n")
             environments.forEach { env ->
-                codeBlock.add("    \"$env\" -> ${classes.getImplementation(element, env)}::class\n")
+                codeBlock.add("    \"$env\" -> ${classes.getImplementation(element, env)}\n")
             }
-            codeBlock.add("    else -> ${classes.getDefaultImplementation(element)}::class\n")
+            codeBlock.add("    else -> ${classes.getDefaultImplementation(element)}\n")
             codeBlock.add("}\n")
         }
 
@@ -58,20 +59,23 @@ internal class ResolverGenerator(private val directory: File) {
         return list.takeIf { it.size == it.distinct().size } ?: throw PopKornException("Environment must be unique among ${this.map { it.element }.joinToString()}")
     }
 
-    private fun List<DefaultImplementation>.getDefaultImplementation(element: TypeElement): TypeElement {
+    private fun List<DefaultImplementation>.getDefaultImplementation(element: TypeElement): String {
         val elements = filter { it.environments.contains(null) }
 
-        if (elements.isEmpty()) throw PopKornException("Default Injectable not found for $element: ${this.map { it.element }.joinToString()}")
-        return elements.singleOrNull()?.element ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
+        if (elements.isEmpty()) {
+            val options = this.joinToString { "\"${it.element}\"" }
+            return "throw ${DefaultImplementationNotFoundException::class.asClassName()}(\"$element\", arrayListOf($options))"
+        }
+        return elements.singleOrNull()?.element?.let { "$it::class" } ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
     }
 
 
-    private fun List<DefaultImplementation>.getImplementation(element: TypeElement, environment: String): TypeElement {
+    private fun List<DefaultImplementation>.getImplementation(element: TypeElement, environment: String): String {
         val elements = filter { it.environments.contains(environment) }
 
         return when (elements.size) {
             0 -> getDefaultImplementation(element)
-            1 -> elements.single().element
+            1 -> elements.single().element.let { "$it::class" }
             else -> throw PopKornException("$element has more than one class for environment $environment: ${this.map { it.element }.joinToString()}")
         }
     }

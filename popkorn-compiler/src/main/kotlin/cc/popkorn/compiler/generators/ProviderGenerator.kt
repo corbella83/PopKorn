@@ -7,6 +7,8 @@ import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.core.Injector
 import cc.popkorn.core.Scope
+import cc.popkorn.core.exceptions.DefaultConstructorNotFoundException
+import cc.popkorn.core.exceptions.DefaultMethodNotFoundException
 import cc.popkorn.core.model.Empty
 import cc.popkorn.core.model.Environment
 import cc.popkorn.providers.Provider
@@ -32,7 +34,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     // Writes a provider from a direct injectable element
     fun write(element: TypeElement, namesMapper: Map<String, TypeMirror>): String {
-        val creationCode = getCreationCode(element.getConstructors(), namesMapper, "$element should have only one public constructor or use environments", "Found multiple constructors with the same environment in $element")
+        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName())
 
         val scope = element.get(Injectable::class)?.scope ?: Scope.BY_APP
         val file = element.getProviderFile(null, creationCode, scope)
@@ -48,7 +50,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             .delegate("lazy { ${provider.simpleName}() }")
             .build()
 
-        val creationCode = getCreationCode(provider.getMethods(), namesMapper, "$provider should have only one public method or use environments", "Found multiple methods with the same environment in $provider")
+        val creationCode = getCreationCode(provider.getMethods(), namesMapper, provider.asClassName(), DefaultMethodNotFoundException::class.asClassName())
         val scope = provider.get(InjectableProvider::class)?.scope ?: Scope.BY_APP
         val file = element.getProviderFile(property, creationCode, scope)
         file.writeTo(directory)
@@ -56,28 +58,32 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
     }
 
 
-    private fun getCreationCode(list: List<ExecutableElement>, namesMapper: Map<String, TypeMirror>, errorNone: String, errorDuplicated: String): CodeBlock {
+    private fun getCreationCode(list: List<ExecutableElement>, namesMapper: Map<String, TypeMirror>, caller: ClassName, error: ClassName): CodeBlock {
         val elements = list.map { it to (it.get(ForEnvironments::class)?.value ?: arrayOf()) }.toMap()
 
-        val default = elements.filterValues { it.isEmpty() }.keys.singleOrNull()
-            ?: throw PopKornException(errorNone)
+        val default = elements.filterValues { it.isEmpty() }.keys.let {
+            if (it.size > 1) throw PopKornException("$caller has more than one default constructor/method with default environment")
+            it.singleOrNull()
+        }
 
-        val others = elements.toMutableMap().apply { remove(default) }
+        val others = elements.toMutableMap().apply { if (default!=null) remove(default) }
             .apply {
                 val all = values.map { it.toList() }.flatten()
-                if (all.size != all.distinct().size) throw PopKornException(errorDuplicated)
+                if (all.size != all.distinct().size) throw PopKornException("$caller has more than one constructor/method for the same environment")
             }
+
+        val defaultCode = default?.getCreationString(namesMapper) ?: "throw $error(\"$caller\")"
 
         val codeBlock = CodeBlock.builder()
         if (others.isEmpty()) {
-            codeBlock.add("return ${default.getCreationString(namesMapper)}")
+            codeBlock.add("return $defaultCode")
         } else {
             codeBlock.add("return when(environment){\n")
             others.forEach { (exe, env) ->
                 val environmentsList = env.joinToString { "\"$it\"" }
                 codeBlock.add("    $environmentsList -> ${exe.getCreationString(namesMapper)}\n")
             }
-            codeBlock.add("    else -> ${default.getCreationString(namesMapper)}\n")
+            codeBlock.addStatement("    else -> $defaultCode\n")
             codeBlock.add("}\n")
         }
 
