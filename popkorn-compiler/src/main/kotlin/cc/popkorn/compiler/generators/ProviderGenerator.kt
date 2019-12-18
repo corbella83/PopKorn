@@ -1,15 +1,15 @@
 package cc.popkorn.compiler.generators
 
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
-import cc.popkorn.Environment
+import cc.popkorn.core.model.Environment
 import cc.popkorn.PROVIDER_SUFFIX
-import cc.popkorn.Scope
+import cc.popkorn.core.Scope
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.compiler.utils.get
 import cc.popkorn.core.Injector
-import cc.popkorn.core.Provider
+import cc.popkorn.providers.Provider
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import org.jetbrains.annotations.Nullable

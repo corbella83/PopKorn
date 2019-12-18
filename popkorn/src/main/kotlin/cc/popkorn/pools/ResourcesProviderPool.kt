@@ -1,8 +1,8 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.pools
 
-import cc.popkorn.core.Provider
-import cc.popkorn.exceptions.ProviderNotFoundException
+import cc.popkorn.providers.Provider
+import cc.popkorn.core.exceptions.ProviderNotFoundException
 import cc.popkorn.mapping.Mapping
 import kotlin.reflect.KClass
 

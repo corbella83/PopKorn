@@ -3,7 +3,7 @@ package cc.popkorn.compiler.utils
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.RESOLVER_SUFFIX
-import cc.popkorn.Scope
+import cc.popkorn.core.Scope
 
 /**
  * Class to create a java class by code
@@ -13,7 +13,7 @@ import cc.popkorn.Scope
  */
 class JavaClass(private val type:String = "class", private val name:String = "Test${System.nanoTime()}"){
     private val pack = "com.test"
-    private val imports = arrayListOf("cc.popkorn.*", "cc.popkorn.annotations.*")
+    private val imports = arrayListOf("cc.popkorn.core.*", "cc.popkorn.annotations.*")
     private val annotations = arrayListOf<String>()
     private val modifiers = arrayListOf<String>()
     private var extends:String? = null
@@ -49,7 +49,7 @@ class JavaClass(private val type:String = "class", private val name:String = "Te
         return this
     }
 
-    fun injectableProvider(scope:Scope?=null, alias:String?=null) : JavaClass{
+    fun injectableProvider(scope: Scope?=null, alias:String?=null) : JavaClass{
         val param1 = scope?.let { "scope = Scope.${it.name}" }
         val param2 = alias?.let { "alias = \"$it\"" }
         val params = arrayOf(param1, param2).filterNotNull()

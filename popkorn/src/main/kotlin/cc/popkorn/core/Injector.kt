@@ -4,14 +4,14 @@ package cc.popkorn.core
 import cc.popkorn.PROVIDER_MAPPINGS
 import cc.popkorn.PopKornController
 import cc.popkorn.RESOLVER_MAPPINGS
-import cc.popkorn.Scope
-import cc.popkorn.exceptions.AlreadyInjectableException
-import cc.popkorn.exceptions.InstanceNotFoundException
-import cc.popkorn.exceptions.ProviderNotFoundException
-import cc.popkorn.exceptions.ResolverNotFoundException
+import cc.popkorn.core.exceptions.AlreadyInjectableException
+import cc.popkorn.core.exceptions.InstanceNotFoundException
+import cc.popkorn.core.exceptions.ProviderNotFoundException
+import cc.popkorn.core.exceptions.ResolverNotFoundException
 import cc.popkorn.instances.*
 import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.*
+import cc.popkorn.resolvers.Resolver
 import cc.popkorn.resolvers.RuntimeResolver
 import kotlin.reflect.KClass
 

@@ -3,8 +3,8 @@ package cc.popkorn.pools
 
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
-import cc.popkorn.core.Provider
-import cc.popkorn.exceptions.ProviderNotFoundException
+import cc.popkorn.providers.Provider
+import cc.popkorn.core.exceptions.ProviderNotFoundException
 import kotlin.reflect.KClass
 
 /**

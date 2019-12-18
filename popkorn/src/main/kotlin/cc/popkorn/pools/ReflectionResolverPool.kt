@@ -2,8 +2,8 @@
 package cc.popkorn.pools
 
 import cc.popkorn.RESOLVER_SUFFIX
-import cc.popkorn.core.Resolver
-import cc.popkorn.exceptions.ResolverNotFoundException
+import cc.popkorn.resolvers.Resolver
+import cc.popkorn.core.exceptions.ResolverNotFoundException
 import kotlin.reflect.KClass
 
 /**

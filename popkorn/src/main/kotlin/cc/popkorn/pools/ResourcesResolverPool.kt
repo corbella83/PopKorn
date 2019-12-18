@@ -1,8 +1,8 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.pools
 
-import cc.popkorn.core.Resolver
-import cc.popkorn.exceptions.ResolverNotFoundException
+import cc.popkorn.resolvers.Resolver
+import cc.popkorn.core.exceptions.ResolverNotFoundException
 import cc.popkorn.mapping.Mapping
 import kotlin.reflect.KClass
 

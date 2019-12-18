@@ -1,6 +1,7 @@
-package cc.popkorn.core
+package cc.popkorn.providers
 
-import cc.popkorn.Scope
+import cc.popkorn.core.Injector
+import cc.popkorn.core.Scope
 
 /**
  * Interface that defines how a certain class can be created
@@ -11,7 +12,7 @@ import cc.popkorn.Scope
  */
 interface Provider<T:Any> {
 
-     fun create(injector:Injector, environment:String?) : T
+     fun create(injector: Injector, environment:String?) : T
 
      fun scope() : Scope
 

@@ -1,6 +1,6 @@
 package cc.popkorn.data
 
-import cc.popkorn.core.Resolver
+import cc.popkorn.resolvers.Resolver
 import kotlin.reflect.KClass
 
 interface TestInterface{

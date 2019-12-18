@@ -1,8 +1,8 @@
 package cc.popkorn.data
 
-import cc.popkorn.Scope
+import cc.popkorn.core.Scope
 import cc.popkorn.core.Injector
-import cc.popkorn.core.Provider
+import cc.popkorn.providers.Provider
 
 class TestClassByUse(environment: String?) : TestClassNoProvider(environment)
 

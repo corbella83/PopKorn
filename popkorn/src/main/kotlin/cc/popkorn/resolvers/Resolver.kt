@@ -1,4 +1,4 @@
-package cc.popkorn.core
+package cc.popkorn.resolvers
 
 import kotlin.reflect.KClass
 

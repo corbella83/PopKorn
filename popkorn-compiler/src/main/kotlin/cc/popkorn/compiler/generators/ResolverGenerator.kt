@@ -5,7 +5,7 @@ import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
-import cc.popkorn.core.Resolver
+import cc.popkorn.resolvers.Resolver
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.io.File

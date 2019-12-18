@@ -1,7 +1,7 @@
 package cc.popkorn.instances
 
 import cc.popkorn.core.Injector
-import cc.popkorn.core.Provider
+import cc.popkorn.providers.Provider
 import java.lang.ref.WeakReference
 
 

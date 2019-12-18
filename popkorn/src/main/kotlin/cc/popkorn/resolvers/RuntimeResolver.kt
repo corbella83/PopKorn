@@ -1,7 +1,6 @@
 package cc.popkorn.resolvers
 
-import cc.popkorn.core.Resolver
-import cc.popkorn.exceptions.InstanceNotFoundException
+import cc.popkorn.core.exceptions.InstanceNotFoundException
 import kotlin.reflect.KClass
 
 /**

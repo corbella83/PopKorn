@@ -1,6 +1,6 @@
 package cc.popkorn.instances
 
-import cc.popkorn.exceptions.InstanceNotFoundException
+import cc.popkorn.core.exceptions.InstanceNotFoundException
 
 /**
  * Instances implementation for manually scoped instances

@@ -1,6 +1,6 @@
 package cc.popkorn.example;
 
-import cc.popkorn.Scope;
+import cc.popkorn.core.Scope;
 import cc.popkorn.annotations.InjectableProvider;
 
 @InjectableProvider(scope=Scope.BY_USE)

@@ -1,9 +1,9 @@
 package cc.popkorn.example.model
 
-import cc.popkorn.Environment
-import cc.popkorn.Propagation
+import cc.popkorn.core.model.Environment
+import cc.popkorn.core.Propagation
 import cc.popkorn.annotations.*
-import cc.popkorn.Scope
+import cc.popkorn.core.Scope
 
 @Injectable(alias = "is1", propagation = Propagation.DIRECT) @ForEnvironments("env1") class D1: DiA, DiG
 

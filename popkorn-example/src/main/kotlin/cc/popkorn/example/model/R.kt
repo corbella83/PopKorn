@@ -1,13 +1,13 @@
 package cc.popkorn.example.model
 
-import cc.popkorn.Environment
+import cc.popkorn.core.model.Environment
 import cc.popkorn.annotations.*
 
 @Injectable class R1(d1:D1, d2:D2, d3:D3, d4:D4) : R1i
 
 @Injectable class R2(d1:D5, d2:D6, d3:D7, d4:D8, d5:D9) : R2i
 
-@Injectable class R3(env:Environment, @WithEnvironment("env1") d1:DiA, @WithEnvironment("envX") d2:DiA, d3:DiA) : R3i
+@Injectable class R3(env: Environment, @WithEnvironment("env1") d1:DiA, @WithEnvironment("envX") d2:DiA, d3:DiA) : R3i
 
 @Injectable class R4(@WithEnvironment("env1") d1:DiB, @WithEnvironment("env2") d2:DiB, d3:DiB) : R4i
 

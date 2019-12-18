@@ -1,7 +1,7 @@
 @file:Suppress("UNCHECKED_CAST")
 package cc.popkorn.pools
 
-import cc.popkorn.core.Provider
+import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 
 /**

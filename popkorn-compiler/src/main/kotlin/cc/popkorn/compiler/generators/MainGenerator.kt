@@ -9,6 +9,7 @@ import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.compiler.utils.Logger
+import cc.popkorn.core.Propagation
 import java.io.File
 import java.util.ArrayList
 import javax.annotation.processing.Filer
@@ -169,7 +170,7 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
 
     // Gets a list of all interfaces of an Element (taking into account the Propagation and Exclusion)
-    private fun TypeElement.getHierarchyElements(propagation:Propagation, exclusions:List<TypeMirror>) : List<TypeElement>{
+    private fun TypeElement.getHierarchyElements(propagation: Propagation, exclusions:List<TypeMirror>) : List<TypeElement>{
         val parents = when(propagation) {
             Propagation.NONE -> arrayListOf()
             Propagation.DIRECT -> interfaces

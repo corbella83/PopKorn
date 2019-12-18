@@ -1,7 +1,7 @@
 package cc.popkorn.annotations
 
-import cc.popkorn.Propagation
-import cc.popkorn.Scope
+import cc.popkorn.core.Propagation
+import cc.popkorn.core.Scope
 import kotlin.reflect.KClass
 
 /**

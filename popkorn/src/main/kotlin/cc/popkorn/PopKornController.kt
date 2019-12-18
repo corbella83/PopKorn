@@ -18,8 +18,8 @@ interface PopKornController {
 
      fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?=null) : T?
 
-     fun reset()
-
      fun purge()
+
+     fun reset()
 
 }

@@ -1,4 +1,4 @@
-package cc.popkorn.exceptions
+package cc.popkorn.core.exceptions
 
 import kotlin.reflect.KClass
 
