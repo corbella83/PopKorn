@@ -102,7 +102,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                 }
                 ?: param.asType()
 
-            val name = impl.asTypeName().toString()
+            val name = impl.supportTypeName().toString()
             val method = if (param.has(Nullable::class)) "injectNullable" else "inject"
             if (nextEnv != null) {
                 "injector.$method($name::class, \"$nextEnv\")"
@@ -156,11 +156,20 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     private fun TypeElement.supportClassName(): ClassName {
         return this.takeUnless { isKotlinClass() }
-            ?.let { JavaToKotlinClassMap.INSTANCE.mapJavaToKotlin(FqName(it.toString())) }
-            ?.asSingleFqName()
-            ?.let { ClassName.bestGuess(it.asString()) }
+            ?.let { toKotlin(it.toString()) }
             ?: asClassName()
     }
 
+    private fun TypeMirror.supportTypeName(): TypeName {
+        return this.takeUnless { it.getAnnotation(Metadata::class.java) != null }
+            ?.let { toKotlin(it.toString()) }
+            ?: asTypeName()
+    }
+
+    private fun toKotlin(name: String): ClassName? {
+        return JavaToKotlinClassMap.INSTANCE.mapJavaToKotlin(FqName(name))
+            ?.asSingleFqName()
+            ?.let { ClassName.bestGuess(it.asString()) }
+    }
 
 }

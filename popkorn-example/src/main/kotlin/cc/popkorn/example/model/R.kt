@@ -17,7 +17,7 @@ class R3(env: Environment, @WithEnvironment("env1") d1: DiA, @WithEnvironment("e
 class R4(ign: Empty, @WithEnvironment("env1") d1: DiB, @WithEnvironment("env2") d2: DiB, d3: DiB) : R4i
 
 @Injectable
-class R5(@WithEnvironment("env1") d1: DiC, @WithEnvironment("env2") d2: DiC, @WithEnvironment("env3") d3: DiC, d4: DiC) : R5i
+class R5(str: String, int: Int, test: Float?, @WithEnvironment("env1") d1: DiC, @WithEnvironment("env2") d2: DiC, @WithEnvironment("env3") d3: DiC, d4: DiC) : R5i
 
 @Injectable
 class R6(@WithEnvironment("env4") d1: DiC, @WithEnvironment("env4") d2: DiC, @Alias("is7") d3: DiC, @Alias("is8") d4: DiC) : R6i

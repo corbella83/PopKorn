@@ -3,6 +3,7 @@ Change Log
 
 Version 1.3.0 *(XXXXXX)*
 -----------------------------
+* Fix: String, Bool (boolean), Int (int), etc.. were still giving compilation error when used in constructors/methods
 * New: Can use `Empty` parameter at any constructor/method to 'fake overload'
 * New: Constructor/method parameters of Injectable classes can now be nullable
 * New: `InjectableProvider` can provide an Interface now

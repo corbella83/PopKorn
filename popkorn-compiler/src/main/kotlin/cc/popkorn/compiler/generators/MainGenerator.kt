@@ -104,7 +104,7 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             .distinct()
             .singleOrNull()
             ?.also { if (it.has(Injectable::class)) throw PopKornException("$element not needed, as $it has already been annotated with @Injectable") }
-            ?: throw PopKornException("All public methods in $element must return the same type")
+            ?: throw PopKornException("All public methods in $element must return the same type. Remember that in Kotlin, getters and setters are generated automatically for properties)")
     }
 
 
