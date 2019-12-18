@@ -4,22 +4,22 @@ apply plugin: 'kotlin'
 
 
 repositories {
-  mavenCentral()
-  jcenter()
+    mavenCentral()
+    jcenter()
 }
 
 
 dependencies {
-  implementation project(':popkorn')
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kt_version"
-  implementation "org.jetbrains.kotlin:kotlin-reflect:$kt_version"
-  implementation "com.squareup:kotlinpoet:$kotlinpoet_version"
-  implementation "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinx_metadata_version"
+    implementation project(':popkorn')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kt_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kt_version"
+    implementation "com.squareup:kotlinpoet:$kotlinpoet_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinx_metadata_version"
 
-  testImplementation "org.jetbrains.kotlin:kotlin-test:$kt_version"
-  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kt_version"
-  testImplementation "com.google.testing.compile:compile-testing:$compile_test_version"
-  testImplementation "commons-io:commons-io:$apache_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kt_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kt_version"
+    testImplementation "com.google.testing.compile:compile-testing:$compile_test_version"
+    testImplementation "commons-io:commons-io:$apache_version"
 
 }
 

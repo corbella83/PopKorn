@@ -6,11 +6,11 @@ package cc.popkorn.compiler.utils
  *
  * @return Returns a Pair containing the package (first) and class name (second)
  */
-internal fun String.splitPackage(): Pair<String, String>{
+internal fun String.splitPackage(): Pair<String, String> {
     val split = split(".")
-    return if (split.size==1){
+    return if (split.size == 1) {
         Pair("", split.single())
-    }else{
+    } else {
         Pair(split.dropLast(1).joinToString("."), split.last())
     }
 }

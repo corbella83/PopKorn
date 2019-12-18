@@ -16,9 +16,9 @@ internal class RuntimeResolver : Resolver<Any> {
         return resolvers[environment] ?: resolvers[null] ?: throw InstanceNotFoundException()
     }
 
-    fun put(environment:String?, data:KClass<out Any>) = resolvers.put(environment, data)
+    fun put(environment: String?, data: KClass<out Any>) = resolvers.put(environment, data)
 
-    fun remove(environment:String?) = resolvers.remove(environment)
+    fun remove(environment: String?) = resolvers.remove(environment)
 
     fun size() = resolvers.size
 

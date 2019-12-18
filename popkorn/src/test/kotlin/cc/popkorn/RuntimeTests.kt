@@ -5,7 +5,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import kotlin.reflect.KClass
-import kotlin.test.*
+import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 /**
  * Class to test runtime injections
@@ -14,11 +15,11 @@ import kotlin.test.*
  * @since 1.3.0
  */
 @RunWith(JUnit4::class)
-internal class RuntimeTests :PopKornTest() {
+internal class RuntimeTests : PopKornTest() {
     interface I1
     interface I2
-    abstract class C1:I1
-    class C2:C1(),I2
+    abstract class C1 : I1
+    class C2 : C1(), I2
 
     @Test
     fun testAddInjectableClass() {
@@ -144,7 +145,6 @@ internal class RuntimeTests :PopKornTest() {
     }
 
 
-
     @Test
     fun testAddInjectableClassWithEnvironments() {
         testInjectAs(C2::class)
@@ -167,7 +167,7 @@ internal class RuntimeTests :PopKornTest() {
     }
 
 
-    private fun testInjectAs(clazz:KClass<out Any>) {
+    private fun testInjectAs(clazz: KClass<out Any>) {
         val injector = Injector(true)
         val c0 = C2()
         val c1 = C2()

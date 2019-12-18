@@ -10,10 +10,10 @@ import cc.popkorn.core.Scope
  * @author Pau Corbella
  * @since 1.0.0
  */
-interface Provider<T:Any> {
+interface Provider<T : Any> {
 
-     fun create(injector: Injector, environment:String?) : T
+    fun create(injector: Injector, environment: String?): T
 
-     fun scope() : Scope
+    fun scope(): Scope
 
 }

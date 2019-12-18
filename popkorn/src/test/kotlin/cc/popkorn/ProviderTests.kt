@@ -19,7 +19,7 @@ import kotlin.test.assertNull
  * @since 1.0.0
  */
 @RunWith(JUnit4::class)
-internal class ProviderTests :PopKornTest() {
+internal class ProviderTests : PopKornTest() {
 
     @Test
     fun testClassWithoutProvider() {
@@ -28,7 +28,7 @@ internal class ProviderTests :PopKornTest() {
     }
 
 
-    private fun testClassWithoutProvider(environment:String?) {
+    private fun testClassWithoutProvider(environment: String?) {
         val factory = Injector(true)
 
         assertFails { factory.inject(TestClassNoProvider::class, environment) }
@@ -37,14 +37,13 @@ internal class ProviderTests :PopKornTest() {
     }
 
 
-
     @Test
     fun testClassByApp() {
         testClassByApp(randEnvironment())  // Custom Environment
         testClassByApp(null)      // Default Environment
     }
 
-    private fun testClassByApp(environment:String?) {
+    private fun testClassByApp(environment: String?) {
         val factory = Injector(true)
 
         val inject = factory.inject(TestClassByApp::class, environment)
@@ -65,7 +64,7 @@ internal class ProviderTests :PopKornTest() {
         testClassByUse(null)      // Default Environment
     }
 
-    private fun testClassByUse(environment:String?) {
+    private fun testClassByUse(environment: String?) {
         val factory = Injector(true)
 
         val inject = factory.inject(TestClassByUse::class, environment)
@@ -86,7 +85,7 @@ internal class ProviderTests :PopKornTest() {
         testClassByNew(null)      // Default Environment
     }
 
-    private fun testClassByNew(environment:String?) {
+    private fun testClassByNew(environment: String?) {
         val factory = Injector(true)
 
         val inject = factory.inject(TestClassByNew::class, environment)
@@ -101,8 +100,6 @@ internal class ProviderTests :PopKornTest() {
     }
 
 
-
-
     @Test
     fun testClassByManual() {
         testClassByManual(randEnvironment())  // Custom Environment
@@ -110,7 +107,7 @@ internal class ProviderTests :PopKornTest() {
     }
 
 
-    private fun testClassByManual(environment:String?) {
+    private fun testClassByManual(environment: String?) {
         val factory = Injector(true)
         val instance = TestClassNoProvider(environment)
         factory.addInjectable(instance, environment = environment)
@@ -124,11 +121,11 @@ internal class ProviderTests :PopKornTest() {
         val inject2 = factory.inject(TestClassNoProvider::class, environment)
         assert(inject === inject2)
 
-        if (environment==null){ //If try to inject another environment, will return the default instance
+        if (environment == null) { //If try to inject another environment, will return the default instance
             val secondaryEnvironment = randEnvironment()
             val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
             assert(inject === inject3)
-        }else{ //If try to inject the default environment or any other, will fail
+        } else { //If try to inject the default environment or any other, will fail
             val secondaryEnvironment = "${environment}_secondary"
             assertFails { factory.inject(TestClassNoProvider::class, null) }
             assertFails { factory.inject(TestClassNoProvider::class, secondaryEnvironment) }

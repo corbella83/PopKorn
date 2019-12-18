@@ -15,7 +15,7 @@ import kotlin.test.assertFails
  * @since 1.0.0
  */
 @RunWith(JUnit4::class)
-internal class ResolverTests :PopKornTest() {
+internal class ResolverTests : PopKornTest() {
     private val availableEnvironments = hashMapOf(null to TestClassByApp::class, "app" to TestClassByApp::class, "use" to TestClassByUse::class, "new" to TestClassByNew::class)
 
     @Test
@@ -24,7 +24,7 @@ internal class ResolverTests :PopKornTest() {
         testInterfaceWithoutResolver(null)      // Default Environment
     }
 
-    private fun testInterfaceWithoutResolver(environment:String?) {
+    private fun testInterfaceWithoutResolver(environment: String?) {
         val factory = Injector(true)
         assertFails { factory.inject(TestInterfaceNoResolver::class, environment) }
 

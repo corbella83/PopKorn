@@ -16,12 +16,12 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.1.0
  */
-internal class MappingGenerator(private val directory: File, private val filer:Filer) {
+internal class MappingGenerator(private val directory: File, private val filer: Filer) {
     private val moduleName = getModuleName()
 
     // Writes a mapping and the resource that points it
-    fun write(values : HashMap<TypeElement, String>, classSuffix:String, resMapping:String) : Boolean {
-        if (values.size==0) return false
+    fun write(values: HashMap<TypeElement, String>, classSuffix: String, resMapping: String): Boolean {
+        if (values.size == 0) return false
 
         val filePackage = "cc.popkorn.mapping.$moduleName${classSuffix}Mapping"
         val code = getCode(values)
@@ -37,8 +37,7 @@ internal class MappingGenerator(private val directory: File, private val filer:F
     }
 
 
-
-    private fun getCode(values : HashMap<TypeElement, String>):CodeBlock {
+    private fun getCode(values: HashMap<TypeElement, String>): CodeBlock {
         val function = CodeBlock.builder()
         function.add("return when(original){\n")
         values.forEach { (type, resolver) ->
@@ -49,7 +48,7 @@ internal class MappingGenerator(private val directory: File, private val filer:F
         return function.build()
     }
 
-    private fun getFile(filePackage:String, creationCode:CodeBlock) : FileSpec {
+    private fun getFile(filePackage: String, creationCode: CodeBlock): FileSpec {
         val producerOfAny = WildcardTypeName.producerOf(Any::class)
         val create = FunSpec.builder("find")
             .addParameter("original", KClass::class.asClassName().parameterizedBy(producerOfAny))
@@ -72,10 +71,10 @@ internal class MappingGenerator(private val directory: File, private val filer:F
     }
 
 
-    private fun getModuleName() : String{
+    private fun getModuleName(): String {
         val split = directory.absolutePath.split("/")
         split.forEachIndexed { index, s ->
-            if (s == "build") return split[index-1].replace(Regex("[^a-zA-Z0-9]"), "").capitalize()
+            if (s == "build") return split[index - 1].replace(Regex("[^a-zA-Z0-9]"), "").capitalize()
         }
         return "Unknown"
     }

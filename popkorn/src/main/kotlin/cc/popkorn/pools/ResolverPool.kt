@@ -1,4 +1,5 @@
 @file:Suppress("UNCHECKED_CAST")
+
 package cc.popkorn.pools
 
 import cc.popkorn.resolvers.Resolver
@@ -12,7 +13,7 @@ import kotlin.reflect.KClass
  */
 interface ResolverPool {
 
-    fun <T : Any> isPresent(clazz: KClass<T>) : Boolean
+    fun <T : Any> isPresent(clazz: KClass<T>): Boolean
 
     fun <T : Any> create(clazz: KClass<T>): Resolver<T>
 

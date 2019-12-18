@@ -8,4 +8,4 @@ import javax.lang.model.element.TypeElement
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal data class DefaultImplementation(val element: TypeElement, val environments:List<String?>)
+internal data class DefaultImplementation(val element: TypeElement, val environments: List<String?>)

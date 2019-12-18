@@ -10,6 +10,6 @@ import kotlin.reflect.KClass
  */
 interface Mapping {
 
-     fun find(original:KClass<out Any>) : Any?
+    fun find(original: KClass<out Any>): Any?
 
 }

@@ -1,6 +1,9 @@
 package cc.popkorn.compiler.generators
 
-import cc.popkorn.*
+import cc.popkorn.PROVIDER_MAPPINGS
+import cc.popkorn.PROVIDER_SUFFIX
+import cc.popkorn.RESOLVER_MAPPINGS
+import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.annotations.Exclude
 import cc.popkorn.annotations.ForEnvironments
 import cc.popkorn.annotations.Injectable
@@ -8,10 +11,9 @@ import cc.popkorn.annotations.InjectableProvider
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.*
-import cc.popkorn.compiler.utils.Logger
 import cc.popkorn.core.Propagation
 import java.io.File
-import java.util.ArrayList
+import java.util.*
 import javax.annotation.processing.Filer
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.TypeElement
@@ -30,17 +32,17 @@ import javax.tools.StandardLocation
  * @author Pau Corbella
  * @since 1.1.0
  */
-internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer, private val types: Types, private val elements: Elements, private val logger:Logger) {
+internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer, private val types: Types, private val elements: Elements, private val logger: Logger) {
     private val providerGenerator = ProviderGenerator(generatedSourcesDir, types)
     private val resolverGenerator = ResolverGenerator(generatedSourcesDir)
     private val mappingGenerator = MappingGenerator(generatedSourcesDir, filer)
 
-    private val resolverMappings = hashMapOf<TypeElement,String>()
-    private val providerMappings = hashMapOf<TypeElement,String>()
+    private val resolverMappings = hashMapOf<TypeElement, String>()
+    private val providerMappings = hashMapOf<TypeElement, String>()
 
 
     // At the beginning we don't need to do anything
-    fun init(){
+    fun init() {
         logger.message("PopKorn Start Compiling")
     }
 
@@ -60,7 +62,7 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
     // At the end, we save the mappings and proguard
-    fun end(){
+    fun end() {
         logger.message("Generating Mappings")
         mappingGenerator.write(resolverMappings, RESOLVER_SUFFIX, RESOLVER_MAPPINGS)
         mappingGenerator.write(providerMappings, PROVIDER_SUFFIX, PROVIDER_MAPPINGS)
@@ -72,14 +74,13 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
 
-
-    private fun RoundEnvironment.getDirectInjectableClasses() : List<TypeElement>{
+    private fun RoundEnvironment.getDirectInjectableClasses(): List<TypeElement> {
         val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
         injectableElements.forEach { it.checkConstruction() }
         return injectableElements.toList()
     }
 
-    private fun RoundEnvironment.getProvidedInjectableClasses() : Map<TypeElement, TypeElement>{
+    private fun RoundEnvironment.getProvidedInjectableClasses(): Map<TypeElement, TypeElement> {
         return ElementFilter.typesIn(getElementsAnnotatedWith(InjectableProvider::class.java))
             .groupBy { element ->
                 element.checkConstruction()
@@ -89,15 +90,14 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
 
-
     // Gets the injectable element from an InjectableProvider
-    private fun resolveType(element:TypeElement) : TypeElement{
+    private fun resolveType(element: TypeElement): TypeElement {
         return element.getMethods()
-            .also { if (it.isEmpty()) throw PopKornException("$element must contain at least one public method")  }
+            .also { if (it.isEmpty()) throw PopKornException("$element must contain at least one public method") }
             .mapNotNull {
-                if (it.returnType is PrimitiveType){
+                if (it.returnType is PrimitiveType) {
                     types.boxedClass(it.returnType as PrimitiveType)
-                }else{
+                } else {
                     types.asElement(it.returnType) as? TypeElement
                 }
             }
@@ -109,7 +109,7 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
 
     // Gets a mapping of alias-elements defined by Injectable and InjectableProvider annotations
-    private fun getAliasMapper(direct: List<TypeElement>, provided:Map<TypeElement, TypeElement>) : Map<String, TypeMirror>{
+    private fun getAliasMapper(direct: List<TypeElement>, provided: Map<TypeElement, TypeElement>): Map<String, TypeMirror> {
         val map = hashMapOf<String, ArrayList<TypeElement>>()
 
         direct.forEach { element ->
@@ -132,7 +132,7 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
 
 
     // Gets a list of all supertypes (of Injectable and InjectableProvider) that will also be injectable
-    private fun getInterfaces(direct: List<TypeElement>, provided:Map<TypeElement, TypeElement>) : Map<TypeElement, List<DefaultImplementation>>{
+    private fun getInterfaces(direct: List<TypeElement>, provided: Map<TypeElement, TypeElement>): Map<TypeElement, List<DefaultImplementation>> {
         val map = hashMapOf<TypeElement, ArrayList<DefaultImplementation>>()
         direct.forEach {
             val environments = it.get(ForEnvironments::class).toList()
@@ -152,9 +152,8 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
 
-
     // Checks that a TypeElement can be constructed
-    private fun TypeElement.checkConstruction(){
+    private fun TypeElement.checkConstruction() {
         checkVisibility()
         if (isInterface()) throw PopKornException("$this can not be an interface. Only classes are allowed")
         if (isAbstract()) throw PopKornException("$this can not be an abstract class")
@@ -162,16 +161,15 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
     // Checks that a TypeElement is visible to be used
-    private fun TypeElement.checkVisibility(){
+    private fun TypeElement.checkVisibility() {
         if (isInner()) throw PopKornException("$this can not be an inner class")
         if (isPrivate()) throw PopKornException("$this cannot be a private class")
     }
 
 
-
     // Gets a list of all interfaces of an Element (taking into account the Propagation and Exclusion)
-    private fun TypeElement.getHierarchyElements(propagation: Propagation, exclusions:List<TypeMirror>) : List<TypeElement>{
-        val parents = when(propagation) {
+    private fun TypeElement.getHierarchyElements(propagation: Propagation, exclusions: List<TypeMirror>): List<TypeElement> {
+        val parents = when (propagation) {
             Propagation.NONE -> arrayListOf()
             Propagation.DIRECT -> interfaces
             Propagation.ALL -> getAllInterfaces()
@@ -189,7 +187,7 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
     // Gets a list of all interfaces of an element
-    private fun TypeElement.getAllInterfaces() : List<TypeMirror>{
+    private fun TypeElement.getAllInterfaces(): List<TypeMirror> {
         val s = this.superclass?.let { types.asElement(it) as? TypeElement }?.getAllInterfaces() ?: arrayListOf()
         val i = this.interfaces
         val iMore = this.interfaces.mapNotNull { types.asElement(it) as? TypeElement }.map { it.getAllInterfaces() }.flatten()
@@ -197,16 +195,15 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     }
 
 
-
     // Gets the exclusions of the element annotated with Injectable
     // Because the excluded class is not yet compiled, it will throw an exception
     // We can catch it and get the corresponding element
-    private fun Injectable?.getExclusions() : List<TypeMirror>{
+    private fun Injectable?.getExclusions(): List<TypeMirror> {
         return try {
             this?.exclude?.map { elements.getTypeElement(it.qualifiedName).asType() } ?: arrayListOf()
-        }catch(e: MirroredTypesException){
+        } catch (e: MirroredTypesException) {
             return e.typeMirrors
-        }catch(e: MirroredTypeException){
+        } catch (e: MirroredTypeException) {
             return listOf(e.typeMirror)
         }
     }
@@ -214,18 +211,18 @@ internal class MainGenerator(generatedSourcesDir:File, private val filer: Filer,
     // Gets the exclusions of the element annotated with InjectableProvider
     // Because the excluded class is not yet compiled, it will throw an exception
     // We can catch it and get the corresponding element
-    private fun InjectableProvider?.getExclusions() : List<TypeMirror>{
+    private fun InjectableProvider?.getExclusions(): List<TypeMirror> {
         return try {
             this?.exclude?.map { elements.getTypeElement(it.qualifiedName).asType() } ?: arrayListOf()
-        }catch(e: MirroredTypesException){
+        } catch (e: MirroredTypesException) {
             return e.typeMirrors
-        }catch(e: MirroredTypeException){
+        } catch (e: MirroredTypeException) {
             return listOf(e.typeMirror)
         }
     }
 
     // Gets a list of all environments defined in the annotation ForEnvironments
-    private fun ForEnvironments?.toList() : List<String?>{
+    private fun ForEnvironments?.toList(): List<String?> {
         val environments = ArrayList<String?>()
         this?.value?.takeIf { it.isNotEmpty() }?.also { environments.addAll(it) } ?: environments.add(null)
         return environments

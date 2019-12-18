@@ -1,4 +1,5 @@
 @file:Suppress("UNCHECKED_CAST")
+
 package cc.popkorn.core
 
 import cc.popkorn.PROVIDER_MAPPINGS
@@ -23,19 +24,19 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 class Injector : PopKornController {
-    private val resolverPool:ResolverPool
-    private val providerPool:ProviderPool
+    private val resolverPool: ResolverPool
+    private val providerPool: ProviderPool
 
     internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
 
 
-    constructor(resolverPool:ResolverPool, providerPool:ProviderPool){
+    constructor(resolverPool: ResolverPool, providerPool: ProviderPool) {
         this.resolverPool = resolverPool
         this.providerPool = providerPool
     }
 
-    constructor(debug : Boolean = false){
+    constructor(debug: Boolean = false) {
         this.resolverPool = loadMappings(RESOLVER_MAPPINGS, debug)
             .takeIf { it.isNotEmpty() }
             ?.let { ResourcesResolverPool(it) }
@@ -60,7 +61,7 @@ class Injector : PopKornController {
      * @param environment The specific environment to be injected to. If null,
      *                    will be injectable by all environments
      */
-    override fun <T:Any> addInjectable(instance : T, type:KClass<out T>, environment:String?){
+    override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
         if (type.isInterface()) {
@@ -70,7 +71,7 @@ class Injector : PopKornController {
                 ?: throw AlreadyInjectableException()
         }
 
-        instances.getOrPut(type, {RuntimeInstances<T>()})
+        instances.getOrPut(type, { RuntimeInstances<T>() })
             .let { it as? RuntimeInstances<T> }
             ?.apply { put(environment, instance) }
             ?: throw AlreadyInjectableException()
@@ -83,19 +84,19 @@ class Injector : PopKornController {
      * @param type Is the type of the instance you would like to remove
      * @param environment The environment the instance is attached to
      */
-    override fun <T:Any> removeInjectable(type : KClass<T>, environment:String?){
+    override fun <T : Any> removeInjectable(type: KClass<T>, environment: String?) {
         if (type.isInterface()) {
             resolvers[type]
                 ?.let { it as? RuntimeResolver }
                 ?.apply { remove(environment) }
-                ?.takeIf { it.size()==0 }
+                ?.takeIf { it.size() == 0 }
                 ?.also { resolvers.remove(type) }
         }
 
         instances[type]
             ?.let { it as? RuntimeInstances<T> }
             ?.apply { remove(environment) }
-            ?.takeIf { it.size()==0 }
+            ?.takeIf { it.size() == 0 }
             ?.also { instances.remove(type) }
     }
 
@@ -105,7 +106,7 @@ class Injector : PopKornController {
      * Notice that objects which already have an injected classes will maintain them until recreated.
      *
      */
-    override fun reset(){
+    override fun reset() {
         instances.clear()
         resolvers.clear()
     }
@@ -115,7 +116,7 @@ class Injector : PopKornController {
      * Frees memory that is not needed anymore
      *
      * */
-    override fun purge(){
+    override fun purge() {
         resolvers.filter { it.value is RuntimeResolver }
             .also {
                 resolvers.clear()
@@ -133,11 +134,11 @@ class Injector : PopKornController {
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
-    override fun <T:Any> inject(clazz: KClass<T>, environment:String?) : T {
-        return if (clazz.isInterface()){
+    override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
+        return if (clazz.isInterface()) {
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
-        }else{
+        } else {
             provide(clazz, environment)
         }
     }
@@ -150,30 +151,35 @@ class Injector : PopKornController {
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
-    override fun <T:Any> injectNullable(clazz: KClass<T>, environment:String?) : T? {
-        return try{ inject(clazz, environment) }
-               catch (e : ProviderNotFoundException){ null }
-               catch (e : ResolverNotFoundException){ null }
-               catch (e : InstanceNotFoundException){ null }
+    override fun <T : Any> injectNullable(clazz: KClass<T>, environment: String?): T? {
+        return try {
+            inject(clazz, environment)
+        } catch (e: ProviderNotFoundException) {
+            null
+        } catch (e: ResolverNotFoundException) {
+            null
+        } catch (e: InstanceNotFoundException) {
+            null
+        }
     }
 
 
-    private fun <T:Any> provide(clazz: KClass<T>, environment:String?) : T{
+    private fun <T : Any> provide(clazz: KClass<T>, environment: String?): T {
         return instances.getOrPut(clazz, { clazz.getInstances() })
             .get(environment) as T
     }
 
-    private fun <T: Any> KClass<T>.isInterface () =  this.java.isInterface
+    private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
 
 
-    private fun <T: Any> KClass<T>.getImplementation(environment:String?) : KClass<out T>{
+    private fun <T : Any> KClass<T>.getImplementation(environment: String?): KClass<out T> {
         return resolvers.getOrPut(this, { resolverPool.create(this) })
             .resolve(environment) as KClass<out T>
     }
 
-    private fun <T: Any> KClass<T>.getInstances() : Instances<T>{
+    private fun <T : Any> KClass<T>.getInstances(): Instances<T> {
         val provider = providerPool.create(this)
-        return when(provider.scope()){
+        return when (provider.scope()) {
             Scope.BY_APP -> PersistentInstances(this@Injector, provider)
             Scope.BY_USE -> VolatileInstances(this@Injector, provider)
             Scope.BY_NEW -> NewInstances(this@Injector, provider)
@@ -181,7 +187,7 @@ class Injector : PopKornController {
     }
 
 
-    private fun loadMappings(resource:String, debug : Boolean) : Set<Mapping>{
+    private fun loadMappings(resource: String, debug: Boolean): Set<Mapping> {
         val set = hashSetOf<Mapping>()
         javaClass.classLoader.getResources("META-INF/$resource")
             .iterator()
@@ -201,7 +207,7 @@ class Injector : PopKornController {
                             }
                         }
 
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     if (debug) println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
                 }
             }

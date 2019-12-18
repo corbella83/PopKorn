@@ -13,11 +13,11 @@ import java.lang.ref.WeakReference
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class VolatileInstances<T:Any>(private val injector: Injector, private val provider: Provider<T>): Instances<T> {
+internal class VolatileInstances<T : Any>(private val injector: Injector, private val provider: Provider<T>) : Instances<T> {
     private val instances = HashMap<String?, WeakReference<T>>()
 
     @Synchronized
-    override fun get(environment:String?) : T{
+    override fun get(environment: String?): T {
         return instances[environment]?.get() ?: provider.create(injector, environment).also { instances[environment] = WeakReference(it) }
     }
 
@@ -25,6 +25,6 @@ internal class VolatileInstances<T:Any>(private val injector: Injector, private 
     override fun size() = instances.size
 
     @Synchronized
-    fun purge() = instances.filter { it.value.get()==null }.forEach { instances.remove(it.key) }
+    fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }
 
 }

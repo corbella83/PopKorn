@@ -11,15 +11,15 @@ import javax.tools.Diagnostic
  */
 internal class Logger(private val messenger: Messager) {
 
-    fun message(text:String) {
+    fun message(text: String) {
         messenger.printMessage(Diagnostic.Kind.NOTE, text)
     }
 
-    fun warning(text:String) {
+    fun warning(text: String) {
         messenger.printMessage(Diagnostic.Kind.WARNING, text)
     }
 
-    fun error(text:String) {
+    fun error(text: String) {
         messenger.printMessage(Diagnostic.Kind.ERROR, text)
     }
 

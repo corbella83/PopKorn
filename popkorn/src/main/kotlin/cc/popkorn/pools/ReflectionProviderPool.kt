@@ -1,10 +1,11 @@
 @file:Suppress("UNCHECKED_CAST")
+
 package cc.popkorn.pools
 
 import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
-import cc.popkorn.providers.Provider
 import cc.popkorn.core.exceptions.ProviderNotFoundException
+import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 
 /**
@@ -16,7 +17,7 @@ import kotlin.reflect.KClass
 internal class ReflectionProviderPool : ProviderPool {
 
     override fun <T : Any> isPresent(clazz: KClass<T>): Boolean {
-        return findClass(clazz)!=null
+        return findClass(clazz) != null
     }
 
     override fun <T : Any> create(clazz: KClass<T>): Provider<T> {
@@ -30,7 +31,7 @@ internal class ReflectionProviderPool : ProviderPool {
         return try {
             val name = "${original.java.name}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
             Class.forName(name)
-        } catch (e:Throwable){
+        } catch (e: Throwable) {
             null
         }
     }

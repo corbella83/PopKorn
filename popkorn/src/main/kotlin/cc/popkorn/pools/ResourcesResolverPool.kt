@@ -1,9 +1,10 @@
 @file:Suppress("UNCHECKED_CAST")
+
 package cc.popkorn.pools
 
-import cc.popkorn.resolvers.Resolver
 import cc.popkorn.core.exceptions.ResolverNotFoundException
 import cc.popkorn.mapping.Mapping
+import cc.popkorn.resolvers.Resolver
 import kotlin.reflect.KClass
 
 /**
@@ -12,9 +13,9 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.3.0
  */
-internal class ResourcesResolverPool(private val mappings:Set<Mapping>) : ResolverPool {
+internal class ResourcesResolverPool(private val mappings: Set<Mapping>) : ResolverPool {
 
-    override fun <T : Any> isPresent(clazz: KClass<T>) =  findResolver(clazz)!=null
+    override fun <T : Any> isPresent(clazz: KClass<T>) = findResolver(clazz) != null
 
     override fun <T : Any> create(clazz: KClass<T>): Resolver<T> {
         return findResolver(clazz)
@@ -22,7 +23,7 @@ internal class ResourcesResolverPool(private val mappings:Set<Mapping>) : Resolv
             ?: throw ResolverNotFoundException(clazz)
     }
 
-    private fun findResolver(original:KClass<*>) : Any?{
+    private fun findResolver(original: KClass<*>): Any? {
         mappings.forEach { map ->
             map.find(original)?.also { return it }
         }

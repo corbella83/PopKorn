@@ -9,8 +9,8 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.0.0
  */
-interface Resolver<T:Any> {
+interface Resolver<T : Any> {
 
-    fun resolve(environment:String?) : KClass<out T>
+    fun resolve(environment: String?): KClass<out T>
 
 }
