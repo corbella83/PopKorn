@@ -11,20 +11,20 @@ import kotlin.reflect.KClass
  * @param annotation the annotation
  * @return Returns annotation @annotation of this Element
  */
-internal fun <A:Annotation> Element.get(annotation : KClass<A>) = getAnnotation(annotation.java) ?: null
+internal fun <A : Annotation> Element.get(annotation: KClass<A>) = getAnnotation(annotation.java) ?: null
 
 
 /**
  * @param annotation the annotation
  * @return Returns if this Element has the annotation @annotation
  */
-internal fun Element.has(annotation : KClass<out Annotation>) = getAnnotation(annotation.java)!=null
+internal fun Element.has(annotation: KClass<out Annotation>) = getAnnotation(annotation.java) != null
 
 
 /**
  * @return Returns if this Element is an interface
  */
-internal fun Element.isInterface() = kind==ElementKind.INTERFACE
+internal fun Element.isInterface() = kind == ElementKind.INTERFACE
 
 
 /**
@@ -48,7 +48,7 @@ internal fun Element.isPrivate() = !modifiers.contains(Modifier.PUBLIC) && !modi
 /**
  * @return Returns if this Element is an internal class
  */
-internal fun Element.isInternal() : Boolean{
+internal fun Element.isInternal(): Boolean {
     return get(Metadata::class)
         ?.run { KotlinClassHeader(kind, metadataVersion, bytecodeVersion, data1, data2, extraString, packageName, extraInt) }
         ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
@@ -57,24 +57,23 @@ internal fun Element.isInternal() : Boolean{
 }
 
 
-
 /**
  * @return Returns all public constructors of this Element
  */
-internal fun Element.getConstructors() : List<ExecutableElement>{
+internal fun Element.getConstructors(): List<ExecutableElement> {
     return enclosedElements
         .filter { it.kind == ElementKind.CONSTRUCTOR && it.modifiers.contains(Modifier.PUBLIC) }
-        .map{ it as ExecutableElement }
+        .map { it as ExecutableElement }
 }
 
 
 /**
  * @return Returns all public methods of this Element
  */
-internal fun Element.getMethods() : List<ExecutableElement>{
+internal fun Element.getMethods(): List<ExecutableElement> {
     return enclosedElements
         .filter { it.kind == ElementKind.METHOD && it.modifiers.contains(Modifier.PUBLIC) }
-        .map{ it as ExecutableElement }
+        .map { it as ExecutableElement }
 }
 
 

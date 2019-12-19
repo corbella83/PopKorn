@@ -27,6 +27,7 @@ fun main() {
     inject<R8i>("env2")
     inject<R8i>("env3")
     inject<R8i>("env4")
+    inject<R9i>()
 
     getPopKornController().removeInjectable(d10::class)
     getPopKornController().reset()

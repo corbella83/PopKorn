@@ -1,7 +1,7 @@
 package cc.popkorn.annotations
 
-import cc.popkorn.Propagation
-import cc.popkorn.Scope
+import cc.popkorn.core.Propagation
+import cc.popkorn.core.Scope
 import kotlin.reflect.KClass
 
 /**
@@ -18,8 +18,8 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.SOURCE)
 annotation class InjectableProvider(
     val scope: Scope = Scope.BY_APP,
-    val alias:String = "",
-    val propagation : Propagation = Propagation.NONE,
+    val alias: String = "",
+    val propagation: Propagation = Propagation.NONE,
     vararg val exclude: KClass<*> = []
 )
 

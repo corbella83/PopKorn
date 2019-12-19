@@ -6,4 +6,4 @@ package cc.popkorn.compiler
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class PopKornException(msg:String) : RuntimeException(msg)
+internal class PopKornException(msg: String) : RuntimeException(msg)

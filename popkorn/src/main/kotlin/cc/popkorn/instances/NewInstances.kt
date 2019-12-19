@@ -1,7 +1,7 @@
 package cc.popkorn.instances
 
 import cc.popkorn.core.Injector
-import cc.popkorn.core.Provider
+import cc.popkorn.providers.Provider
 
 
 /**
@@ -11,9 +11,9 @@ import cc.popkorn.core.Provider
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class NewInstances<T:Any>(private val injector: Injector, private val provider: Provider<T>): Instances<T> {
+internal class NewInstances<T : Any>(private val injector: Injector, private val provider: Provider<T>) : Instances<T> {
 
-    override fun get(environment:String?) : T{
+    override fun get(environment: String?): T {
         return provider.create(injector, environment)
     }
 

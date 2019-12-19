@@ -9,54 +9,54 @@ package cc.popkorn
  */
 class PopKornCompat {
 
-    companion object{
+    companion object {
 
         @JvmStatic
-        fun <T:Any> addInjectable(instance : T, type: Class<out T>, environment:String){
+        fun <T : Any> addInjectable(instance: T, type: Class<out T>, environment: String) {
             injector.addInjectable(instance, type.kotlin, environment)
         }
 
         @JvmStatic
-        fun <T:Any> addInjectable(instance : T, type: Class<out T>){
+        fun <T : Any> addInjectable(instance: T, type: Class<out T>) {
             injector.addInjectable(instance, type.kotlin)
         }
 
         @JvmStatic
-        fun <T:Any> addInjectable(instance : T, environment:String){
+        fun <T : Any> addInjectable(instance: T, environment: String) {
             injector.addInjectable(instance, environment = environment)
         }
 
         @JvmStatic
-        fun <T:Any> addInjectable(instance : T){
+        fun <T : Any> addInjectable(instance: T) {
             injector.addInjectable(instance)
         }
 
 
         @JvmStatic
-        fun <T:Any> removeInjectable(type: Class<T>, environment:String){
+        fun <T : Any> removeInjectable(type: Class<T>, environment: String) {
             injector.removeInjectable(type.kotlin, environment)
         }
 
         @JvmStatic
-        fun <T:Any> removeInjectable(type: Class<T>){
+        fun <T : Any> removeInjectable(type: Class<T>) {
             injector.removeInjectable(type.kotlin)
         }
 
         @JvmStatic
-        fun reset(){
+        fun reset() {
             injector.reset()
         }
 
         @JvmStatic
-        fun purge(){
+        fun purge() {
             injector.purge()
         }
 
         @JvmStatic
-        fun <T:Any> inject(clazz:Class<T>, environment:String) = injector.inject(clazz.kotlin, environment)
+        fun <T : Any> inject(clazz: Class<T>, environment: String) = injector.inject(clazz.kotlin, environment)
 
         @JvmStatic
-        fun <T:Any> inject(clazz:Class<T>) = injector.inject(clazz.kotlin, null)
+        fun <T : Any> inject(clazz: Class<T>) = injector.inject(clazz.kotlin, null)
 
     }
 

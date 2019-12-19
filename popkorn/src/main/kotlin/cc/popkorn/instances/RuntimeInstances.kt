@@ -1,5 +1,7 @@
 package cc.popkorn.instances
 
+import cc.popkorn.core.exceptions.InstanceNotFoundException
+
 /**
  * Instances implementation for manually scoped instances
  * Calling get() will return a previously added T::class. If not added or already removed,
@@ -8,16 +10,16 @@ package cc.popkorn.instances
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class ProvidedInstances<T:Any>: Instances<T> {
+internal class RuntimeInstances<T : Any> : Instances<T> {
     private val instances = HashMap<String?, T>()
 
-    override fun get(environment:String?) : T{
-        return instances[environment] ?: instances[null] ?: throw RuntimeException("Invalid instance. Seems like you didn't call addInjectable")
+    override fun get(environment: String?): T {
+        return instances[environment] ?: instances[null] ?: throw InstanceNotFoundException()
     }
 
-    fun put(environment:String?, data:T) = instances.put(environment, data)
+    fun put(environment: String?, data: T) = instances.put(environment, data)
 
-    fun remove(environment:String?){
+    fun remove(environment: String?) {
         instances.remove(environment)
     }
 

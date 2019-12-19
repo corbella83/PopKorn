@@ -16,7 +16,7 @@ internal abstract class PopKornTest {
     private val alphabet = StringBuffer("ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmptwxyz")
 
 
-    fun randEnvironment() : String{
+    fun randEnvironment(): String {
         val len = random.nextInt(10)
         val sb = StringBuilder(len)
         for (i in 0 until len) {
@@ -27,11 +27,11 @@ internal abstract class PopKornTest {
     }
 
 
-    fun Injector.assertNumberInstances(numberOfProviders:Int){
+    fun Injector.assertNumberInstances(numberOfProviders: Int) {
         assertEquals(instances.size, numberOfProviders)
     }
 
-    fun <T:Any> Injector.assertNumberInstancesForClass(clazz: KClass<T>, numberOfInstances:Int){
+    fun <T : Any> Injector.assertNumberInstancesForClass(clazz: KClass<T>, numberOfInstances: Int) {
         val size = instances[clazz]?.size() ?: 0
         assertEquals(size, numberOfInstances)
     }

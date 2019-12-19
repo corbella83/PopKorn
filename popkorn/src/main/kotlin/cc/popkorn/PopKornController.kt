@@ -10,12 +10,16 @@ import kotlin.reflect.KClass
  */
 interface PopKornController {
 
-     fun <T:Any> addInjectable(instance : T, type:KClass<out T> = instance::class, environment:String?=null)
+    fun <T : Any> addInjectable(instance: T, type: KClass<out T> = instance::class, environment: String? = null)
 
-     fun <T:Any> removeInjectable(type:KClass<T>, environment:String?=null)
+    fun <T : Any> removeInjectable(type: KClass<T>, environment: String? = null)
 
-     fun reset()
+    fun <T : Any> inject(clazz: KClass<T>, environment: String? = null): T
 
-     fun purge()
+    fun <T : Any> injectNullable(clazz: KClass<T>, environment: String? = null): T?
+
+    fun purge()
+
+    fun reset()
 
 }

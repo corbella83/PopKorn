@@ -1,4 +1,4 @@
-package cc.popkorn
+package cc.popkorn.core
 
 /**
  * Enum defining available Scopes in PopKorn

@@ -1,4 +1,4 @@
-package cc.popkorn
+package cc.popkorn.core
 
 /**
  * Enum defining how far will extend injection from an Injectable class

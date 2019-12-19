@@ -15,33 +15,33 @@ import org.junit.runners.JUnit4
 class DirectInjectableTests : PopKornCompilerTest() {
 
     @Test
-    fun testPrivateClassInjectable(){
+    fun testPrivateClassInjectable() {
         val test = JavaClass().modifiers("private").injectable()
         assertCompileFail(test)
     }
 
     @Test
-    fun testAbstractClassInjectable(){
+    fun testAbstractClassInjectable() {
         val test = JavaClass().modifiers("public", "abstract").injectable()
         assertCompileFail(test)
     }
 
     @Test
-    fun testInterfaceInjectable(){
+    fun testInterfaceInjectable() {
         val test = JavaClass("interface").modifiers("public").injectable()
         assertCompileFail(test)
     }
 
 
     @Test
-    fun testPublicClassInjectable(){
+    fun testPublicClassInjectable() {
         val test = JavaClass().modifiers("public").injectable()
         assertCompileSuccess(test)
     }
 
 
     @Test
-    fun testPublicClassWithAlias(){
+    fun testPublicClassWithAlias() {
         val test = JavaClass().modifiers("public").injectable(alias = "alias")
         assertCompileSuccess(test)
 
@@ -52,14 +52,14 @@ class DirectInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithEnvironments(){
+    fun testPublicClassWithEnvironments() {
         val test = JavaClass().modifiers("public").injectable().forEnvironments("1", "2")
         assertCompileSuccess(test)
     }
 
 
     @Test
-    fun testPublicClassWithSuper(){
+    fun testPublicClassWithSuper() {
         val test = JavaClass("interface").modifiers("public")
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         assertCompileSuccess(test, test2)
@@ -67,7 +67,7 @@ class DirectInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithSameSuper(){
+    fun testPublicClassWithSameSuper() {
         val test = JavaClass("interface").modifiers("public")
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         val test3 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
@@ -75,7 +75,7 @@ class DirectInjectableTests : PopKornCompilerTest() {
     }
 
     @Test
-    fun testPublicClassWithSameSuperWithoutDefaultEnvironments(){
+    fun testPublicClassWithSameSuperWithoutDefaultEnvironments() {
         val test = JavaClass("interface").modifiers("public")
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName()).forEnvironments("4")
         val test3 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName()).forEnvironments("4")
@@ -84,13 +84,12 @@ class DirectInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithSameSuperWithDifferentEnvironments(){
+    fun testPublicClassWithSameSuperWithDifferentEnvironments() {
         val test = JavaClass("interface").modifiers("public")
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName()).forEnvironments("4")
         val test3 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         assertCompileSuccess(test, test2, test3)
     }
-
 
 
 }

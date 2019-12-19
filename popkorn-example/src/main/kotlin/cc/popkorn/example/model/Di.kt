@@ -8,7 +8,7 @@ interface DiB
 
 interface DiC
 
-interface Wrapper{
+interface Wrapper {
     interface DiD
 }
 

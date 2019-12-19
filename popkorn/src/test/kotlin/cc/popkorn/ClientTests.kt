@@ -27,7 +27,7 @@ internal class ClientTests : PopKornTest() {
 
         val interfaceApp = inject<TestInterface>("app")
         val interfaceUse = inject<TestInterface>("use")
-        val interfaceNew = inject<TestInterface>("new")
+        val interfaceNew = getPopKornController().injectNullable(TestInterface::class, "new")
 
         assert(classApp === interfaceApp)
         assert(classUse === interfaceUse)

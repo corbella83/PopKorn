@@ -3,7 +3,7 @@ package cc.popkorn.compiler
 import cc.popkorn.annotations.Injectable
 import cc.popkorn.annotations.InjectableProvider
 import cc.popkorn.compiler.generators.MainGenerator
-import cc.popkorn.compiler.utils.*
+import cc.popkorn.compiler.utils.Logger
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment

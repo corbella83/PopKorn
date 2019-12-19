@@ -20,21 +20,21 @@ abstract class PopKornCompilerTest {
     private val generatedFolder = "$projectFolder/build/generated/source/kaptKotlin/test"
 
 
-    fun assertCompileSuccess(vararg classes: JavaClass){
+    fun assertCompileSuccess(vararg classes: JavaClass) {
         try {
             val compilation = compile(*classes)
             CompilationSubject.assertThat(compilation).succeeded()
             assertFiles(*classes)
-        }finally {
+        } finally {
             clean()
         }
     }
 
-    fun assertCompileFail(vararg classes: JavaClass){
-        try{
+    fun assertCompileFail(vararg classes: JavaClass) {
+        try {
             val compilation = compile(*classes)
             CompilationSubject.assertThat(compilation).failed()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             // assertion ok
         } finally {
             clean()
@@ -42,8 +42,7 @@ abstract class PopKornCompilerTest {
     }
 
 
-
-    private fun compile(vararg classes: JavaClass) : Compilation{
+    private fun compile(vararg classes: JavaClass): Compilation {
         val files = classes.map { JavaFileObjects.forSourceString(it.qualifiedName(), it.construct()) }
 
         return Compiler.javac()
@@ -52,12 +51,12 @@ abstract class PopKornCompilerTest {
             .compile(files)
     }
 
-    private fun clean(){
+    private fun clean() {
         File(generatedFolder).listFiles()?.forEach { FileUtils.forceDelete(it) }
     }
 
 
-    private fun assertFiles(vararg classes: JavaClass){
+    private fun assertFiles(vararg classes: JavaClass) {
         classes.mapNotNull { it.getGeneratedFile()?.replace(".", "/") }
             .map { File("$generatedFolder/$it.kt") }
             .takeIf { files -> files.all { it.exists() } }

@@ -12,14 +12,14 @@ Get it with Maven:
 <dependency>
   <groupId>cc.popkorn</groupId>
   <artifactId>popkorn</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-implementation 'cc.popkorn:popkorn:1.2.0'
-kapt 'cc.popkorn:popkorn-compiler:1.2.0'
+implementation 'cc.popkorn:popkorn:1.3.0'
+kapt 'cc.popkorn:popkorn-compiler:1.3.0'
 ```
 
 Working with Scopes and Environments
@@ -150,7 +150,7 @@ val hello = inject<Retrofit>() //This will inject a persistent instance of Retro
 
 
 
-Injecting Existing Instances
+Injecting Runtime Instances
 --------
 There is also a way to use custom injection. You can take control of when an instance is injectable and when is not:
 ```kotlin

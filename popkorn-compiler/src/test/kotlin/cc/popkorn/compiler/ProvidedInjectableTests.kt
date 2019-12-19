@@ -16,26 +16,26 @@ import org.junit.runners.JUnit4
 class ProvidedInjectableTests : PopKornCompilerTest() {
 
     @Test
-    fun testPrivateClassInjectable(){
+    fun testPrivateClassInjectable() {
         val test = JavaClass().modifiers("private").injectableProvider()
         assertCompileFail(test)
     }
 
     @Test
-    fun testAbstractClassInjectable(){
+    fun testAbstractClassInjectable() {
         val test = JavaClass().modifiers("public", "abstract").injectableProvider()
         assertCompileFail(test)
     }
 
     @Test
-    fun testInterfaceInjectable(){
+    fun testInterfaceInjectable() {
         val test = JavaClass("interface").modifiers("public").injectableProvider()
         assertCompileFail(test)
     }
 
 
     @Test
-    fun testPublicClassInjectable(){
+    fun testPublicClassInjectable() {
         val inject = JavaClass().modifiers("public")
         val test = JavaClass().modifiers("public")
             .injectableProvider()
@@ -46,7 +46,7 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithAlias(){
+    fun testPublicClassWithAlias() {
         val inject = JavaClass().modifiers("public")
         val test = JavaClass().modifiers("public")
             .injectableProvider(alias = "alias")
@@ -63,7 +63,7 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithEnvironments(){
+    fun testPublicClassWithEnvironments() {
         val inject = JavaClass().modifiers("public")
         val test = JavaClass().modifiers("public")
             .injectableProvider()
@@ -75,7 +75,7 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
 
     @Test
-    fun testPublicClassWithPrimitiveType(){
+    fun testPublicClassWithPrimitiveType() {
         val test = JavaClass().modifiers("public")
             .injectableProvider()
             .method(JavaMethod("testFun").modifiers("public").returns("int", "3"))
@@ -84,7 +84,7 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
     }
 
     @Test
-    fun testPublicClassWithDifferentReturnTypes(){
+    fun testPublicClassWithDifferentReturnTypes() {
         val type1 = JavaClass().modifiers("public")
         val type2 = JavaClass().modifiers("public")
 
@@ -94,6 +94,19 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
             .method(JavaMethod("testFun2").modifiers("public").returns(type2.qualifiedName()))
 
         assertCompileFail(type1, type2, test)
+
+    }
+
+    @Test
+    fun testPublicClassWithInterface() {
+        val inter = JavaClass("interface").modifiers("public")
+        val impl = JavaClass("class").modifiers("public").implements(inter.qualifiedName())
+
+        val test = JavaClass().modifiers("public")
+            .injectableProvider()
+            .method(JavaMethod("testFun").modifiers("public").returns(inter.qualifiedName(), "new ${impl.qualifiedName()}()"))
+
+        assertCompileSuccess(inter, impl, test)
 
     }
 

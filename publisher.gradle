@@ -8,75 +8,75 @@ properties.load(new FileInputStream(rootProject.file("local.properties")))
 def isReleaseBuild = !VERSION_NAME.endsWith("SNAPSHOT")
 
 allprojects {
-  ext."signing.keyId" = properties.getProperty("signing.keyId")
-  ext."signing.secretKeyRingFile" = properties.getProperty("signing.secretKeyRingFile")
-  ext."signing.password" = properties.getProperty("signing.password")
+    ext."signing.keyId" = properties.getProperty("signing.keyId")
+    ext."signing.secretKeyRingFile" = properties.getProperty("signing.secretKeyRingFile")
+    ext."signing.password" = properties.getProperty("signing.password")
 }
 
 task dokkaJar(type: Jar) {
-  from dokka
-  group = JavaBasePlugin.DOCUMENTATION_GROUP
-  archiveClassifier.set("javadoc")
+    from dokka
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    archiveClassifier.set("javadoc")
 }
 
 publishing {
 
-  repositories {
-    maven() {
-      def releasesRepoUrl = properties.getProperty("nexus.pro_url")
-      def snapshotsRepoUrl = properties.getProperty("nexus.snap_url")
-      url isReleaseBuild ? releasesRepoUrl : snapshotsRepoUrl
-      credentials {
-        username = properties.getProperty("nexus.username")
-        password = properties.getProperty("nexus.password")
-      }
+    repositories {
+        maven() {
+            def releasesRepoUrl = properties.getProperty("nexus.pro_url")
+            def snapshotsRepoUrl = properties.getProperty("nexus.snap_url")
+            url isReleaseBuild ? releasesRepoUrl : snapshotsRepoUrl
+            credentials {
+                username = properties.getProperty("nexus.username")
+                password = properties.getProperty("nexus.password")
+            }
+        }
     }
-  }
 
 
-  publications {
-    library(MavenPublication) {
-      groupId = GROUP
-      artifactId = POM_ARTIFACT_ID
-      version = VERSION_NAME
+    publications {
+        library(MavenPublication) {
+            groupId = GROUP
+            artifactId = POM_ARTIFACT_ID
+            version = VERSION_NAME
 
-      from components.kotlin
-      artifact kotlinSourcesJar
-      artifact dokkaJar
+            from components.kotlin
+            artifact kotlinSourcesJar
+            artifact dokkaJar
 
-      pom {
-        name = POM_NAME
-        description = POM_DESCRIPTION
-        url = POM_URL
-        licenses {
-          license {
-            name = POM_LICENCE_NAME
-            url = POM_LICENCE_URL
-            distribution = POM_LICENCE_DIST
-          }
+            pom {
+                name = POM_NAME
+                description = POM_DESCRIPTION
+                url = POM_URL
+                licenses {
+                    license {
+                        name = POM_LICENCE_NAME
+                        url = POM_LICENCE_URL
+                        distribution = POM_LICENCE_DIST
+                    }
+                }
+                developers {
+                    developer {
+                        id = POM_DEVELOPER_ID
+                        name = POM_DEVELOPER_NAME
+                    }
+                }
+                scm {
+                    connection = POM_SCM_CONNECTION
+                    developerConnection = POM_SCM_DEV_CONNECTION
+                    url = POM_SCM_URL
+                }
+            }
         }
-        developers {
-          developer {
-            id = POM_DEVELOPER_ID
-            name = POM_DEVELOPER_NAME
-          }
-        }
-        scm {
-          connection = POM_SCM_CONNECTION
-          developerConnection = POM_SCM_DEV_CONNECTION
-          url = POM_SCM_URL
-        }
-      }
     }
-  }
 }
 
 
 tasks.withType(Sign) {
-  onlyIf { isReleaseBuild }
+    onlyIf { isReleaseBuild }
 }
 
 signing {
-  sign publishing.publications.library
+    sign publishing.publications.library
 }
 
