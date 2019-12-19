@@ -12,14 +12,14 @@ Get it with Maven:
 <dependency>
   <groupId>cc.popkorn</groupId>
   <artifactId>popkorn</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
 or Gradle:
 ```groovy
-implementation 'cc.popkorn:popkorn:1.3.0'
-kapt 'cc.popkorn:popkorn-compiler:1.3.0'
+implementation 'cc.popkorn:popkorn:1.4.0'
+kapt 'cc.popkorn:popkorn-compiler:1.4.0'
 ```
 
 Working with Scopes and Environments

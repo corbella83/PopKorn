@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.4.0 *(XXXXXX)*
+-----------------------------
+
+
 Version 1.3.0 *(2019-12-19)*
 -----------------------------
 * New: Can compile Injectable classes without default environment
