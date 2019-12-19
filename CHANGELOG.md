@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 1.3.0 *(XXXXXX)*
+Version 1.3.0 *(2019-12-19)*
 -----------------------------
 * New: Can compile Injectable classes without default environment
 * Fix: String, Bool (boolean), Int (int), etc.. were still giving compilation error when used in constructors/methods
