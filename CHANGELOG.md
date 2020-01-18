@@ -3,7 +3,7 @@ Change Log
 
 Version 1.4.0 *(XXXXXX)*
 -----------------------------
-
+* New: Can get the injector at any injectable constructor/method 
 
 Version 1.3.0 *(2019-12-19)*
 -----------------------------

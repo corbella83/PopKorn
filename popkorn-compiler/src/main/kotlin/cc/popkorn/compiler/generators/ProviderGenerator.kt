@@ -66,7 +66,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             it.singleOrNull()
         }
 
-        val others = elements.toMutableMap().apply { if (default!=null) remove(default) }
+        val others = elements.toMutableMap().apply { if (default != null) remove(default) }
             .apply {
                 val all = values.map { it.toList() }.flatten()
                 if (all.size != all.distinct().size) throw PopKornException("$caller has more than one constructor/method for the same environment")
@@ -93,7 +93,9 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
         val params = parameters.map { param ->
-            if (param.asType().asTypeName() == Environment::class.asTypeName()) {
+            if (param.asType().asTypeName() == Injector::class.asTypeName()) {
+                return@map "injector"
+            } else if (param.asType().asTypeName() == Environment::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}(environment)"
             } else if (param.asType().asTypeName() == Empty::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}()"
