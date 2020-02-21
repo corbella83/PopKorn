@@ -3,7 +3,7 @@ buildscript {
     ext.kotlinpoet_version = '1.5.0'
     ext.kotlinx_metadata_version = '0.1.0'
     ext.apache_version = '2.6'
-    ext.dokka_version = '0.10.0'
+    ext.dokka_version = '0.10.1'
     ext.compile_test_version = '0.18'
 
 
