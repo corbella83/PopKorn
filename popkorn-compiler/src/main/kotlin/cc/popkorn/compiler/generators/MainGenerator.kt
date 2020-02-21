@@ -171,27 +171,30 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
     private fun TypeElement.getHierarchyElements(propagation: Propagation, exclusions: List<TypeMirror>): List<TypeElement> {
         val parents = when (propagation) {
             Propagation.NONE -> arrayListOf()
-            Propagation.DIRECT -> interfaces
+            Propagation.DIRECT -> interfaces + this.superclass?.takeIf { it.isAbstract() }
             Propagation.ALL -> getAllInterfaces()
         }
 
         return parents
+            .asSequence()
+            .filterNotNull()
             .toSet()
             .filterNot { type -> exclusions.any { types.isSameType(type, it) } }
             .mapNotNull { types.asElement(it) as? TypeElement }
             .filterNot { it.has(Exclude::class) }
             .let {
-                if (this.isInterface()) it + this
+                if (this.isInterface() || this.isAbstract()) it + this
                 else it
             }
     }
 
     // Gets a list of all interfaces of an element
-    private fun TypeElement.getAllInterfaces(): List<TypeMirror> {
+    private fun TypeElement.getAllInterfaces(): List<TypeMirror?> {
+        val parent = this.superclass?.takeIf { it.isAbstract() }
         val s = this.superclass?.let { types.asElement(it) as? TypeElement }?.getAllInterfaces() ?: arrayListOf()
         val i = this.interfaces
         val iMore = this.interfaces.mapNotNull { types.asElement(it) as? TypeElement }.map { it.getAllInterfaces() }.flatten()
-        return s + i + iMore
+        return s + i + iMore + parent
     }
 
 
@@ -226,6 +229,13 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         val environments = ArrayList<String?>()
         this?.value?.takeIf { it.isNotEmpty() }?.also { environments.addAll(it) } ?: environments.add(null)
         return environments
+    }
+
+
+    // Checks if a TypeMirror is an abstract class
+    private fun TypeMirror.isAbstract(): Boolean {
+        val element = types.asElement(this) as? TypeElement
+        return element?.isAbstract() ?: false
     }
 
 

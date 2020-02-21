@@ -224,14 +224,14 @@ internal class RuntimeTests : PopKornTest() {
         injector.addInjectable(C2(), I2::class, "4")
         injector.addInjectable(C2(), I1::class, "6")
 
-        assertEquals(4, injector.instances.size)
-        assertEquals(2, injector.resolvers.size)
+        assertEquals(4, injector.instances.size) // One for every different environment, because if set again, it replaces it
+        assertEquals(3, injector.resolvers.size) // One for every interface or abstract
 
         injector.purge()
 
         //Purge must not affect to runtime injections
         assertEquals(4, injector.instances.size)
-        assertEquals(2, injector.resolvers.size)
+        assertEquals(3, injector.resolvers.size)
     }
 
 
@@ -246,8 +246,8 @@ internal class RuntimeTests : PopKornTest() {
         injector.addInjectable(C2(), I2::class, "4")
         injector.addInjectable(C2(), I1::class, "6")
 
-        assertEquals(4, injector.instances.size)
-        assertEquals(2, injector.resolvers.size)
+        assertEquals(4, injector.instances.size) // One for every different environment, because if set again, it replaces it
+        assertEquals(3, injector.resolvers.size) // One for every interface or abstract
 
         injector.reset()
 

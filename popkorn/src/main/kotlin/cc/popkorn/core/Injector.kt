@@ -11,6 +11,7 @@ import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.*
 import cc.popkorn.resolvers.Resolver
 import cc.popkorn.resolvers.RuntimeResolver
+import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
 
@@ -61,7 +62,7 @@ class Injector : PopKornController {
     override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
-        if (type.isInterface()) {
+        if (type.isInterface() || type.isAbstract()) {
             resolvers.getOrPut(type, { RuntimeResolver() })
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
@@ -82,7 +83,7 @@ class Injector : PopKornController {
      * @param environment The environment the instance is attached to
      */
     override fun <T : Any> removeInjectable(type: KClass<T>, environment: String?) {
-        if (type.isInterface()) {
+        if (type.isInterface() || type.isAbstract()) {
             resolvers[type]
                 ?.let { it as? RuntimeResolver }
                 ?.apply { remove(environment) }
@@ -132,7 +133,7 @@ class Injector : PopKornController {
      * @param environment The environment in which you would like to retrieve the object
      */
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return if (clazz.isInterface()) {
+        return if (clazz.isInterface() || clazz.isAbstract()) {
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
         } else {
@@ -173,6 +174,9 @@ class Injector : PopKornController {
     }
 
     private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
+
+    // Must check it's primitiveness because java considers them abstract (int, long, float, double, etc)
+    private fun <T : Any> KClass<T>.isAbstract() = (!this.java.isPrimitive && Modifier.isAbstract(this.java.modifiers))
 
 
     private fun <T : Any> KClass<T>.getImplementation(environment: String?): KClass<out T> {

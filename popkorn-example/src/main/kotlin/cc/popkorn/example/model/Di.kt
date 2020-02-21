@@ -12,6 +12,17 @@ interface Wrapper {
     interface DiD
 }
 
+interface DiE
+
+interface DiF
 
 @Exclude
 interface DiG
+
+
+abstract class DaH : DiE
+
+abstract class DaI : DaH(), DiF
+
+abstract class DaJ
+
