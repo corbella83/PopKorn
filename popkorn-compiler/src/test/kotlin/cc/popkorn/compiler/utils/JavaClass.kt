@@ -1,9 +1,9 @@
 package cc.popkorn.compiler.utils
 
-import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.core.Scope
+import cc.popkorn.normalizeQualifiedName
 
 /**
  * Class to create a java class by code
@@ -26,7 +26,7 @@ class JavaClass(private val type: String = "class", private val name: String = "
         return if (type == "class" && annotations.any { it.startsWith("@Injectable(") }) {
             "${qualifiedName()}_$PROVIDER_SUFFIX"
         } else if (type == "class" && annotations.any { it.startsWith("@InjectableProvider(") }) {
-            return methods.mapNotNull { it.getReturnType() }.firstOrNull()?.let { "${it}_$PROVIDER_SUFFIX" }?.replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+            return methods.mapNotNull { it.getReturnType() }.firstOrNull()?.let { "${normalizeQualifiedName(it)}_$PROVIDER_SUFFIX" }
         } else if (type == "interface") {
             "${qualifiedName()}_$RESOLVER_SUFFIX"
         } else {

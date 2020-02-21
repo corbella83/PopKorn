@@ -1,6 +1,5 @@
 package cc.popkorn.compiler.generators
 
-import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
@@ -11,6 +10,7 @@ import cc.popkorn.core.exceptions.DefaultConstructorNotFoundException
 import cc.popkorn.core.exceptions.DefaultMethodNotFoundException
 import cc.popkorn.core.model.Empty
 import cc.popkorn.core.model.Environment
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.providers.Provider
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -129,7 +129,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
 
     private fun TypeElement.getProviderFile(property: PropertySpec?, creationCode: CodeBlock, scope: Scope): FileSpec {
-        val filePackage = "${qualifiedName}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+        val filePackage = "${normalizeQualifiedName(qualifiedName.toString())}_$PROVIDER_SUFFIX"
 
         val className = supportClassName()
 

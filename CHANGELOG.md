@@ -3,6 +3,7 @@ Change Log
 
 Version 1.4.0 *(XXXXXX)*
 -----------------------------
+* Fix: Add support to all prohibited packages(java.*, javax.*), not only java.lang.*
 * New: Can get the injector at any injectable constructor/method 
 
 Version 1.3.0 *(2019-12-19)*
