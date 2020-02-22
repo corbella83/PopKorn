@@ -4,6 +4,7 @@ package cc.popkorn.pools
 
 import cc.popkorn.RESOLVER_SUFFIX
 import cc.popkorn.core.exceptions.ResolverNotFoundException
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.resolvers.Resolver
 import kotlin.reflect.KClass
 
@@ -28,7 +29,7 @@ internal class ReflectionResolverPool : ResolverPool {
 
     private fun findClass(original: KClass<*>): Class<*>? {
         return try {
-            Class.forName("${original.getGenerationName()}_$RESOLVER_SUFFIX")
+            Class.forName("${normalizeQualifiedName(original.getGenerationName())}_$RESOLVER_SUFFIX")
         } catch (e: Throwable) {
             null
         }
