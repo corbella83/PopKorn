@@ -141,6 +141,11 @@ class Injector : PopKornController {
         }
     }
 
+    /**
+     * Inline version of the above
+     */
+    inline fun <reified T : Any> inject(environment: String? = null) = this.inject(T::class, environment)
+
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
@@ -166,6 +171,11 @@ class Injector : PopKornController {
             null
         }
     }
+
+    /**
+     * Inline version of the above
+     */
+    inline fun <reified T : Any> injectNullable(environment: String? = null) = this.injectNullable(T::class, environment)
 
 
     private fun <T : Any> provide(clazz: KClass<T>, environment: String?): T {
