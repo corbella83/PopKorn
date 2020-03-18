@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+Version 1.5.0 *(2020-XX-XX)*
+-----------------------------
+
 Version 1.4.0 *(2020-03-18)*
 -----------------------------
 * New: Add support for abstract classes as if they where interfaces
