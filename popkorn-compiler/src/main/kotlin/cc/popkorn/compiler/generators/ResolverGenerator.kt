@@ -6,6 +6,7 @@ import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.isInternal
 import cc.popkorn.compiler.utils.splitPackage
 import cc.popkorn.core.exceptions.DefaultImplementationNotFoundException
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.resolvers.Resolver
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -82,7 +83,7 @@ internal class ResolverGenerator(private val directory: File) {
 
 
     private fun TypeElement.getResolverFile(creationCode: CodeBlock): FileSpec {
-        val filePackage = "${getGenerationName()}_$RESOLVER_SUFFIX"
+        val filePackage = "${normalizeQualifiedName(getGenerationName())}_$RESOLVER_SUFFIX"
 
         val producerOf = WildcardTypeName.producerOf(asClassName())
 

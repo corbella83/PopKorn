@@ -2,9 +2,9 @@
 
 package cc.popkorn.pools
 
-import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.core.exceptions.ProviderNotFoundException
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 
@@ -29,7 +29,7 @@ internal class ReflectionProviderPool : ProviderPool {
 
     private fun findClass(original: KClass<*>): Class<*>? {
         return try {
-            val name = "${original.java.name}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+            val name = "${normalizeQualifiedName(original.java.name)}_$PROVIDER_SUFFIX"
             Class.forName(name)
         } catch (e: Throwable) {
             null

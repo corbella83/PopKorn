@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.4.0 *(2020-03-18)*
+-----------------------------
+* New: Add support for abstract classes as if they where interfaces
+* Fix: Add support to all prohibited packages(java.*, javax.*), not only java.lang.*
+* New: Can get the injector at any injectable constructor/method 
+
 Version 1.3.0 *(2019-12-19)*
 -----------------------------
 * New: Can compile Injectable classes without default environment

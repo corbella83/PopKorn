@@ -1,6 +1,5 @@
 package cc.popkorn.compiler.generators
 
-import cc.popkorn.ALTERNATE_JAVA_LANG_PACKAGE
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
@@ -11,6 +10,7 @@ import cc.popkorn.core.exceptions.DefaultConstructorNotFoundException
 import cc.popkorn.core.exceptions.DefaultMethodNotFoundException
 import cc.popkorn.core.model.Empty
 import cc.popkorn.core.model.Environment
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.providers.Provider
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -66,7 +66,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             it.singleOrNull()
         }
 
-        val others = elements.toMutableMap().apply { if (default!=null) remove(default) }
+        val others = elements.toMutableMap().apply { if (default != null) remove(default) }
             .apply {
                 val all = values.map { it.toList() }.flatten()
                 if (all.size != all.distinct().size) throw PopKornException("$caller has more than one constructor/method for the same environment")
@@ -93,7 +93,9 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
         val params = parameters.map { param ->
-            if (param.asType().asTypeName() == Environment::class.asTypeName()) {
+            if (param.asType().asTypeName() == Injector::class.asTypeName()) {
+                return@map "injector"
+            } else if (param.asType().asTypeName() == Environment::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}(environment)"
             } else if (param.asType().asTypeName() == Empty::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}()"
@@ -127,7 +129,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
 
     private fun TypeElement.getProviderFile(property: PropertySpec?, creationCode: CodeBlock, scope: Scope): FileSpec {
-        val filePackage = "${qualifiedName}_$PROVIDER_SUFFIX".replace(ALTERNATE_JAVA_LANG_PACKAGE.first, ALTERNATE_JAVA_LANG_PACKAGE.second)
+        val filePackage = "${normalizeQualifiedName(qualifiedName.toString())}_$PROVIDER_SUFFIX"
 
         val className = supportClassName()
 
