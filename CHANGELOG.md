@@ -3,6 +3,7 @@ Change Log
 
 Version 1.5.0 *(2020-XX-XX)*
 -----------------------------
+* Maintenance: Increase library versions
 
 Version 1.4.0 *(2020-03-18)*
 -----------------------------
