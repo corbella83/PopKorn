@@ -1,7 +1,11 @@
 Change Log
 ==========
 
-Version 1.5.0 *(2020-XX-XX)*
+Version 1.6.0 *(2020-XX-XX)*
+-----------------------------
+
+
+Version 1.5.0 *(2020-06-03)*
 -----------------------------
 * Maintenance: Increase library versions
 
