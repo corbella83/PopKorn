@@ -41,7 +41,7 @@ publishing {
             version = VERSION_NAME
 
             from components.kotlin
-            artifact kotlinSourcesJar
+            //artifact kotlinSourcesJar
             artifact dokkaJar
 
             pom {
@@ -70,7 +70,6 @@ publishing {
         }
     }
 }
-
 
 tasks.withType(Sign) {
     onlyIf { isReleaseBuild }

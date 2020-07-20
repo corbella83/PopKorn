@@ -1,7 +1,59 @@
-apply plugin: 'java-library'
+apply plugin: 'kotlin-multiplatform'
 apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'kotlin'
 
+
+kotlin {
+    jvm()
+    js {
+        browser { }
+        nodejs { }
+    }
+
+    // For ARM, should be changed to iosArm32 or iosArm64
+    // For Linux, should be changed to e.g. linuxX64
+    // For MacOS, should be changed to e.g. macosX64
+    // For Windows, should be changed to e.g. mingwX64
+    macosX64("native")
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
+            }
+        }
+        commonTest{
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
+            }
+        }
+        jsTest{
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test-js'
+            }
+        }
+        jvmMain {
+            dependsOn commonMain
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+            }
+        }
+        jvmTest{
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-test'
+            }
+        }
+        nativeMain {
+        }
+        nativeTest {
+        }
+    }
+
+}
 
 repositories {
     mavenCentral()
@@ -9,11 +61,4 @@ repositories {
 }
 
 
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kt_version"
-
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kt_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kt_version"
-}
-
-apply from: rootProject.file('publisher.gradle')
+//apply from: rootProject.file('publisher.gradle')
