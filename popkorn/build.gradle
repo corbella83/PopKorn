@@ -1,6 +1,8 @@
 apply plugin: 'kotlin-multiplatform'
 apply plugin: 'org.jetbrains.dokka'
 
+group = GROUP
+version = VERSION_NAME
 
 kotlin {
     jvm()
@@ -37,7 +39,6 @@ kotlin {
             }
         }
         jvmMain {
-            dependsOn commonMain
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib'
             }
@@ -61,4 +62,4 @@ repositories {
 }
 
 
-//apply from: rootProject.file('publisher.gradle')
+apply from: rootProject.file('publisher.gradle')

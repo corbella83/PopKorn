@@ -2,6 +2,8 @@ apply plugin: 'java-library'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'kotlin'
 
+group = GROUP
+version = VERSION_NAME
 
 repositories {
     mavenCentral()

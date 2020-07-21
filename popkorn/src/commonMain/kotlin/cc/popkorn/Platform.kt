@@ -10,7 +10,4 @@ expect class WeakReference<T : Any>(referred: T) {
 
 internal expect fun <T : Any> KClass<T>.getName(): String
 
-internal expect fun <T : Any> KClass<T>.isInterface(): Boolean
-
-internal expect fun <T : Any> KClass<T>.isAbstract(): Boolean
-
+internal expect fun <T : Any> KClass<T>.needsResolver(): Boolean

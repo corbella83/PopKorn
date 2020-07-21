@@ -17,16 +17,12 @@ actual class WeakReference<T : Any> actual constructor(referred: T) {
 internal actual fun <T : Any> KClass<T>.getName() = js.name
 
 
-internal actual fun <T : Any> KClass<T>.isInterface(): Boolean {
-    //return true
+//internal actual fun <T : Any> KClass<T>.needsResolver() = false
+
+
+internal actual fun <T : Any> KClass<T>.needsResolver() : Boolean {
     return js.name == "TestInterface" ||
             js.name == "RuntimeTests\$I1" ||
-            js.name == "RuntimeTests\$I2"
+            js.name == "RuntimeTests\$I2" ||
+            js.name == "RuntimeTests\$C1"
 }
-
-
-internal actual fun <T : Any> KClass<T>.isAbstract(): Boolean {
-    //return false
-    return js.name == "RuntimeTests\$C1"
-}
-

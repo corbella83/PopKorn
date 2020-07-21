@@ -5,8 +5,7 @@ package cc.popkorn.core
 import cc.popkorn.PopKornController
 import cc.popkorn.core.exceptions.*
 import cc.popkorn.instances.*
-import cc.popkorn.isAbstract
-import cc.popkorn.isInterface
+import cc.popkorn.needsResolver
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
 import cc.popkorn.resolvers.Resolver
@@ -44,7 +43,7 @@ class Injector(
     override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
-        if (type.isInterface() || type.isAbstract()) {
+        if (type.needsResolver()) {
             resolvers.getOrPut(type, { RuntimeResolver() })
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
@@ -65,7 +64,7 @@ class Injector(
      * @param environment The environment the instance is attached to
      */
     override fun <T : Any> removeInjectable(type: KClass<T>, environment: String?) {
-        if (type.isInterface() || type.isAbstract()) {
+        if (type.needsResolver()) {
             resolvers[type]
                 ?.let { it as? RuntimeResolver }
                 ?.apply { remove(environment) }
@@ -115,7 +114,7 @@ class Injector(
      * @param environment The environment in which you would like to retrieve the object
      */
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return if (clazz.isInterface() || clazz.isAbstract()) {
+        return if (clazz.needsResolver()) {
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
         } else {
