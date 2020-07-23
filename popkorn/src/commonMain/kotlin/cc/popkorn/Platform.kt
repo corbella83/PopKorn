@@ -1,5 +1,6 @@
 package cc.popkorn
 
+import cc.popkorn.pools.ResolverPool
 import kotlin.reflect.KClass
 
 /**
@@ -17,4 +18,4 @@ expect class WeakReference<T : Any>(referred: T) {
 
 internal expect fun <T : Any> KClass<T>.getName(): String
 
-internal expect fun <T : Any> KClass<T>.needsResolver(): Boolean
+internal expect fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool): Boolean

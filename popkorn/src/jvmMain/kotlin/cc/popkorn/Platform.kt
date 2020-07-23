@@ -1,5 +1,6 @@
 package cc.popkorn
 
+import cc.popkorn.pools.ResolverPool
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
@@ -16,7 +17,7 @@ actual typealias WeakReference<T> = java.lang.ref.WeakReference<T>
 internal actual fun <T : Any> KClass<T>.getName() = java.name
 
 
-internal actual fun <T : Any> KClass<T>.needsResolver() = isInterface() || isAbstract()
+internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool) = isInterface() || isAbstract()
 
 
 private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface

@@ -43,7 +43,7 @@ class Injector(
     override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
-        if (type.needsResolver()) {
+        if (type.needsResolver(resolverPool)) {
             resolvers.getOrPut(type, { RuntimeResolver() })
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
@@ -64,7 +64,7 @@ class Injector(
      * @param environment The environment the instance is attached to
      */
     override fun <T : Any> removeInjectable(type: KClass<T>, environment: String?) {
-        if (type.needsResolver()) {
+        if (type.needsResolver(resolverPool)) {
             resolvers[type]
                 ?.let { it as? RuntimeResolver }
                 ?.apply { remove(environment) }
@@ -114,7 +114,7 @@ class Injector(
      * @param environment The environment in which you would like to retrieve the object
      */
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return if (clazz.needsResolver()) {
+        return if (clazz.needsResolver(resolverPool)) {
             val impl = clazz.getImplementation(environment)
             provide(impl, environment)
         } else {

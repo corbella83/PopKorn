@@ -2,7 +2,10 @@ package cc.popkorn
 
 import cc.popkorn.core.Injector
 import cc.popkorn.data.*
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertNotNull
+import kotlin.test.assertNotSame
+import kotlin.test.assertSame
 
 /**
  * Class to test injectable classes end to end
