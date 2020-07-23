@@ -3,6 +3,12 @@ package cc.popkorn
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
+/**
+ * Implementation for JVM of the methods/classes that are Platform-dependent
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
 
 actual typealias WeakReference<T> = java.lang.ref.WeakReference<T>
 

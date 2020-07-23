@@ -3,6 +3,13 @@ package cc.popkorn
 import kotlin.reflect.KClass
 
 
+/**
+ * Implementation for Native of the methods/classes that are Platform-dependent
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
+
 actual typealias WeakReference<T> = kotlin.native.ref.WeakReference<T>
 
 

@@ -2,9 +2,7 @@ package cc.popkorn
 
 import cc.popkorn.core.Injector
 import cc.popkorn.data.*
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Class to test injectable classes end to end
@@ -29,9 +27,9 @@ internal class ClientTests : PopKornTest() {
         val interfaceUse = injector.inject<TestInterface>("use")
         val interfaceNew = injector.injectNullable(TestInterface::class, "new")
 
-        assertTrue(classApp === interfaceApp)
-        assertTrue(classUse === interfaceUse)
-        assertTrue(classNew !== interfaceNew)
+        assertSame(classApp, interfaceApp)
+        assertSame(classUse, interfaceUse)
+        assertNotSame(classNew, interfaceNew)
         assertNotNull(classManual)
 
         injector.removeInjectable(tmp::class)

@@ -7,7 +7,7 @@ interface TestInterface {
     val value: String?
 }
 
-class TestInterface_Resolver : Resolver<TestInterface> {
+class TestInterfaceResolver : Resolver<TestInterface> {
     override fun resolve(environment: String?): KClass<out TestInterface> {
         return when (environment) {
             "app" -> TestClassByApp::class

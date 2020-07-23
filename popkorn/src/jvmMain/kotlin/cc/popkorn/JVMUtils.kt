@@ -6,17 +6,24 @@ import cc.popkorn.pools.*
 import kotlin.reflect.KClass
 
 
+/**
+ * JVM-specific utilities class
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
+
 internal fun jvmResolverPool(): ResolverPool {
     return loadMappings(RESOLVER_MAPPINGS)
         .takeIf { it.isNotEmpty() }
-        ?.let { ResourcesResolverPool(it) }
+        ?.let { MappingResolverPool(it) }
         ?: ReflectionResolverPool()
 }
 
 internal fun jvmProviderPool(): ProviderPool {
     return loadMappings(PROVIDER_MAPPINGS)
         .takeIf { it.isNotEmpty() }
-        ?.let { ResourcesProviderPool(it) }
+        ?.let { MappingProviderPool(it) }
         ?: ReflectionProviderPool()
 }
 

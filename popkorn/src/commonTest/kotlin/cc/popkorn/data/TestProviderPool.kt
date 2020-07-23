@@ -4,6 +4,12 @@ import cc.popkorn.pools.ProviderPool
 import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 
+/**
+ * ResolverPool that define how test classes are created
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
 class TestProviderPool : ProviderPool {
 
     override fun <T : Any> isPresent(clazz: KClass<T>): Boolean {
@@ -17,9 +23,9 @@ class TestProviderPool : ProviderPool {
 
     override fun <T : Any> create(clazz: KClass<T>): Provider<T> {
         return when (clazz) {
-            TestClassByApp::class -> TestClassByApp_Provider() as Provider<T>
-            TestClassByNew::class -> TestClassByNew_Provider() as Provider<T>
-            TestClassByUse::class -> TestClassByUse_Provider() as Provider<T>
+            TestClassByApp::class -> TestClassByAppProvider() as Provider<T>
+            TestClassByNew::class -> TestClassByNewProvider() as Provider<T>
+            TestClassByUse::class -> TestClassByUseProvider() as Provider<T>
             else -> throw RuntimeException("Provider not found : $clazz")
         }
     }

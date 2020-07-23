@@ -6,7 +6,6 @@ def properties = new Properties()
 properties.load(new FileInputStream(rootProject.file("local.properties")))
 
 def isReleaseBuild = !VERSION_NAME.endsWith("SNAPSHOT")
-def isMultiplatform = true
 
 allprojects {
     ext."signing.keyId" = properties.getProperty("signing.keyId")
@@ -34,9 +33,8 @@ publishing {
         }
     }
 
-
     publications {
-        popkorn(MavenPublication) {
+        popkornCompiler(MavenPublication) {
             from components.kotlin
             //artifact kotlinSourcesJar
         }
@@ -75,9 +73,5 @@ publishing {
 
 tasks.withType(Sign) {
     onlyIf { isReleaseBuild }
-}
-
-signing {
-    sign publishing.publications.popkorn
 }
 

@@ -42,7 +42,7 @@ internal class ProviderTests : PopKornTest() {
 
         //If injected again, should return the same instance
         val inject2 = factory.inject(TestClassByApp::class, environment)
-        assertTrue(inject === inject2)
+        assertSame(inject, inject2)
 
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassByApp::class, 1)
@@ -63,7 +63,7 @@ internal class ProviderTests : PopKornTest() {
 
         //If injected again, should return the same instance
         val inject2 = factory.inject(TestClassByUse::class, environment)
-        assertTrue(inject === inject2)
+        assertSame(inject, inject2)
 
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassByUse::class, 1)
@@ -110,12 +110,12 @@ internal class ProviderTests : PopKornTest() {
 
         //If injected again, should return the same instance
         val inject2 = factory.inject(TestClassNoProvider::class, environment)
-        assertTrue(inject === inject2)
+        assertSame(inject, inject2)
 
         if (environment == null) { //If try to inject another environment, will return the default instance
             val secondaryEnvironment = randEnvironment()
             val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
-            assertTrue(inject === inject3)
+            assertSame(inject, inject3)
         } else { //If try to inject the default environment or any other, will fail
             val secondaryEnvironment = "${environment}_secondary"
             assertFails { factory.inject(TestClassNoProvider::class, null) }
@@ -151,7 +151,7 @@ internal class ProviderTests : PopKornTest() {
         //If any other environment must return the default one
         val secondaryEnvironment = "${environment}_secondary"
         val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
-        assertTrue(inject === inject3)
+        assertSame(inject, inject3)
 
         factory.removeInjectable(instanceDef::class)
         factory.assertNumberInstances(1)

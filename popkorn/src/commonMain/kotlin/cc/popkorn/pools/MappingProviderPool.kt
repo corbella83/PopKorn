@@ -8,12 +8,12 @@ import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 
 /**
- * Implementation to get providers via resource mappings
+ * Implementation to get providers via mappings
  *
  * @author Pau Corbella
  * @since 1.3.0
  */
-internal class ResourcesProviderPool(private val mappings: Set<Mapping>) :
+internal class MappingProviderPool(private val mappings: Set<Mapping>) :
     ProviderPool {
 
     override fun <T : Any> isPresent(clazz: KClass<T>) = findProvider(clazz) != null
