@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.3.0
  */
-internal class MappingResolverPool(private val mappings: Set<Mapping>) :
+class MappingResolverPool(private val mappings: Set<Mapping>) :
     ResolverPool {
 
     override fun <T : Any> isPresent(clazz: KClass<T>) = findResolver(clazz) != null

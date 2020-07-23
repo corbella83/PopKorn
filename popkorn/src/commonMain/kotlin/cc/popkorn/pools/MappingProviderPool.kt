@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.3.0
  */
-internal class MappingProviderPool(private val mappings: Set<Mapping>) :
+class MappingProviderPool(private val mappings: Set<Mapping>) :
     ProviderPool {
 
     override fun <T : Any> isPresent(clazz: KClass<T>) = findProvider(clazz) != null
