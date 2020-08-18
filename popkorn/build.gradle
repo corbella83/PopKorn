@@ -6,31 +6,26 @@ version = VERSION_NAME
 
 kotlin {
     jvm()
+    ios(){ // creates iosX64Main and iosArm64Main
+        compilations.main {
+            cinterops {
+                myInterop {
+                    defFile project.file("cinterop.def")
+                    packageName GROUP
+                }
+            }
+        }
+    }
     js {
         browser { }
         nodejs { }
     }
 
-    // For ARM, should be changed to iosArm32 or iosArm64
-    // For Linux, should be changed to e.g. linuxX64
-    // For MacOS, should be changed to e.g. macosX64
-    // For Windows, should be changed to e.g. mingwX64
-    iosX64("native")
 
     sourceSets {
-        commonMain {
-            dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib-common'
-            }
-        }
         commonTest{
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
-            }
-        }
-        jsMain {
-            dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib-js'
             }
         }
         jsTest{
@@ -38,21 +33,15 @@ kotlin {
                 implementation 'org.jetbrains.kotlin:kotlin-test-js'
             }
         }
-        jvmMain {
-            dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-            }
-        }
         jvmTest{
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test'
             }
         }
-        nativeMain {
-        }
-        nativeTest {
+        iosTest {
         }
     }
+
 
 }
 
