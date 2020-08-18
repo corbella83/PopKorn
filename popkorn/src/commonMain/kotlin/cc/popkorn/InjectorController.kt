@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.0.0
  */
-interface PopKornController {
+interface InjectorController {
 
     fun <T : Any> addInjectable(instance: T, type: KClass<out T> = instance::class, environment: String? = null)
 

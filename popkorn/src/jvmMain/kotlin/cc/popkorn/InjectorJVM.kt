@@ -1,9 +1,13 @@
 package cc.popkorn
 
-import cc.popkorn.core.Injector
 
-
-class InjectorJVM(private val injector: Injector) {
+/**
+ * Wrapper for Injector to be used from the JVM (pure java)
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
+class InjectorJVM(private val injector: InjectorController) {
 
     fun <T : Any> addInjectable(instance: T, type: Class<out T>, environment: String) = injector.addInjectable(instance, type.kotlin, environment)
 

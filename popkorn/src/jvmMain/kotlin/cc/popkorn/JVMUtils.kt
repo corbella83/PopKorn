@@ -13,6 +13,35 @@ import kotlin.reflect.KClass
  * @since 1.6.0
  */
 
+
+internal fun <T : Any> KClass<T>.getHierarchyName(): String {
+    val parent = java.enclosingClass
+    return if (parent == null) { //If the class its on its own
+        java.name
+    } else {
+        "${parent.name}_${java.simpleName}"
+    }
+}
+
+
+internal fun existClass(fullName: String): Boolean {
+    return try {
+        Class.forName(fullName)
+        true
+    } catch (e: Throwable) {
+        false
+    }
+}
+
+internal fun <T : Any> createClass(fullName: String): T? {
+    return try {
+        Class.forName(fullName).getDeclaredConstructor().newInstance() as T
+    } catch (e: Throwable) {
+        null
+    }
+}
+
+
 internal fun jvmResolverPool(): ResolverPool {
     return loadMappings(RESOLVER_MAPPINGS)
         .takeIf { it.isNotEmpty() }
@@ -40,7 +69,7 @@ private fun loadMappings(resource: String): Set<Mapping> {
                     .filter { it.isNotEmpty() }
                     .forEach {
                         try {
-                            val mapping = Class.forName(it).newInstance() as Mapping
+                            val mapping = Class.forName(it).getDeclaredConstructor().newInstance() as Mapping
                             set.add(mapping)
                             //println("Successfully mapping loaded : ${mapping.javaClass}")
                         } catch (e: Exception) {
@@ -55,30 +84,3 @@ private fun loadMappings(resource: String): Set<Mapping> {
     return set
 }
 
-
-internal fun <T : Any> KClass<T>.getHierarchyName(): String {
-    val parent = java.enclosingClass
-    return if (parent == null) { //If the class its on its own
-        java.name
-    } else {
-        "${parent.name}_${java.simpleName}"
-    }
-}
-
-
-internal fun existClass(fullName: String): Boolean {
-    return try {
-        Class.forName(fullName)
-        true
-    } catch (e: Throwable) {
-        false
-    }
-}
-
-internal fun <T : Any> createClass(fullName: String): T? {
-    return try {
-        Class.forName(fullName).newInstance() as T
-    } catch (e: Throwable) {
-        null
-    }
-}

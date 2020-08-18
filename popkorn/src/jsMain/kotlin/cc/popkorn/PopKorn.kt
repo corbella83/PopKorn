@@ -5,14 +5,14 @@ import kotlin.reflect.KClass
 
 
 /**
- * PopKorn DI (JVM)
+ * PopKorn DI (JS)
  *
  * @author Pau Corbella
- * @since 1.0.0
+ * @since 1.6.0
  */
 
 
-internal val injector = Injector(jvmResolverPool(), jvmProviderPool())
+internal val injector = Injector(jsResolverPool(), jsProviderPool())
 
 fun popKorn(): InjectorController = injector
 

@@ -2,7 +2,7 @@
 
 package cc.popkorn.core
 
-import cc.popkorn.PopKornController
+import cc.popkorn.InjectorController
 import cc.popkorn.core.exceptions.*
 import cc.popkorn.instances.*
 import cc.popkorn.needsResolver
@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 class Injector(
     private val resolverPool: ResolverPool,
     private val providerPool: ProviderPool
-) : PopKornController {
+) : InjectorController {
 
     internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()

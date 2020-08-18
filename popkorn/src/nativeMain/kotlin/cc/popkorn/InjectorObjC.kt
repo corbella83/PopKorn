@@ -4,7 +4,13 @@ import cc.popkorn.core.Injector
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCProtocol
 
-class InjectorObjC(private val injector: Injector) {
+/**
+ * Wrapper for Injector to be used from the ObjectiveC (pure objc)
+ *
+ * @author Pau Corbella
+ * @since 1.6.0
+ */
+class InjectorObjC(private val injector: InjectorController) {
 
     fun addInjectable(instance: Any, clazz: ObjCClass, environment: String) = injector.addInjectable(instance, clazz.kotlinClass(), environment)
 
