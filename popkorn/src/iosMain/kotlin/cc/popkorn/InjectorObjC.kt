@@ -1,8 +1,8 @@
 package cc.popkorn
 
-import cc.popkorn.core.Injector
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCProtocol
+import kotlinx.cinterop.getOriginalKotlinClass
 
 /**
  * Wrapper for Injector to be used from the ObjectiveC (pure objc)
@@ -51,4 +51,12 @@ class InjectorObjC(private val injector: InjectorController) {
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
+
+
+    //If it doesn't exist, creates a ReferenceClass
+
+    private fun ObjCClass.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
+
+    private fun ObjCProtocol.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
+
 }

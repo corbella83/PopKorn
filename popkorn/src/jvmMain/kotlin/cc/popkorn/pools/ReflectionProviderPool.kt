@@ -2,8 +2,10 @@
 
 package cc.popkorn.pools
 
-import cc.popkorn.*
+import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.core.exceptions.ProviderNotFoundException
+import cc.popkorn.getName
+import cc.popkorn.normalizeQualifiedName
 import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
 

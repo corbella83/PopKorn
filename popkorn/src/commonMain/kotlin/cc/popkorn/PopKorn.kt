@@ -1,18 +1,16 @@
 package cc.popkorn
 
-import cc.popkorn.core.Injector
 import kotlin.reflect.KClass
 
 
 /**
- * PopKorn DI (JVM)
+ * PopKorn DI
  *
  * @author Pau Corbella
- * @since 1.0.0
+ * @since 1.1.0
  */
 
-
-internal val injector = Injector(jvmResolverPool(), jvmProviderPool())
+internal val injector by lazy { createDefaultInjector() }
 
 fun popKorn(): InjectorController = injector
 

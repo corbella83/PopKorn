@@ -5,16 +5,17 @@ import kotlinx.cinterop.ObjCProtocol
 import platform.Foundation.NSStringFromClass
 import kotlin.reflect.KClass
 
+
 /**
- * Fake Kotlin Class to be used when adding platform dependency objects to PopKorn
+ * Fake KClass to hold platform-specific types
  *
  * @author Pau Corbella
  * @since 1.6.0
  */
-internal class MyObjCClass private constructor(
+internal class ReferenceClass<T : Any> private constructor(
     override val qualifiedName: String,
     override val simpleName: String
-) : KClass<Any> {
+) : KClass<T> {
 
     constructor(objClass: ObjCClass) : this(NSStringFromClass(objClass), NSStringFromClass(objClass))
 
@@ -22,7 +23,7 @@ internal class MyObjCClass private constructor(
     constructor(objProtocol: ObjCProtocol) : this(objProtocol.toString(), objProtocol.toString())
 
     override fun equals(other: Any?): Boolean {
-        return other is MyObjCClass && qualifiedName == other.qualifiedName
+        return other is ReferenceClass<*> && qualifiedName == other.qualifiedName
     }
 
     override fun hashCode() = qualifiedName.hashCode()
@@ -34,4 +35,3 @@ internal class MyObjCClass private constructor(
     override fun toString() = "class $qualifiedName"
 
 }
-
