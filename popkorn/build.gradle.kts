@@ -43,31 +43,19 @@ kotlin {
         nodejs {}
     }
 
-    ios {
-
-        compilations.getByName("main") {
-            val myInterop by cinterops.creating {
-                defFile("cinterop.def")
-                packageName(libraryGroup)
-            }
-        }
-
-    }
-
+    ios() // Creates iosX64("ios") and iosArm64("ios")
 
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-            }
-        }
-        val jvmMain by getting
-        val jvmTest by getting {
-            dependencies {
+                implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
         }
+        val jvmMain by getting
+        val jvmTest by getting
+
         val jsMain by getting
         val jsTest by getting {
             dependencies {
@@ -75,13 +63,12 @@ kotlin {
             }
         }
 
-
         val iosMain by getting {
             //dependsOn(cinterop)
+            //For now, iosMain doesn't depend on cinterop libraries.Only iosX64Main and iosArm64Main
+            // Anyway, it compiles well but the IDE doesn't recognize any c-object
         }
-
-        val iosX64Main by getting
-        val iosArm64Main by getting
+        val iosTest by getting
 
     }
 
