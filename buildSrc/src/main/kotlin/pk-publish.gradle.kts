@@ -18,7 +18,9 @@ publishing {
 
     publications.configureEach {
         if (this is MavenPublication) {
+            val publicName = "${rootProject.name} ${name.capitalize()}"
             pom {
+                name.set(publicName)
                 description.set("Powerful Dependency Injector for Kotlin")
                 url.set("https://github.com/corbella83/PopKorn")
                 licenses {

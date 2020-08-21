@@ -28,8 +28,7 @@ val sourcesJar by tasks.creating(Jar::class) {
 
 publishing {
     publications {
-        create<MavenPublication>("Compiler") {
-            artifactId = "popkorn-compiler"
+        create<MavenPublication>("compiler") {
             from(components["kotlin"])
             artifact(dokkaJar)
             artifact(sourcesJar)
