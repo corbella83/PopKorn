@@ -29,7 +29,6 @@ private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
 private fun <T : Any> KClass<T>.isAbstract() = (!this.java.isPrimitive && Modifier.isAbstract(this.java.modifiers))
 
 
-
 private fun jvmResolverPool(): ResolverPool {
     return loadMappings(RESOLVER_MAPPINGS)
         .takeIf { it.isNotEmpty() }

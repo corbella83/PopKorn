@@ -1,8 +1,8 @@
 package cc.popkorn.example
 
 import cc.popkorn.example.model.*
-import cc.popkorn.popKorn
 import cc.popkorn.inject
+import cc.popkorn.popKorn
 
 fun main() {
     val d10 = D10()
