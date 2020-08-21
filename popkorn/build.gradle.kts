@@ -1,5 +1,3 @@
-val libraryGroup: String by project
-
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
