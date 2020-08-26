@@ -45,7 +45,7 @@ private fun jvmProviderPool(): ProviderPool {
 
 
 private fun loadMappings(resource: String): Set<Mapping> {
-    val set = hashSetOf<Mapping>()
+    val set = HashSet<Mapping>()
     Injector::class.java.classLoader.getResources("META-INF/$resource")
         .iterator()
         .forEach { url ->

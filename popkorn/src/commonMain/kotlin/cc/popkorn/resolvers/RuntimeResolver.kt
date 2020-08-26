@@ -13,7 +13,7 @@ internal class RuntimeResolver : Resolver<Any> {
     private val resolvers = HashMap<String?, KClass<out Any>>()
 
     override fun resolve(environment: String?): KClass<out Any> {
-        return resolvers[environment] ?: resolvers[null] ?: throw InstanceNotFoundException()
+        return resolvers[environment] ?: (resolvers[null] ?: throw InstanceNotFoundException())
     }
 
     fun put(environment: String?, data: KClass<out Any>) = resolvers.put(environment, data)

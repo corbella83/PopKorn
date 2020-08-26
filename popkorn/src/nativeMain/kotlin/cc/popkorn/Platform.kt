@@ -3,7 +3,6 @@ package cc.popkorn
 import cc.popkorn.core.Injector
 import cc.popkorn.core.exceptions.NonExistingClassException
 import cc.popkorn.core.exceptions.PopKornNotInitializedException
-import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.MappingProviderPool
 import cc.popkorn.pools.MappingResolverPool
 import cc.popkorn.pools.ProviderPool

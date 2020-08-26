@@ -76,13 +76,13 @@ kotlin {
         val linuxX64Main by getting
         val linuxArm64Main by getting
         val macosX64Main by getting
-        val nativeMain by creating{
+        val nativeMain by creating {
             dependsOn(commonMain)
             linuxX64Main.dependsOn(this)
             linuxArm64Main.dependsOn(this)
             macosX64Main.dependsOn(this)
         }
-        val nativeTest by creating{
+        val nativeTest by creating {
             dependsOn(commonTest)
         }
     }

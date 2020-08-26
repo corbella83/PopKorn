@@ -21,7 +21,6 @@ import kotlinx.cinterop.ObjCClass
 //Necesitariem un adaptador per Kotlin llabors tambe
 
 
-
 internal lateinit var classCreator: (ObjCClass) -> Mapping
 
 /**

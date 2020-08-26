@@ -28,9 +28,7 @@ internal class ReferenceClass<T : Any> private constructor(
 
     override fun hashCode() = qualifiedName.hashCode()
 
-    override fun isInstance(value: Any?): Boolean {
-        TODO("Not supported in native")
-    }
+    override fun isInstance(value: Any?) = false
 
     override fun toString() = "class $qualifiedName"
 
