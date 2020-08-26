@@ -3,7 +3,7 @@ Change Log
 
 Version 1.6.0 *(2020-XX-XX)*
 -----------------------------
-* New: Add multiplatform support (JVM, JS, Native)
+* New: Add multiplatform support (JVM, JS, IOS, Native)
 
 Version 1.5.0 *(2020-06-03)*
 -----------------------------

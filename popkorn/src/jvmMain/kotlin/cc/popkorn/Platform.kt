@@ -58,14 +58,13 @@ private fun loadMappings(resource: String): Set<Mapping> {
                         try {
                             val mapping = Class.forName(it).getDeclaredConstructor().newInstance() as Mapping
                             set.add(mapping)
-                            //println("Successfully mapping loaded : ${mapping.javaClass}")
                         } catch (e: Exception) {
-                            //println("Warning: PopKorn mapping ($it) could not be loaded. Might not work if using obfuscation")
+                            println("Warning: PopKorn mapping ($it) could not be loaded. Might not work if using obfuscation")
                         }
                     }
 
             } catch (e: Exception) {
-                //println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
+                println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
             }
         }
     return set

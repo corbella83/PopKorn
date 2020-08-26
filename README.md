@@ -1,8 +1,8 @@
-PopKorn
+PopKorn - Kotlin Multiplatform DI
 ==========
 
 
-PopKorn is a simple, powerful and lightweight Dependency Injector 100% Kotlin. It doesn't need any boilerplate, just use it!
+PopKorn is a simple, powerful and lightweight Multiplatform Dependency Injector written 100% Kotlin. It doesn't need any boilerplate, just use it! It supports AND, JVM, JS, IOS and NATIVE.
 
 
 Download
@@ -55,11 +55,6 @@ val helloWorld:HelloWorld = inject()
 or
 
 val helloWorld = HelloWorld::class.inject()
-```
-
-If you are using java code, you can call it this way
-```java
-HelloWorld helloWorld = PopKornCompat.inject(HelloWorld.class);
 ```
 
 By default `HelloWorld` will be  Scope.BY_APP, but we can change it:
@@ -156,11 +151,11 @@ There is also a way to use custom injection. You can take control of when an ins
 ```kotlin
 val someInstance = SomeType()
 
-getPopKornController().addInjectable(someInstance)
+popKorn().addInjectable(someInstance)
 
 val copy1 = inject<SomeType>() //Will inject someInstance
 
-getPopKornController().removeInjectable(someInstance)
+popKorn().removeInjectable(someInstance)
 
 val copy2 = inject<SomeType>() //Will fail, because SomeType is not injectable anymore
 ```
@@ -171,13 +166,13 @@ class MyApplication : Application() {
     
     override fun onCreate() {
         super.onCreate()
-        getPopKornController().addInjectable(this, Context::class)
+        popKorn().addInjectable(this, Context::class)
     }
 
 }
 ```
 
-Using Android (and Obfuscation)
+Using Android
 --------
 To prevent you to exclude lots of classes from obfuscation, PopKorn saves some mappings that needs to be merged when generating the APK. If you are using multiple modules, Android will take only the last one by default (or throw a compilation error depending on the Gradle version), unless the following option it's set in the `build.gradle`:
 ```groovy
@@ -195,6 +190,26 @@ Execution failed for task ':app:mergeDebugJavaResource'.
    > More than one file was found with OS independent path 'META-INF/popkorn.provider.mappings'
 ```
     
+
+Using JVM
+--------
+//TODO
+PopKorn provides an InjectorJVM wrapper class to be used from java code
+```java
+HelloWorld helloWorld = PopKornCompat.inject(HelloWorld.class);
+```
+
+    
+Using IOS
+--------
+//TODO
+
+
+Using JS
+--------
+//TODO
+
+
 
 More Examples
 --------

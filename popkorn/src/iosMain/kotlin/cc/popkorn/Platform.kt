@@ -1,6 +1,8 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
+import cc.popkorn.core.exceptions.NonExistingClassException
+import cc.popkorn.core.exceptions.PopKornNotInitializedException
 import cc.popkorn.mapping.Mapping
 import cc.popkorn.pools.MappingProviderPool
 import cc.popkorn.pools.MappingResolverPool
@@ -22,35 +24,10 @@ import kotlin.reflect.KClass
  * @since 1.6.0
  */
 
-//TODO El PopClass guanya adeptes
-//Hi ha dos tipus de clases a popkorn, les que es compilen automaticament,
-// i les que s'afegeixen externament (addInjectable). Aquestes ultimes depenen de la plataforma,
-// mentres que les primeres son sempre KClass. Per tant fer un ExternalClass que s'implementi per
-// plataforma i es el que comprobara si es interficie o clase.
-//LA comprobacio de si necesita resolver o no hauria de ser si (esta al resolver pool) o (es externalclass i !isClass())
-//Mirar si un PopClass es pot utilitzar en comptes del KClass al Injector.
-//Necesitariem un adaptador per Kotlin llabors tambe
-
-private lateinit var classCreator: (ObjCClass) -> Mapping
-
-/**
- * This method needs to be called on IOS platform before using PopKorn. This is because from Kotlin
- * cannot instanciate a class with "class_createInstance(ObjCClass, 0) as? Mapping". So we need
- * the ios to provide a lamdba of how to create an object
- *
- * @param creator Lambda defining how to create a certain ObjCClass
- */
-fun setup(creator: (ObjCClass) -> Mapping) {
-    if (::classCreator.isInitialized) return
-    classCreator = creator
-}
-
-
-
 actual typealias WeakReference<T> = kotlin.native.ref.WeakReference<T>
 
 
-internal actual fun <T : Any> KClass<T>.getName() = qualifiedName ?: throw RuntimeException("Try to get details of a non existing class")
+internal actual fun <T : Any> KClass<T>.getName() = qualifiedName ?: throw NonExistingClassException(this)
 
 internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool) = resolverPool.isPresent(this)
 
@@ -58,21 +35,15 @@ internal actual fun createDefaultInjector() = Injector(objcResolverPool(), objcP
 
 
 private fun objcResolverPool(): ResolverPool {
-    return loadMappings("ResolverMapping")
-        .takeIf { it.isNotEmpty() }
-        ?.let { MappingResolverPool(it) }
-        ?: throw RuntimeException("Could not load Resolver Mappings")
+    return MappingResolverPool(loadMappings("ResolverMapping"))
 }
 
 private fun objcProviderPool(): ProviderPool {
-    return loadMappings("ProviderMapping")
-        .takeIf { it.isNotEmpty() }
-        ?.let { MappingProviderPool(it) }
-        ?: throw RuntimeException("Could not load Resolver Mappings")
+    return MappingProviderPool(loadMappings("ProviderMapping"))
 }
 
 private fun loadMappings(type: String): Set<Mapping> {
-    if (!::classCreator.isInitialized) throw RuntimeException("You must execute PlatformKt.setup() before using this library")
+    if (!::classCreator.isInitialized) throw PopKornNotInitializedException()
     return getMappings(type)
         .map { classCreator(it) }
         .toSet()
@@ -89,7 +60,8 @@ private fun getMappings(type: String): Set<ObjCClass> {
         val count = outCount.get()[0].toInt()
 
         for (index in 0 until count) {
-            val name = classes[index]?.toKString() ?: continue
+            val value = classes[index] as? CPointer<ByteVar>
+            val name = value?.toKString() ?: continue
 
             if (name.endsWith(type)) {
                 val real = objc_getClass(name) as? ObjCClass ?: continue

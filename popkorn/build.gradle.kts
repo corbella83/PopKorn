@@ -43,6 +43,10 @@ kotlin {
 
     ios() // Creates iosX64("ios") and iosArm64("ios")
 
+    linuxX64()
+    linuxArm64()
+    macosX64()
+
     sourceSets {
         val commonMain by getting
         val commonTest by getting {
@@ -68,6 +72,19 @@ kotlin {
         }
         val iosTest by getting
 
+
+        val linuxX64Main by getting
+        val linuxArm64Main by getting
+        val macosX64Main by getting
+        val nativeMain by creating{
+            dependsOn(commonMain)
+            linuxX64Main.dependsOn(this)
+            linuxArm64Main.dependsOn(this)
+            macosX64Main.dependsOn(this)
+        }
+        val nativeTest by creating{
+            dependsOn(commonTest)
+        }
     }
 
 
