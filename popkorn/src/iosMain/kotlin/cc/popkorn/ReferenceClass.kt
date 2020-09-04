@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * Fake KClass to hold platform-specific types
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 internal class ReferenceClass<T : Any> private constructor(
     override val qualifiedName: String,
@@ -20,7 +20,7 @@ internal class ReferenceClass<T : Any> private constructor(
     constructor(objClass: ObjCClass) : this(NSStringFromClass(objClass), NSStringFromClass(objClass))
 
     //TODO should be the name of the protocol
-    constructor(objProtocol: ObjCProtocol) : this(objProtocol.toString(), objProtocol.toString())
+    constructor(objProtocol: ObjCProtocol) : this(objProtocol.hashCode().toString(), objProtocol.hashCode().toString())
 
     override fun equals(other: Any?): Boolean {
         return other is ReferenceClass<*> && qualifiedName == other.qualifiedName

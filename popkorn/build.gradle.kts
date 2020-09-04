@@ -65,11 +65,7 @@ kotlin {
             }
         }
 
-        val iosMain by getting {
-            //dependsOn(cinterop)
-            //For now, iosMain doesn't depend on cinterop libraries.Only iosX64Main and iosArm64Main
-            // Anyway, it compiles well but the IDE doesn't recognize any c-object
-        }
+        val iosMain by getting
         val iosTest by getting
 
 

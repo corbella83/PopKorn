@@ -5,7 +5,7 @@ package cc.popkorn
  * Wrapper for Injector to be used from the JS (pure js)
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 class InjectorJS(private val injector: InjectorController) {
 

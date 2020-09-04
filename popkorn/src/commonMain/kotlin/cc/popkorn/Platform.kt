@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * Methods/Classes used in library that are Platform-dependent
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 
 

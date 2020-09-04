@@ -5,7 +5,7 @@ package cc.popkorn
  * Wrapper for Injector to be used from the JVM (pure java)
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 class InjectorJVM(private val injector: InjectorController) {
 

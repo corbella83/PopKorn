@@ -8,7 +8,7 @@ import kotlinx.cinterop.getOriginalKotlinClass
  * Wrapper for Injector to be used from the ObjectiveC (pure objc)
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 class InjectorObjC(private val injector: InjectorController) {
 

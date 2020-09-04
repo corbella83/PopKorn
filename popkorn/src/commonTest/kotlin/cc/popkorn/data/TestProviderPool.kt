@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
  * ResolverPool that define how test classes are created
  *
  * @author Pau Corbella
- * @since 1.6.0
+ * @since 2.0.0
  */
 class TestProviderPool : ProviderPool {
 
