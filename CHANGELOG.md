@@ -1,9 +1,10 @@
 Change Log
 ==========
 
-Version 2.0.0 *(2020-09-04)*
+Version 2.0.0 *(2020-09-05)*
 -----------------------------
 * New: Add multiplatform support (JVM, IOS, JS and Native)
+* Maintenance: Update to Kotlin 1.4.0
 
 Version 1.5.0 *(2020-06-03)*
 -----------------------------
