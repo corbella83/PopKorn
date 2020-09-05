@@ -83,7 +83,7 @@ internal class ResolverGenerator(private val directory: File) {
 
 
     private fun TypeElement.getResolverFile(creationCode: CodeBlock): FileSpec {
-        val filePackage = "${normalizeQualifiedName(getGenerationName())}_$RESOLVER_SUFFIX"
+        val filePackage = "${normalizeQualifiedName(getHierarchyName())}_$RESOLVER_SUFFIX"
 
         val producerOf = WildcardTypeName.producerOf(asClassName())
 
@@ -108,7 +108,7 @@ internal class ResolverGenerator(private val directory: File) {
     }
 
 
-    private fun TypeElement.getGenerationName(): String {
+    private fun TypeElement.getHierarchyName(): String {
         val parent = enclosingElement?.takeIf { it.kind == ElementKind.INTERFACE || it.kind == ElementKind.CLASS }
         return if (parent == null) { //If the class its on its own
             toString()

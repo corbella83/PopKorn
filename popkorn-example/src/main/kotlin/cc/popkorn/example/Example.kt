@@ -1,12 +1,12 @@
 package cc.popkorn.example
 
 import cc.popkorn.example.model.*
-import cc.popkorn.getPopKornController
 import cc.popkorn.inject
+import cc.popkorn.popKorn
 
 fun main() {
     val d10 = D10()
-    getPopKornController().addInjectable(d10)
+    popKorn().addInjectable(d10)
 
     inject<String>()
     inject<Int>()
@@ -18,7 +18,7 @@ fun main() {
     inject<R5i>()
 
     System.gc()
-    getPopKornController().purge()
+    popKorn().purge()
 
     inject<R6i>()
     inject<R7i>()
@@ -29,8 +29,8 @@ fun main() {
     inject<R8i>("env4")
     inject<R9i>()
 
-    getPopKornController().removeInjectable(d10::class)
-    getPopKornController().reset()
+    popKorn().removeInjectable(d10::class)
+    popKorn().reset()
 
     println("ok")
     ExampleCompat().execute()

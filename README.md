@@ -1,35 +1,32 @@
-PopKorn
+PopKorn - Kotlin Multiplatform DI
 ==========
 
 
-PopKorn is a simple, powerful and lightweight Dependency Injector 100% Kotlin. It doesn't need any boilerplate, just use it
+PopKorn is a simple, powerful and lightweight Multiplatform Dependency Injector written 100% Kotlin. It doesn't need any boilerplate, just use it! It supports AND, IOS, JVM, JS and NATIVE.
 
 
 Download
 --------
-Get it with Maven:
-```xml
-<dependency>
-  <groupId>cc.popkorn</groupId>
-  <artifactId>popkorn</artifactId>
-  <version>1.5.0</version>
-</dependency>
+Get it with Gradle:
+```groovy
+implementation 'cc.popkorn:popkorn:2.0.0'
+kapt 'cc.popkorn:popkorn-compiler:2.0.0'
 ```
 
-or Gradle:
+The Kotlin Gradle Plugin 1.4.0 will automatically resolve platform dependent implementations (jvm, js, iosX64...). But if you are using Kotlin Gradle Plugin below 1.4.0 you will have to specify the platform yourself. In the case of Android/JVM is the following:
 ```groovy
-implementation 'cc.popkorn:popkorn:1.5.0'
-kapt 'cc.popkorn:popkorn-compiler:1.5.0'
+implementation 'cc.popkorn:popkorn-jvm:2.0.0'
+kapt 'cc.popkorn:popkorn-compiler:2.0.0'
 ```
 
 Working with Scopes and Environments
 --------
 Scopes are the way to define the life span of an instance. There are 3 types of scopes:
 * Scope.BY_APP (default) -> Instance will be created only once, for hence will live forever. Normally for classes that have heavy construction or saves states (Retrofit, OkHttp, RoomDB, etc)
-* Scope.BY_USE -> Instance will be created if no one is using it, meaning that will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc..)
-* Scope.BY_NEW -> Instance will be created every time is needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, screens, etc...)
+* Scope.BY_USE -> Instance will be created if no one is using it, meaning will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc...)
+* Scope.BY_NEW -> Instance will be created every time it's needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, screens, etc...)
 
-Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom
+Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom.
 ```kotlin
 val r1 = inject<Retrofit>("pro") //This will inject a persistent instance of Retrofit attached to "pro"
 val r2 = inject<Retrofit>("des") //This will inject a persistent instance of Retrofit attached to "des"
@@ -57,24 +54,19 @@ or
 val helloWorld = HelloWorld::class.inject()
 ```
 
-If you are using java code, you can call it this way
-```java
-val helloWorld = PopKornCompat.inject(HelloWorld.class);
-```
-
 By default `HelloWorld` will be  Scope.BY_APP, but we can change it:
 ```kotlin
 @Injectable(scope=Scope.BY_NEW)
 class HelloWorld
 ```
 
-Also if `HelloWorld` has injectable constructor dependencies, PopKorn will automatically resolve them
+Also, if `HelloWorld` has injectable constructor dependencies, PopKorn will automatically resolve them
 ```kotlin
 @Injectable
 class HelloWorld(val helloBarcelona:HelloBarcelona, val helloParis:HelloParis)
 ```
 
-And if we have different constructors for the class, we can define environments to distinguish them:
+and if we have different constructors for the class, we can define environments to distinguish them:
 ```kotlin
 @Injectable
 class HelloWorld {
@@ -108,7 +100,7 @@ and use it in our example
 class HelloWorld : Hello
 ```
 
-We can now inject by interface:
+We can now inject by an interface:
 ```kotlin
 val helloWorld = inject<Hello>() //This will inject a HelloWorld instance 
 ```
@@ -129,7 +121,7 @@ val hello = inject<Hello>() // this will return an instance of HelloWorld
 
 Injecting External Classes
 --------
-If you want to inject a class that is out of your code, just define a class and annotate it with `@InjectableProvider`. Notice that you can use as many injectable objects as you need defining them as parameters of your method
+If you want to inject a class out of your code, just define a class and annotate it with `@InjectableProvider`. Notice that you can use as many injectable objects as you need defining them as parameters of your method.
 ```kotlin
 @InjectableProvider(scope=Scope.BY_APP)
 class MyRetrofitProvider {
@@ -156,30 +148,37 @@ There is also a way to use custom injection. You can take control of when an ins
 ```kotlin
 val someInstance = SomeType()
 
-getPopKornController().addInjectable(someInstance)
+popKorn().addInjectable(someInstance)
 
 val copy1 = inject<SomeType>() //Will inject someInstance
 
-getPopKornController().removeInjectable(someInstance)
+popKorn().removeInjectable(someInstance)
 
 val copy2 = inject<SomeType>() //Will fail, because SomeType is not injectable anymore
 ```
 
-In Android this is very useful when injecting the Context (An instance that is provided and can not be created)
+In Android this is very useful when injecting the Context (An instance that is provided and cannot be created)
 ```kotlin
 class MyApplication : Application() {
     
     override fun onCreate() {
         super.onCreate()
-        getPopKornController().addInjectable(this, Context::class)
+        popKorn().addInjectable(this, Context::class)
     }
 
 }
 ```
 
-Using Android (and Obfuscation)
+Using Android / JVM
 --------
-To prevent you to exclude lots of classes from obfuscation, PopKorn saves some mappings that needs to be merged when generating the APK. If you are using multiple modules, Android will take only the last one by default (or throw a compilation error depending on the Gradle version), unless the following option is set in the `build.gradle`:
+PopKorn provides full support to Android platforms. You don't need to initialize anything. Just use it as described above.
+
+To use it from pure java classes, use PopKornCompat: 
+```java
+HelloWorld helloWorld = PopKornCompat.inject(HelloWorld.class);
+```
+
+To prevent you to exclude lots of classes from obfuscation, PopKorn saves some mappings that needs to be merged when generating the APK. If you are using multiple modules, Android will take only the last one by default (or throw a compilation error depending on the Gradle version), unless the following option it's set in the `build.gradle`:
 ```groovy
 android{
     packagingOptions {
@@ -194,7 +193,59 @@ Execution failed for task ':app:mergeDebugJavaResource'.
 > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
    > More than one file was found with OS independent path 'META-INF/popkorn.provider.mappings'
 ```
+   
     
+Using IOS
+--------
+PopKorn provides full support to Objective C / Swift platforms. You will need to do the following:
+
+A) In your multiplatform project, write a File (Bridge.kt) on your IOS module and add this 2 functions:
+```kotlin
+fun init(creator:(ObjCClass)-> Mapping) = cc.popkorn.setup(creator)
+
+fun getInjector() = InjectorObjC(popKorn())
+```
+
+B) From your IOS project you will need to initialize PopKorn at the beginning of your app (AppDelegate):
+```swift
+BridgeKt.doInit { (clazz) -> PopkornMapping in
+            return clazz.alloc() as! PopkornMapping
+        }
+```
+
+C) To be used anywhere like this in ObjectiveC / Swift code
+```swift
+let injector = BridgeKt.getInjector()
+
+let helloWorld = injector.inject(clazz: HelloWorld.self) as! HelloWorld
+```
+
+You can also use runtime injections
+```swift
+let someInstance = SomeType()
+
+injector.addInjectable(instance: someInstance, clazz: SomeType.self)
+
+let copy1 = injector.inject(clazz: SomeType.self) as! SomeType  //Will inject someInstance
+
+injector.removeInjectable(clazz: SomeType.self)
+
+let copy2 = injector.inject(clazz: SomeType.self) as! SomeType //Will fail, because SomeType is not injectable anymore
+```
+
+
+Using JS / Native
+--------
+PopKorn provides basic support to JS / Native platforms. In your multiplatform project, write a File on your JS / Native module and add this function: 
+```kotlin
+fun init(){
+    val resolvers: Set<Mapping> = hashSetOf(/* LOCATE ALL RESOLVER CLASSES OF TYPE MAPPING THAT POPKORN AUTOGENERATED */)
+    val providers: Set<Mapping> = hashSetOf(/* LOCATE ALL PROVIDER CLASSES OF TYPE MAPPING THAT POPKORN AUTOGENERATED */)
+    cc.popkorn.setup(resolvers, providers)
+}
+```
+
+then call it somewhere to initialize PopKorn. For now, injections for JS / Native can only be done from your multiplatform project. Injections from JS / Native code is not yet available.
 
 More Examples
 --------
@@ -228,9 +279,9 @@ val r2 = inject<Location>("network") //This will inject a persistent instance Re
 val r2 = inject<Location>("fake") //This will inject a volatile instance of FakeLocation
 ```
 
-or use it in constructor of other injectable classes:
+or use it in any constructor of other injectable classes:
 ```kotlin
-constructor(real:Location, @WithEnvironment("fake") fake:Location, @WithEnvironment("network") network:Location):this(){}
+constructor(real:Location, @WithEnvironment("fake") fake:Location, @WithEnvironment("network") network:Location){}
 ```
 
 
