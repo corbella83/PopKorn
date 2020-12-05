@@ -17,5 +17,7 @@ fun popKorn(): InjectorController = injector
 
 inline fun <reified T : Any> inject(environment: String? = null) = T::class.inject(environment)
 
+inline fun <reified T : Any> lazyInject(environment: String? = null) = lazy { T::class.inject(environment) }
+
 fun <T : Any> KClass<T>.inject(environment: String? = null) = injector.inject(this, environment)
 
