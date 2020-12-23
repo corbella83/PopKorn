@@ -214,7 +214,8 @@ internal class RuntimeTests : PopKornTest() {
 
     @Test
     fun testPurge() {
-        val injector = Injector(TestResolverPool(), TestProviderPool())
+        val resolverPool = TestResolverPool()
+        val injector = Injector(resolverPool, TestProviderPool())
 
         injector.addInjectable(C2())
         injector.addInjectable(C2(), C2::class, "4")
@@ -223,23 +224,23 @@ internal class RuntimeTests : PopKornTest() {
         injector.addInjectable(C2(), I2::class, "4")
         injector.addInjectable(C2(), I1::class, "6")
 
-        assertEquals(
-            4,
-            injector.instances.size
-        ) // One for every different environment, because if set again, it replaces it
-        assertEquals(3, injector.resolvers.size) // One for every interface or abstract
+        val addedInterfaces = listOf(C2::class, C1::class, I2::class, I1::class).count { it.needsResolver(resolverPool) }
+
+        assertEquals(4, injector.instances.size) // One for every different environment, because if set again, it replaces it
+        assertEquals(addedInterfaces, injector.resolvers.size) // One for every interface or abstract
 
         injector.purge()
 
         //Purge must not affect to runtime injections
         assertEquals(4, injector.instances.size)
-        assertEquals(3, injector.resolvers.size)
+        assertEquals(addedInterfaces, injector.resolvers.size)
     }
 
 
     @Test
     fun testReset() {
-        val injector = Injector(TestResolverPool(), TestProviderPool())
+        val resolverPool = TestResolverPool()
+        val injector = Injector(resolverPool, TestProviderPool())
 
         injector.addInjectable(C2())
         injector.addInjectable(C2(), C2::class, "4")
@@ -248,11 +249,10 @@ internal class RuntimeTests : PopKornTest() {
         injector.addInjectable(C2(), I2::class, "4")
         injector.addInjectable(C2(), I1::class, "6")
 
-        assertEquals(
-            4,
-            injector.instances.size
-        ) // One for every different environment, because if set again, it replaces it
-        assertEquals(3, injector.resolvers.size) // One for every interface or abstract
+        val addedInterfaces = listOf(C2::class, C1::class, I2::class, I1::class).count { it.needsResolver(resolverPool) }
+
+        assertEquals(4, injector.instances.size) // One for every different environment, because if set again, it replaces it
+        assertEquals(addedInterfaces, injector.resolvers.size) // One for every interface or abstract
 
         injector.reset()
 
