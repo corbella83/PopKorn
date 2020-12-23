@@ -6,7 +6,7 @@ import cc.popkorn.resolvers.Resolver
 import kotlin.reflect.KClass
 
 /**
- * Implementation to get the provider via reflection
+ * Interface to define how to obtain the resolvers
  *
  * @author Pau Corbella
  * @since 1.0.0

@@ -3,6 +3,7 @@ Change Log
 
 Version 2.1.0 *(2020-XX-XX)*
 -----------------------------
+* New: Add assisted dependencies
 
 Version 2.0.0 *(2020-09-05)*
 -----------------------------

@@ -1,5 +1,6 @@
 package cc.popkorn
 
+import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
 /**
@@ -17,6 +18,8 @@ interface InjectorController {
     fun <T : Any> inject(clazz: KClass<T>, environment: String? = null): T
 
     fun <T : Any> injectNullable(clazz: KClass<T>, environment: String? = null): T?
+
+    fun <T : Any> createInstance(clazz: KClass<T>, environment: String? = null, vararg providedInstances: Instance<*>): T
 
     fun purge()
 

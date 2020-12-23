@@ -1,5 +1,7 @@
 package cc.popkorn
 
+import cc.popkorn.core.model.Instance
+
 
 /**
  * Wrapper for Injector to be used from the JVM (pure java)
@@ -8,6 +10,8 @@ package cc.popkorn
  * @since 2.0.0
  */
 class InjectorJVM(private val injector: InjectorController) {
+
+    class InstanceJVM<T : Any>(val instance: T, val type: Class<out T> = instance::class.java, val environment: String? = null)
 
     fun <T : Any> addInjectable(instance: T, type: Class<out T>, environment: String) = injector.addInjectable(instance, type.kotlinClass(), environment)
 
@@ -32,9 +36,19 @@ class InjectorJVM(private val injector: InjectorController) {
     fun <T : Any> injectNullable(clazz: Class<T>) = injector.injectNullable(clazz.kotlinClass(), null)
 
 
+    fun <T : Any> create(clazz: Class<T>, environment: String, vararg providedInstances: InstanceJVM<*>) =
+        injector.createInstance(clazz.kotlinClass(), environment, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+    fun <T : Any> create(clazz: Class<T>, vararg providedInstances: InstanceJVM<*>) =
+        injector.createInstance(clazz.kotlinClass(), null, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
+
+
+    private fun <T : Any> InstanceJVM<T>.toKotlin() = Instance(instance, type.kotlinClass(), environment)
 
     //If it doesn't exist, creates a ClassReference
     private fun <T : Any> Class<T>.kotlinClass() = kotlin

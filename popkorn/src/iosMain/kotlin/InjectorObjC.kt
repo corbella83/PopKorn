@@ -1,5 +1,6 @@
 package cc.popkorn
 
+import cc.popkorn.core.model.Instance
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCProtocol
 import kotlinx.cinterop.getOriginalKotlinClass
@@ -11,6 +12,12 @@ import kotlinx.cinterop.getOriginalKotlinClass
  * @since 2.0.0
  */
 class InjectorObjC(private val injector: InjectorController) {
+
+    sealed class InstanceObjC(val instance: Any, val environment: String?) {
+        class InstanceObjCClass(instance: Any, val type: ObjCClass, environment: String? = null) : InstanceObjC(instance, environment)
+        class InstanceObjCProtocol(instance: Any, val type: ObjCProtocol, environment: String? = null) : InstanceObjC(instance, environment)
+    }
+
 
     fun addInjectable(instance: Any, clazz: ObjCClass, environment: String) = injector.addInjectable(instance, clazz.kotlinClass(), environment)
 
@@ -48,9 +55,30 @@ class InjectorObjC(private val injector: InjectorController) {
     fun injectNullable(protocol: ObjCProtocol) = injector.injectNullable(protocol.kotlinClass(), null)
 
 
+    fun create(clazz: ObjCClass, environment: String, vararg providedInstances: InstanceObjC) =
+        injector.createInstance(clazz.kotlinClass(), environment, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+    fun create(clazz: ObjCClass, vararg providedInstances: InstanceObjC) =
+        injector.createInstance(clazz.kotlinClass(), null, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+    fun create(clazz: ObjCProtocol, environment: String, vararg providedInstances: InstanceObjC) =
+        injector.createInstance(clazz.kotlinClass(), environment, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+    fun create(clazz: ObjCProtocol, vararg providedInstances: InstanceObjC) =
+        injector.createInstance(clazz.kotlinClass(), null, *providedInstances.map { it.toKotlin() }.toTypedArray())
+
+
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
+
+
+    private fun InstanceObjC.toKotlin(): Instance<*> {
+        return when (this) {
+            is InstanceObjC.InstanceObjCClass -> Instance(instance, type.kotlinClass(), environment)
+            is InstanceObjC.InstanceObjCProtocol -> Instance(instance, type.kotlinClass(), environment)
+        }
+    }
 
 
     //If it doesn't exist, creates a ReferenceClass

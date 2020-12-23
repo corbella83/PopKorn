@@ -4,6 +4,7 @@ package cc.popkorn.core
 
 import cc.popkorn.InjectorController
 import cc.popkorn.core.exceptions.*
+import cc.popkorn.core.model.Instance
 import cc.popkorn.instances.*
 import cc.popkorn.needsResolver
 import cc.popkorn.pools.ProviderPool
@@ -115,17 +116,11 @@ class Injector(
      */
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
         return if (clazz.needsResolver(resolverPool)) {
-            val impl = clazz.getImplementation(environment)
-            provide(impl, environment)
+            provide(clazz.getImplementation(environment), environment)
         } else {
             provide(clazz, environment)
         }
     }
-
-    /**
-     * Inline version of the above
-     */
-    inline fun <reified T : Any> inject(environment: String? = null) = this.inject(T::class, environment)
 
 
     /**
@@ -153,11 +148,25 @@ class Injector(
         }
     }
 
+
     /**
-     * Inline version of the above
+     * Creates an object of type clazz using assisted instances preferentially. If not assisting a certain parameter
+     * it will be injected. Notice that this function will always return a new instance ignoring the scope it has
+     *
+     * @param clazz Class or Interface that you want to create
+     * @param environment The environment in which you would like to create the object
+     * @param providedInstances The instances you would like to use (preferentially) when creating the object
      */
-    inline fun <reified T : Any> injectNullable(environment: String? = null) =
-        this.injectNullable(T::class, environment)
+    override fun <T : Any> createInstance(clazz: KClass<T>, environment: String?, vararg providedInstances: Instance<*>): T {
+        val pool = if (clazz.needsResolver(resolverPool)) {
+            providerPool.create(clazz.getImplementation(environment))
+        } else {
+            providerPool.create(clazz)
+        }
+
+        val useInjector = providedInstances.takeIf { it.isNotEmpty() }?.let { AssistedInjector(this, it.toList()) } ?: this
+        return pool.create(useInjector, environment)
+    }
 
 
     private fun <T : Any> provide(clazz: KClass<T>, environment: String?): T {
