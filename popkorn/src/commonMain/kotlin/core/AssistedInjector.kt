@@ -1,6 +1,8 @@
 package cc.popkorn.core
 
 import cc.popkorn.InjectorController
+import cc.popkorn.core.exceptions.AssistedNotFoundException
+import cc.popkorn.core.exceptions.ProviderNotFoundException
 import cc.popkorn.core.model.Instance
 import cc.popkorn.pools.MappingProviderPool
 import cc.popkorn.pools.MappingResolverPool
@@ -15,12 +17,12 @@ import kotlin.reflect.KClass
  */
 internal class AssistedInjector(
     private val baseInjector: InjectorController,
-    providedInstances: List<Instance<*>>
+    private val assistedInstances: List<Instance<*>>
 ) : InjectorController {
     private val assistedInjector = Injector(MappingResolverPool(setOf()), MappingProviderPool(setOf()))
 
     init {
-        providedInstances.forEach { assistedInjector.addInjectable(it.instance, it.type, it.environment) }
+        assistedInstances.forEach { assistedInjector.addInjectable(it.instance, it.type, it.environment) }
     }
 
     override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
@@ -32,19 +34,19 @@ internal class AssistedInjector(
     }
 
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return assistedInjector.injectNullable(clazz, environment) ?: baseInjector.inject(clazz, environment)
+        try {
+            return assistedInjector.injectNullable(clazz, environment) ?: baseInjector.inject(clazz, environment)
+        } catch (e: ProviderNotFoundException) {
+            throw AssistedNotFoundException(e.clazz)
+        }
     }
 
     override fun <T : Any> injectNullable(clazz: KClass<T>, environment: String?): T? {
         return assistedInjector.injectNullable(clazz, environment) ?: baseInjector.injectNullable(clazz, environment)
     }
 
-    override fun <T : Any> create(clazz: KClass<T>, providedInstances: List<Any>, environment: String?): T {
-        return try {
-            assistedInjector.create(clazz, providedInstances, environment)
-        } catch (e: Exception) {
-            baseInjector.create(clazz, providedInstances, environment)
-        }
+    override fun <T : Any> create(clazz: KClass<T>, assistedInstances: List<Any>, environment: String?): T {
+        return assistedInjector.injectNullable(clazz, environment) ?: baseInjector.create(clazz, assistedInstances, environment)
     }
 
     override fun purge() {

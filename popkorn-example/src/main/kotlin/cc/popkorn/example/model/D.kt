@@ -46,6 +46,9 @@ class D13 : DaJ(), DiF
 @Injectable(propagation = Propagation.DIRECT)
 class D14 : DaJ()
 
+@Injectable(propagation = Propagation.NONE)
+class D15 : DiF
+
 @InjectableProvider(scope = Scope.BY_NEW, propagation = Propagation.DIRECT, alias = "is6")
 @ForEnvironments("env1", "env2", "env3")
 class DCustom6 {

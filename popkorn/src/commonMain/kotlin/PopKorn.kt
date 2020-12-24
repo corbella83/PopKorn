@@ -25,9 +25,9 @@ inline fun <reified T : Any> InjectorController.inject(environment: String? = nu
 
 inline fun <reified T : Any> InjectorController.injectNullable(environment: String? = null) = this.injectNullable(T::class, environment)
 
-inline fun <reified T : Any> InjectorController.create(vararg params: Any): T {
-    val environment = params.singleOrNull { it is Environment } as? Environment
-    val parameters = params.filterNot { it is Environment }
+inline fun <reified T : Any> InjectorController.create(vararg assistedInstances: Any): T {
+    val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
+    val parameters = assistedInstances.filterNot { it is Environment }
     return this.create(T::class, parameters, environment?.value)
 }
 

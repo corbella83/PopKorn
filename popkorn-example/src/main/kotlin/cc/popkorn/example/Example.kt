@@ -1,5 +1,7 @@
 package cc.popkorn.example
 
+import cc.popkorn.core.model.Environment
+import cc.popkorn.create
 import cc.popkorn.example.model.*
 import cc.popkorn.inject
 import cc.popkorn.popKorn
@@ -28,6 +30,11 @@ fun main() {
     inject<R8i>("env3")
     inject<R8i>("env4")
     inject<R9i>()
+
+    popKorn().create<R10i>(10L, R9())
+    popKorn().create<R10i>(Environment("env2"), 10L, R10())
+    popKorn().create<R8i>()
+    popKorn().create(R8i::class, "env1")
 
     popKorn().removeInjectable(d10::class)
     popKorn().reset()

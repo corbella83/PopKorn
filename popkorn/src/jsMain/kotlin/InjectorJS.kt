@@ -40,9 +40,9 @@ class InjectorJS(private val injector: InjectorController) {
 
     // Provide raw objects or an InstanceJS<*> object for more information
     // If want to specify the environment, do it with Environment("value")
-    fun <T : Any> create(clazz: JsClass<T>, vararg providedInstances: Any): T {
-        val environment = providedInstances.singleOrNull { it is Environment } as? Environment
-        val parameters = providedInstances.filterNot { it is Environment }.map { if (it is InstanceJS<*>) it.toKotlin() else it }
+    fun <T : Any> create(clazz: JsClass<T>, vararg assistedInstances: Any): T {
+        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
+        val parameters = assistedInstances.filterNot { it is Environment }.map { if (it is InstanceJS<*>) it.toKotlin() else it }
         return injector.create(clazz.kotlinClass(), parameters, environment?.value)
     }
 

@@ -58,15 +58,15 @@ class InjectorObjC(private val injector: InjectorController) {
 
     // Provide raw objects or an InstanceObjC<*> object for more information
     // If want to specify the environment, do it with Environment("value")
-    fun create(clazz: ObjCClass, vararg providedInstances: Any): Any {
-        val environment = providedInstances.singleOrNull { it is Environment } as? Environment
-        val parameters = providedInstances.filterNot { it is Environment }.map { if (it is InstanceObjC) it.toKotlin() else it }
+    fun create(clazz: ObjCClass, vararg assistedInstances: Any): Any {
+        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
+        val parameters = assistedInstances.filterNot { it is Environment }.map { if (it is InstanceObjC) it.toKotlin() else it }
         return injector.create(clazz.kotlinClass(), parameters, environment?.value)
     }
 
-    fun create(clazz: ObjCProtocol, vararg providedInstances: Any): Any {
-        val environment = providedInstances.singleOrNull { it is Environment } as? Environment
-        val parameters = providedInstances.filterNot { it is Environment }.map { if (it is InstanceObjC) it.toKotlin() else it }
+    fun create(clazz: ObjCProtocol, vararg assistedInstances: Any): Any {
+        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
+        val parameters = assistedInstances.filterNot { it is Environment }.map { if (it is InstanceObjC) it.toKotlin() else it }
         return injector.create(clazz.kotlinClass(), parameters, environment?.value)
     }
 
