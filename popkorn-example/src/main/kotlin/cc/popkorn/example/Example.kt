@@ -1,14 +1,16 @@
 package cc.popkorn.example
 
+import cc.popkorn.*
 import cc.popkorn.core.model.Environment
-import cc.popkorn.create
 import cc.popkorn.example.model.*
-import cc.popkorn.inject
-import cc.popkorn.popKorn
 
 fun main() {
     val d10 = D10()
     popKorn().addInjectable(d10)
+
+    val string1 by popkorn<R2i>()
+    val string2 by lazyInject<R2i>()
+    val string3 by lazyCreate<R2i>("", 33)
 
     inject<String>()
     inject<Int>()
@@ -31,10 +33,10 @@ fun main() {
     inject<R8i>("env4")
     inject<R9i>()
 
-    popKorn().create<R10i>(10L, R9())
-    popKorn().create<R10i>(Environment("env2"), 10L, R10())
-    popKorn().create<R8i>()
-    popKorn().create(R8i::class, "env1")
+    create<R10i>(10L, R9())
+    create<R10i>(Environment("env2"), 10L, R10())
+    create<R8i>()
+    create<R8i>("env1")
 
     popKorn().removeInjectable(d10::class)
     popKorn().reset()

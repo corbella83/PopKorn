@@ -21,13 +21,13 @@ internal class ClientTests : PopKornTest() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
         injector.addInjectable(tmp)
 
-        val classApp = injector.inject<TestClassByApp>("app")
-        val classUse = injector.inject<TestClassByUse>("use")
-        val classNew = injector.inject<TestClassByNew>("new")
-        val classManual = injector.inject<TestClassNoProvider>("some")
+        val classApp = injector.inject(TestClassByApp::class, "app")
+        val classUse = injector.inject(TestClassByUse::class, "use")
+        val classNew = injector.inject(TestClassByNew::class,"new")
+        val classManual = injector.inject(TestClassNoProvider::class,"some")
 
-        val interfaceApp = injector.inject<TestInterface>("app")
-        val interfaceUse = injector.inject<TestInterface>("use")
+        val interfaceApp = injector.inject(TestInterface::class,"app")
+        val interfaceUse = injector.inject(TestInterface::class,"use")
         val interfaceNew = injector.injectNullable(TestInterface::class, "new")
 
         assertSame(classApp, interfaceApp)
