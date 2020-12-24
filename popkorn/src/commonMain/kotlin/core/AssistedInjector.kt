@@ -13,16 +13,14 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 2.1.0
  */
-class AssistedInjector(
-    private val baseInjector: Injector,
+internal class AssistedInjector(
+    private val baseInjector: InjectorController,
     providedInstances: List<Instance<*>>
 ) : InjectorController {
     private val assistedInjector = Injector(MappingResolverPool(setOf()), MappingProviderPool(setOf()))
 
     init {
-        providedInstances.forEach {
-            assistedInjector.addInjectable(it.instance, it.type, it.environment)
-        }
+        providedInstances.forEach { assistedInjector.addInjectable(it.instance, it.type, it.environment) }
     }
 
     override fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String?) {
@@ -41,11 +39,11 @@ class AssistedInjector(
         return assistedInjector.injectNullable(clazz, environment) ?: baseInjector.injectNullable(clazz, environment)
     }
 
-    override fun <T : Any> createInstance(clazz: KClass<T>, environment: String?, vararg providedInstances: Instance<*>): T {
+    override fun <T : Any> create(clazz: KClass<T>, providedInstances: List<Any>, environment: String?): T {
         return try {
-            assistedInjector.createInstance(clazz, environment, *providedInstances)
+            assistedInjector.create(clazz, providedInstances, environment)
         } catch (e: Exception) {
-            baseInjector.createInstance(clazz, environment, *providedInstances)
+            baseInjector.create(clazz, providedInstances, environment)
         }
     }
 

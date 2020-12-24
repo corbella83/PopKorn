@@ -1,6 +1,6 @@
 package cc.popkorn
 
-import cc.popkorn.core.model.Instance
+import cc.popkorn.core.model.Environment
 import kotlin.reflect.KClass
 
 
@@ -26,13 +26,9 @@ inline fun <reified T : Any> InjectorController.inject(environment: String? = nu
 inline fun <reified T : Any> InjectorController.injectNullable(environment: String? = null) = this.injectNullable(T::class, environment)
 
 inline fun <reified T : Any> InjectorController.create(vararg params: Any): T {
-    val list = params.map { if (it is Instance<*>) it else Instance(it) }
-    return this.createInstance(T::class, null, *list.toTypedArray())
-}
-
-inline fun <reified T : Any> InjectorController.createWithEnvironment(environment: String, vararg params: Any): T {
-    val list = params.map { if (it is Instance<*>) it else Instance(it) }
-    return this.createInstance(T::class, environment, *list.toTypedArray())
+    val environment = params.singleOrNull { it is Environment } as? Environment
+    val parameters = params.filterNot { it is Environment }
+    return this.create(T::class, parameters, environment?.value)
 }
 
 // if want no holder -> val tmp = Unit.inject() or popKorn().inject()

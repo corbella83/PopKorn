@@ -1,6 +1,5 @@
 package cc.popkorn
 
-import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
 /**
@@ -11,7 +10,9 @@ import kotlin.reflect.KClass
  */
 interface InjectorController {
 
-    fun <T : Any> addInjectable(instance: T, type: KClass<out T> = instance::class, environment: String? = null)
+    fun <T : Any> addInjectable(instance: T, type: KClass<out T>, environment: String? = null)
+
+    fun <T : Any> addInjectable(instance: T, environment: String? = null) = addInjectable(instance, instance::class, environment)
 
     fun <T : Any> removeInjectable(type: KClass<T>, environment: String? = null)
 
@@ -19,7 +20,9 @@ interface InjectorController {
 
     fun <T : Any> injectNullable(clazz: KClass<T>, environment: String? = null): T?
 
-    fun <T : Any> createInstance(clazz: KClass<T>, environment: String? = null, vararg providedInstances: Instance<*>): T
+    fun <T : Any> create(clazz: KClass<T>, providedInstances: List<Any>, environment: String? = null): T
+
+    fun <T : Any> create(clazz: KClass<T>, environment: String? = null) = create(clazz, listOf(), environment)
 
     fun purge()
 

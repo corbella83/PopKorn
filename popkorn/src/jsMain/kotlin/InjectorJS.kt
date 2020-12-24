@@ -1,6 +1,6 @@
 package cc.popkorn
 
-import cc.popkorn.core.AssistedInjector
+import cc.popkorn.core.model.Environment
 import cc.popkorn.core.model.Instance
 
 
@@ -38,12 +38,13 @@ class InjectorJS(private val injector: InjectorController) {
     fun <T : Any> injectNullable(clazz: JsClass<T>) = injector.injectNullable(clazz.kotlinClass(), null)
 
 
-    fun <T : Any> create(clazz: JsClass<T>, environment: String, vararg providedInstances: InstanceJS<*>) =
-        injector.createInstance(clazz.kotlinClass(), environment, *providedInstances.map { it.toKotlin() }.toTypedArray())
-
-    fun <T : Any> create(clazz: JsClass<T>, vararg providedInstances: InstanceJS<*>) =
-        injector.createInstance(clazz.kotlinClass(), null, *providedInstances.map { it.toKotlin() }.toTypedArray())
-
+    // Provide raw objects or an InstanceJS<*> object for more information
+    // If want to specify the environment, do it with Environment("value")
+    fun <T : Any> create(clazz: JsClass<T>, vararg providedInstances: Any): T {
+        val environment = providedInstances.singleOrNull { it is Environment } as? Environment
+        val parameters = providedInstances.filterNot { it is Environment }.map { if (it is InstanceJS<*>) it.toKotlin() else it }
+        return injector.create(clazz.kotlinClass(), parameters, environment?.value)
+    }
 
     fun reset() = injector.reset()
 

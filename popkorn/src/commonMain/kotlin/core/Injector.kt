@@ -154,17 +154,22 @@ class Injector(
      * it will be injected. Notice that this function will always return a new instance ignoring the scope it has
      *
      * @param clazz Class or Interface that you want to create
+     * @param providedInstances The instances you would like to use (preferentially) when creating the object.
+     *                          Use an Instance<*> object to provide more information about the instance
      * @param environment The environment in which you would like to create the object
-     * @param providedInstances The instances you would like to use (preferentially) when creating the object
      */
-    override fun <T : Any> createInstance(clazz: KClass<T>, environment: String?, vararg providedInstances: Instance<*>): T {
+    override fun <T : Any> create(clazz: KClass<T>, providedInstances: List<Any>, environment: String?): T {
         val pool = if (clazz.needsResolver(resolverPool)) {
             providerPool.create(clazz.getImplementation(environment))
         } else {
             providerPool.create(clazz)
         }
 
-        val useInjector = providedInstances.takeIf { it.isNotEmpty() }?.let { AssistedInjector(this, it.toList()) } ?: this
+        val useInjector = providedInstances
+            .map { if (it is Instance<*>) it else Instance(it) }
+            .takeIf { it.isNotEmpty() }
+            ?.let { AssistedInjector(this, it) }
+            ?: this
         return pool.create(useInjector, environment)
     }
 

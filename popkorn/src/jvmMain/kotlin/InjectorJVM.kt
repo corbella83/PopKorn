@@ -1,5 +1,6 @@
 package cc.popkorn
 
+import cc.popkorn.core.model.Environment
 import cc.popkorn.core.model.Instance
 
 
@@ -36,11 +37,13 @@ class InjectorJVM(private val injector: InjectorController) {
     fun <T : Any> injectNullable(clazz: Class<T>) = injector.injectNullable(clazz.kotlinClass(), null)
 
 
-    fun <T : Any> create(clazz: Class<T>, environment: String, vararg providedInstances: InstanceJVM<*>) =
-        injector.createInstance(clazz.kotlinClass(), environment, *providedInstances.map { it.toKotlin() }.toTypedArray())
-
-    fun <T : Any> create(clazz: Class<T>, vararg providedInstances: InstanceJVM<*>) =
-        injector.createInstance(clazz.kotlinClass(), null, *providedInstances.map { it.toKotlin() }.toTypedArray())
+    // Provide raw objects or an InstanceJVM<*> object for more information
+    // If want to specify the environment, do it with Environment("value")
+    fun <T : Any> create(clazz: Class<T>, vararg providedInstances: Any): T {
+        val environment = providedInstances.singleOrNull { it is Environment } as? Environment
+        val parameters = providedInstances.filterNot { it is Environment }.map { if (it is InstanceJVM<*>) it.toKotlin() else it }
+        return injector.create(clazz.kotlinClass(), parameters, environment?.value)
+    }
 
 
     fun reset() = injector.reset()
