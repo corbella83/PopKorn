@@ -36,9 +36,7 @@ class R8A private constructor() : R8i {
     @ForEnvironments("env1", "env4")
     constructor(d1: DiA, @WithEnvironment("env2") d2: DiB, d3: DiC, d4: Wrapper.DiD) : this()
 
-    constructor(d1: D3, d2: D5, d3: D7, d4: D10) : this() {
-        println("D52 : $d2")
-    }
+    constructor(d1: D3, d2: D5, d3: D7, d4: D10) : this()
 
 }
 
