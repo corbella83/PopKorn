@@ -13,4 +13,3 @@ fun normalizeQualifiedName(path: String): String {
     val isProhibited = PROHIBITED_PACKAGES.map { path.matches(it) }.any { it }
     return if (isProhibited) "cc.popkorn.$path" else path
 }
-

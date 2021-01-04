@@ -4,6 +4,8 @@ Change Log
 Version 2.1.0 *(2020-XX-XX)*
 -----------------------------
 * New: Add assisted dependencies
+* New: Now you can create any `Injectable` class overriding any of it's dependencies
+* Maintenance: Update to Kotlin 1.4.20
 
 Version 2.0.0 *(2020-09-05)*
 -----------------------------

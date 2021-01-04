@@ -62,9 +62,6 @@ class PopKornCompat {
         fun <T : Any> inject(clazz: Class<T>) = injectorJVM.inject(clazz)
 
         @JvmStatic
-        fun <T : Any> create(clazz: Class<T>, environment: String, vararg assistedInstances: Any) = injectorJVM.create(clazz, environment, *assistedInstances)
-
-        @JvmStatic
         fun <T : Any> create(clazz: Class<T>, vararg assistedInstances: Any) = injectorJVM.create(clazz, *assistedInstances)
 
     }

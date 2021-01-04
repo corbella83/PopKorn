@@ -14,7 +14,7 @@ import kotlin.jvm.Synchronized
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class VolatileInstances<T : Any>(private val injector: InjectorController, private val provider: Provider<T>) : Instances<T> {
+internal class VolatileInstances<T : Any>(private val injector: InjectorController, private val provider: Provider<T>) : Instances<T>, Purgeable {
     private val instances = HashMap<String?, WeakReference<T>>()
 
     @Synchronized
@@ -27,6 +27,6 @@ internal class VolatileInstances<T : Any>(private val injector: InjectorControll
     override fun size() = instances.size
 
     @Synchronized
-    fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }
+    override fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }
 
 }

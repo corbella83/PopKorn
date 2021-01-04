@@ -1,6 +1,7 @@
 package cc.popkorn
 
 import cc.popkorn.core.model.Environment
+import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
 
@@ -17,15 +18,22 @@ internal val injector by lazy { createDefaultInjector() }
  * Methods to use PopKorn
  * popKorn() -> Call this to obtain the injector currently being used
  * val instance by popkorn<SomeClass>() -> Call this to lazy inject dependencies
- * val instance by assist<SomeClass>(assisted, params) -> Call this to lazy create dependencies
+ * val instance by injecting<SomeClass>() -> Call this to lazy inject dependencies
+ * val instance by creating<SomeClass>(assisted, params) -> Call this to lazy create dependencies
  */
 fun popKorn(): InjectorController = injector
 
-inline fun <reified T : Any> popkorn(environment: String? = null, vararg assistedInstances: Any): Lazy<T> = LazyDelegate { T::class.inject(environment) }
+inline fun <reified T : Any> popkorn(environment: String? = null) = lazy { T::class.inject(environment) }
 
-inline fun <reified T : Any> lazyInject(environment: String? = null): Lazy<T> = LazyDelegate { T::class.inject(environment) }
+inline fun <reified T : Any> injecting(environment: String? = null) = lazy { T::class.inject(environment) }
 
-inline fun <reified T : Any> lazyCreate(vararg assistedInstances: Any): Lazy<T> = LazyDelegate { T::class.create(*assistedInstances) }
+inline fun <reified T : Any> creating(vararg assistedInstances: Any) = lazy {
+    val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
+    T::class.create(environment?.value) {
+        assistedInstances.filterNot { it is Environment }
+            .forEach { add(if (it is Instance<*>) it else Instance(it)) }
+    }
+}
 
 
 /**
@@ -45,13 +53,11 @@ fun <T : Any> KClass<T>.injectNullable(environment: String? = null) = injector.i
 
 
 /**
- * Methods to create instances anywhere like create<SomeClass>(assisted, params)
+ * Methods to create instances anywhere like create<SomeClass>{ add("param") }
  */
-inline fun <reified T : Any> create(vararg assistedInstances: Any) = T::class.create(*assistedInstances)
+inline fun <reified T : Any> create(environment: String? = null, noinline parameters: (ParametersFactory.Builder.() -> Unit)? = null) = T::class.create(environment, parameters)
 
-fun <T : Any> KClass<T>.create(vararg assistedInstances: Any): T {
-    val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-    val parameters = assistedInstances.filterNot { it is Environment }
-    return injector.create(this, parameters, environment?.value)
+fun <T : Any> KClass<T>.create(environment: String? = null, parameters: (ParametersFactory.Builder.() -> Unit)? = null): T {
+    val params = parameters?.let { ParametersFactory.Builder().also(it).build() }
+    return injector.create(this, environment, params)
 }
-

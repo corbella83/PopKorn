@@ -9,8 +9,8 @@ fun main() {
     popKorn().addInjectable(d10)
 
     val string1 by popkorn<R2i>()
-    val string2 by lazyInject<R2i>()
-    val string3 by lazyCreate<R2i>("", 33)
+    val string2 by injecting<R2i>()
+    val string3 by creating<R2i>("", 33)
 
     inject<String>()
     inject<Int>()
@@ -33,10 +33,23 @@ fun main() {
     inject<R8i>("env4")
     inject<R9i>()
 
-    create<R10i>(10L, R9())
-    create<R10i>(Environment("env2"), 10L, R10())
+    create<R10i> {
+        add(10L)
+        add(R9())
+    }
+    val c1 by creating<R10i>(10L, R9())
+
+    create<R10i>("env2") {
+        add(10L)
+        add(R10())
+    }
+    val c2 by creating<R10i>(Environment("env2"), 10L, R10())
+
     create<R8i>()
+    val c3 by creating<R8i>()
+
     create<R8i>("env1")
+    val c4 by creating<R8i>("env1")
 
     popKorn().removeInjectable(d10::class)
     popKorn().reset()

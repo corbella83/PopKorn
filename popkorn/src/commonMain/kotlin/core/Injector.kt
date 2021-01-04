@@ -3,8 +3,8 @@
 package cc.popkorn.core
 
 import cc.popkorn.InjectorController
+import cc.popkorn.ParametersFactory
 import cc.popkorn.core.exceptions.*
-import cc.popkorn.core.model.Instance
 import cc.popkorn.instances.*
 import cc.popkorn.needsResolver
 import cc.popkorn.pools.ProviderPool
@@ -103,7 +103,7 @@ class Injector(
                 resolvers.putAll(it)
             }
 
-        instances.mapNotNull { it.value as? VolatileInstances }
+        instances.mapNotNull { it.value as? Purgeable }
             .forEach { it.purge() }
     }
 
@@ -155,23 +155,18 @@ class Injector(
      * It doesn't propagate. Assisted instances will only be used at the constructor of 'clazz'
      *
      * @param clazz Class or Interface that you want to create
-     * @param assistedInstances The instances you would like to use (preferentially) when creating the object.
-     *                          Use an Instance<*> object to provide more information about the instance
      * @param environment The environment in which you would like to create the object
+     * @param parametersFactory The instances you would like to use (preferentially) when creating the object.
      */
-    override fun <T : Any> create(clazz: KClass<T>, assistedInstances: List<Any>, environment: String?): T {
+    override fun <T : Any> create(clazz: KClass<T>, environment: String?, parametersFactory: ParametersFactory?): T {
         val pool = if (clazz.needsResolver(resolverPool)) {
             providerPool.create(clazz.getImplementation(environment))
         } else {
             providerPool.create(clazz)
         }
 
-        val useInjector = assistedInstances
-            .map { if (it is Instance<*>) it else Instance(it) }
-            .takeIf { it.isNotEmpty() }
-            ?.let { AssistedInjector(this, it) }
-            ?: this
-        return pool.create(useInjector, environment)
+        val currentInjector = parametersFactory?.let { AssistedInjector(this, it) } ?: this
+        return pool.create(currentInjector, environment)
     }
 
 

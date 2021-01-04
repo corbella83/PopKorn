@@ -20,9 +20,9 @@ interface InjectorController {
 
     fun <T : Any> injectNullable(clazz: KClass<T>, environment: String? = null): T?
 
-    fun <T : Any> create(clazz: KClass<T>, assistedInstances: List<Any>, environment: String? = null): T
+    fun <T : Any> create(clazz: KClass<T>, environment: String?, parametersFactory: ParametersFactory?): T
 
-    fun <T : Any> create(clazz: KClass<T>, environment: String? = null) = create(clazz, listOf(), environment)
+    fun <T : Any> create(clazz: KClass<T>, parametersFactory: ParametersFactory?) = create(clazz, null, parametersFactory)
 
     fun purge()
 
