@@ -11,7 +11,6 @@ buildscript {
         classpath(kotlin("gradle-plugin", kotlinVersion))
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
     }
-
 }
 
 allprojects {
