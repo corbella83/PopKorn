@@ -5,7 +5,7 @@ import cc.popkorn.core.exceptions.InstanceNotFoundException
 /**
  * Instances implementation for manually scoped instances
  * Calling get() will return a previously added T::class. If not added or already removed,
- * will throw a RuntimeException
+ * will throw an InstanceNotFoundException
  *
  * @author Pau Corbella
  * @since 1.0.0

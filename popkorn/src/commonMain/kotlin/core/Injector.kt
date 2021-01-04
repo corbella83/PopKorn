@@ -165,7 +165,7 @@ class Injector(
             providerPool.create(clazz)
         }
 
-        val currentInjector = parametersFactory?.let { AssistedInjector(this, it) } ?: this
+        val currentInjector = AssistedInjector(this, parametersFactory ?: ParametersFactory.Builder().build())
         return pool.create(currentInjector, environment)
     }
 

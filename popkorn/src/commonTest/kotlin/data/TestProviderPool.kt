@@ -1,5 +1,6 @@
 package cc.popkorn.data
 
+import cc.popkorn.core.exceptions.ProviderNotFoundException
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.providers.Provider
 import kotlin.reflect.KClass
@@ -17,6 +18,8 @@ class TestProviderPool : ProviderPool {
             TestClassByApp::class -> true
             TestClassByNew::class -> true
             TestClassByUse::class -> true
+            TestAssistedClass::class -> true
+            TestAssistedClass2::class -> true
             else -> false
         }
     }
@@ -26,7 +29,9 @@ class TestProviderPool : ProviderPool {
             TestClassByApp::class -> TestClassByAppProvider() as Provider<T>
             TestClassByNew::class -> TestClassByNewProvider() as Provider<T>
             TestClassByUse::class -> TestClassByUseProvider() as Provider<T>
-            else -> throw RuntimeException("Provider not found : $clazz")
+            TestAssistedClass::class -> TestAssistedClassProvider() as Provider<T>
+            TestAssistedClass2::class -> TestAssistedClass2Provider() as Provider<T>
+            else -> throw ProviderNotFoundException(clazz)
         }
     }
 }

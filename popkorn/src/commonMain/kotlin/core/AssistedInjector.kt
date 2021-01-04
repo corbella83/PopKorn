@@ -31,7 +31,7 @@ internal class AssistedInjector(
         try {
             return parameters.get(clazz, environment) ?: baseInjector.inject(clazz, environment)
         } catch (e: ProviderNotFoundException) {
-            throw AssistedNotFoundException(e.clazz)
+            throw AssistedNotFoundException(e.clazz, environment)
         }
     }
 
