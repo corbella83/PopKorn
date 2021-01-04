@@ -1,7 +1,7 @@
-val kotlinPoetVersion = "1.6.0"
-val kotlinxMetadataVersion = "0.1.0"
-val apacheVersion = "2.7"
-val compileTestVersion = "0.18"
+val kotlinPoetVersion = "1.7.2"
+val kotlinxMetadataVersion = "0.2.0"
+val apacheVersion = "2.6"
+val compileTestVersion = "0.19"
 
 plugins {
     kotlin("jvm")

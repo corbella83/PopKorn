@@ -53,7 +53,7 @@ fun <T : Any> KClass<T>.injectNullable(environment: String? = null) = injector.i
 
 
 /**
- * Methods to create instances anywhere like create<SomeClass>{ add("param") }
+ * Methods to create instances anywhere like create<SomeClass>{ add("param1"); add("param2"); }
  */
 inline fun <reified T : Any> create(environment: String? = null, noinline parameters: (ParametersFactory.Builder.() -> Unit)? = null) = T::class.create(environment, parameters)
 
