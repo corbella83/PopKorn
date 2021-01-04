@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 /**
- * Class to test assisted creations
+ * Class to test creations
  *
  * @author Pau Corbella
  * @since 2.1.0

@@ -1,6 +1,6 @@
 package cc.popkorn.instances
 
-import cc.popkorn.InjectorController
+import cc.popkorn.InjectorManager
 import cc.popkorn.WeakReference
 import cc.popkorn.providers.Provider
 import kotlin.jvm.Synchronized
@@ -14,7 +14,7 @@ import kotlin.jvm.Synchronized
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class VolatileInstances<T : Any>(private val injector: InjectorController, private val provider: Provider<T>) : Instances<T>, Purgeable {
+internal class VolatileInstances<T : Any>(private val injector: InjectorManager, private val provider: Provider<T>) : Instances<T>, Purgeable {
     private val instances = HashMap<String?, WeakReference<T>>()
 
     @Synchronized

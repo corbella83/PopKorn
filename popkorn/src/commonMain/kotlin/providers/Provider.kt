@@ -1,6 +1,6 @@
 package cc.popkorn.providers
 
-import cc.popkorn.InjectorController
+import cc.popkorn.InjectorManager
 import cc.popkorn.core.Scope
 
 /**
@@ -12,7 +12,7 @@ import cc.popkorn.core.Scope
  */
 interface Provider<T : Any> {
 
-    fun create(injector: InjectorController, environment: String?): T
+    fun create(injector: InjectorManager, environment: String?): T
 
     fun scope(): Scope
 

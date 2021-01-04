@@ -1,6 +1,6 @@
 package cc.popkorn.instances
 
-import cc.popkorn.InjectorController
+import cc.popkorn.InjectorManager
 import cc.popkorn.providers.Provider
 
 
@@ -11,7 +11,7 @@ import cc.popkorn.providers.Provider
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal class PersistentInstances<T : Any>(private val injector: InjectorController, private val provider: Provider<T>) : Instances<T> {
+internal class PersistentInstances<T : Any>(private val injector: InjectorManager, private val provider: Provider<T>) : Instances<T> {
     private val instances = HashMap<String?, T>()
 
     override fun get(environment: String?): T {

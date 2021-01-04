@@ -150,7 +150,7 @@ class Injector(
 
 
     /**
-     * Creates an object of type clazz using assisted instances preferentially. If not assisting a certain parameter
+     * Creates an object of type clazz using given instances preferentially. If not assisting a certain parameter
      * it will be injected normally. Notice that this function will always return a new instance ignoring the scope it has.
      * It doesn't propagate. Assisted instances will only be used at the constructor of 'clazz'
      *
@@ -165,8 +165,8 @@ class Injector(
             providerPool.create(clazz)
         }
 
-        val currentInjector = AssistedInjector(this, parametersFactory ?: ParametersFactory.Builder().build())
-        return pool.create(currentInjector, environment)
+        val wrapper = InjectorWrapper(this, parametersFactory ?: ParametersFactory.Builder().build())
+        return pool.create(wrapper, environment)
     }
 
 

@@ -1,6 +1,6 @@
 package cc.popkorn.compiler.generators
 
-import cc.popkorn.InjectorController
+import cc.popkorn.InjectorManager
 import cc.popkorn.PROVIDER_SUFFIX
 import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
@@ -95,8 +95,8 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
         val params = parameters.map { param ->
             if (param.asType().asTypeName() == Injector::class.asTypeName()) {
-                throw PopKornException("Constructors cannot use 'Injector' as a parameter, use 'InjectorController' instead")
-            } else if (param.asType().asTypeName() == InjectorController::class.asTypeName()) {
+                throw PopKornException("Constructors cannot use 'Injector' as a parameter, use 'InjectorManager' instead")
+            } else if (param.asType().asTypeName() == InjectorManager::class.asTypeName()) {
                 return@map "injector"
             } else if (param.asType().asTypeName() == Environment::class.asTypeName()) {
                 return@map "${param.asType().asTypeName()}(environment)"
@@ -137,7 +137,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         val className = supportClassName()
 
         val createFun = FunSpec.builder("create")
-            .addParameter("injector", InjectorController::class)
+            .addParameter("injector", InjectorManager::class)
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
             .returns(className)

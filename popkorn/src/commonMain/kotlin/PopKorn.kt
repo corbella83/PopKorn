@@ -19,7 +19,7 @@ internal val injector by lazy { createDefaultInjector() }
  * popKorn() -> Call this to obtain the injector currently being used
  * val instance by popkorn<SomeClass>() -> Call this to lazy inject dependencies
  * val instance by injecting<SomeClass>() -> Call this to lazy inject dependencies
- * val instance by creating<SomeClass>(assisted, params) -> Call this to lazy create dependencies
+ * val instance by creating<SomeClass>(param1, param2) -> Call this to lazy create dependencies
  */
 fun popKorn(): InjectorController = injector
 
@@ -27,6 +27,7 @@ inline fun <reified T : Any> popkorn(environment: String? = null) = lazy { T::cl
 
 inline fun <reified T : Any> injecting(environment: String? = null) = lazy { T::class.inject(environment) }
 
+//TODO
 inline fun <reified T : Any> creating(vararg assistedInstances: Any) = lazy {
     val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
     T::class.create(environment?.value) {
