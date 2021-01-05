@@ -9,9 +9,9 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 2.1.0
  */
-class ParametersFactory private constructor(internal val params: List<Instance<*>>) {
+class ParametersFactory private constructor(private val params: List<Instance<*>>) {
 
-    class Builder internal constructor() {
+    class Builder {
         private val parameters = arrayListOf<Instance<*>>()
 
         fun <T : Any> add(instance: Instance<T>) = parameters.add(instance)
@@ -20,7 +20,7 @@ class ParametersFactory private constructor(internal val params: List<Instance<*
 
         fun <T : Any> add(instance: T, environment: String? = null) = add(instance, instance::class, environment)
 
-        internal fun build() = ParametersFactory(parameters)
+        fun build() = ParametersFactory(parameters)
 
     }
 
