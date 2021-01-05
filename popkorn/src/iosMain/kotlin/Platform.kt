@@ -35,11 +35,19 @@ internal actual fun createDefaultInjector() = Injector(objcResolverPool(), objcP
 
 
 private fun objcResolverPool(): ResolverPool {
-    return MappingResolverPool(loadMappings("ResolverMapping"))
+    return if (::resolverMappings.isInitialized) {
+        MappingResolverPool(resolverMappings)
+    } else {
+        MappingResolverPool(loadMappings("ResolverMapping"))
+    }
 }
 
 private fun objcProviderPool(): ProviderPool {
-    return MappingProviderPool(loadMappings("ProviderMapping"))
+    return if (::providerMappings.isInitialized) {
+        MappingProviderPool(providerMappings)
+    } else {
+        MappingProviderPool(loadMappings("ProviderMapping"))
+    }
 }
 
 private fun loadMappings(type: String): Set<Mapping> {

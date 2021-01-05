@@ -11,19 +11,19 @@ import cc.popkorn.mapping.Mapping
  */
 
 
-internal lateinit var iResolverMappings: Set<Mapping>
-internal lateinit var iProviderMappings: Set<Mapping>
+internal lateinit var resolverMappings: Set<Mapping>
+internal lateinit var providerMappings: Set<Mapping>
 
 /**
  * This method needs to be called on Native platform before using PopKorn. This is because in native cannot
  * automatically locate the mapping files
  *
- * @param resolverMappings All the resolver mappings that PopKorn generated
- * @param providerMappings All the provider mappings that PopKorn generated
+ * @param resolvers All the resolver mappings that PopKorn generated
+ * @param providers All the provider mappings that PopKorn generated
  */
-fun setup(resolverMappings: Set<Mapping>, providerMappings: Set<Mapping>) {
-    if (::iResolverMappings.isInitialized || ::iProviderMappings.isInitialized) return
-    iResolverMappings = resolverMappings
-    iProviderMappings = providerMappings
+fun setup(resolvers: Set<Mapping>, providers: Set<Mapping>) {
+    if (::resolverMappings.isInitialized || ::providerMappings.isInitialized) return
+    resolverMappings = resolvers
+    providerMappings = providers
 }
 

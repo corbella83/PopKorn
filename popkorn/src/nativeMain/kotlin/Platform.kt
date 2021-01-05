@@ -28,11 +28,11 @@ internal actual fun createDefaultInjector() = Injector(nativeResolverPool(), nat
 
 
 private fun nativeResolverPool(): ResolverPool {
-    if (!::iResolverMappings.isInitialized || !::iProviderMappings.isInitialized) throw PopKornNotInitializedException()
-    return MappingResolverPool(iProviderMappings)
+    if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()
+    return MappingResolverPool(resolverMappings)
 }
 
 private fun nativeProviderPool(): ProviderPool {
-    if (!::iResolverMappings.isInitialized || !::iProviderMappings.isInitialized) throw PopKornNotInitializedException()
-    return MappingProviderPool(iProviderMappings)
+    if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()
+    return MappingProviderPool(providerMappings)
 }

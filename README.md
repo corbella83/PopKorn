@@ -5,7 +5,7 @@ PopKorn - Kotlin Multiplatform DI
 ==========
 
 
-PopKorn is a simple, powerful and lightweight Multiplatform Dependency Injector written 100% Kotlin. It doesn't need any boilerplate, just use it! It supports AND, IOS, JVM, JS and NATIVE.
+PopKorn is a simple, powerful and lightweight Kotlin Multiplatform Dependency Injector. It doesn't need any modules or components, just use it without writing a single extra file! It supports AND, IOS, JVM, JS and NATIVE.
 
 
 Download
@@ -13,15 +13,15 @@ Download
 Get it with Gradle:
 
 ```groovy
-implementation 'cc.popkorn:popkorn:2.0.0'
-kapt 'cc.popkorn:popkorn-compiler:2.0.0'
+implementation 'cc.popkorn:popkorn:2.1.0'
+kapt 'cc.popkorn:popkorn-compiler:2.1.0'
 ```
 
 The Kotlin Gradle Plugin 1.4.0 will automatically resolve platform dependent implementations (jvm, js, iosX64...). But if you are using Kotlin Gradle Plugin below 1.4.0 you will have to specify the platform yourself. In the case of Android/JVM is the following:
 
 ```groovy
-implementation 'cc.popkorn:popkorn-jvm:2.0.0'
-kapt 'cc.popkorn:popkorn-compiler:2.0.0'
+implementation 'cc.popkorn:popkorn-jvm:2.1.0'
+kapt 'cc.popkorn:popkorn-compiler:2.1.0'
 ```
 
 Working with Scopes and Environments
@@ -54,13 +54,9 @@ class HelloWorld
 ```kotlin
 val helloWorld = inject<HelloWorld>()
 
-or
+or by lazy
 
-val helloWorld: HelloWorld = inject()
-
-or
-
-val helloWorld = HelloWorld::class.inject()
+val helloWorld by popkorn<HelloWorld>()
 ```
 
 By default `HelloWorld` will be Scope.BY_APP, but we can change it:
@@ -137,14 +133,14 @@ val hello = inject<Hello>() // this will return an instance of HelloWorld
 
 ### Using runtime arguments (or assisted dependencies)
 
-Imagine you have this injectable class where 'id' is not injectable
+If you have this injectable class where 'id' is not injectable
 
 ```kotlin
 @Injectable(BY_NEW)
 class HelloViewModel(val id: Long, val param2: HelloBarcelona, val param2: HelloNewYork) : Hello
 ```
 
-You can create a HelloViewModel like this:
+You can create a HelloViewModel like this to provide runtime 'id':
 
 ```kotlin
 val hello = create<Hello> {
@@ -152,7 +148,7 @@ val hello = create<Hello> {
 }
 ```
 
-You can even override dependencies. So, if you create the object like this:
+You can even override dependencies using this. So, if you create the object like this:
 
 ```kotlin
 val hello = create<Hello> {
@@ -224,7 +220,7 @@ PopKorn provides full support to Android platforms. You don't need to initialize
 To use it from pure java classes, use PopKornCompat:
 
 ```java
-HelloWorld helloWorld=PopKornCompat.inject(HelloWorld.class);
+HelloWorld helloWorld = PopKornCompat.inject(HelloWorld.class);
 ```
 
 To prevent you to exclude lots of classes from obfuscation, PopKorn saves some mappings that needs to be merged when generating the APK. If you are using multiple modules, Android will take only the last one by default (

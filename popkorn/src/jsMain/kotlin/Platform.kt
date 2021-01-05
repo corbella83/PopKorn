@@ -36,11 +36,11 @@ internal actual fun createDefaultInjector() = Injector(jsResolverPool(), jsProvi
 
 
 private fun jsResolverPool(): ResolverPool {
-    if (!::iResolverMappings.isInitialized || !::iProviderMappings.isInitialized) throw PopKornNotInitializedException()
-    return MappingResolverPool(iProviderMappings)
+    if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()
+    return MappingResolverPool(resolverMappings)
 }
 
 private fun jsProviderPool(): ProviderPool {
-    if (!::iResolverMappings.isInitialized || !::iProviderMappings.isInitialized) throw PopKornNotInitializedException()
-    return MappingProviderPool(iProviderMappings)
+    if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()
+    return MappingProviderPool(providerMappings)
 }
