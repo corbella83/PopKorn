@@ -58,5 +58,7 @@ kotlin {
                 implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
             }
         }
+
+        named("androidTest") { }
     }
 }
