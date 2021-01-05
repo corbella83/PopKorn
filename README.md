@@ -54,8 +54,7 @@ class HelloWorld
 ```kotlin
 val helloWorld = inject<HelloWorld>()
 
-or by lazy
-
+// or by lazy
 val helloWorld by popkorn<HelloWorld>()
 ```
 
