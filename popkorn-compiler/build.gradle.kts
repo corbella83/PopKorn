@@ -5,7 +5,6 @@ val compileTestVersion = "0.19"
 
 plugins {
     kotlin("jvm")
-    id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     id("pk-publish")
 }
