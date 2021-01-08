@@ -3,7 +3,6 @@ package cc.popkorn
 import cc.popkorn.core.model.Environment
 import cc.popkorn.core.model.Instance
 
-
 /**
  * Wrapper for Injector to be used from the JVM (pure java)
  *
@@ -59,7 +58,7 @@ class InjectorJVM(private val injector: InjectorController) {
 
     private fun <T : Any> InstanceJVM<T>.toKotlin() = Instance(instance, type.kotlinClass(), environment)
 
-    //If it doesn't exist, creates a ClassReference
+    // If it doesn't exist, creates a ClassReference
     private fun <T : Any> Class<T>.kotlinClass() = kotlin
 
 }

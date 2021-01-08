@@ -42,5 +42,4 @@ public class ExampleCompat {
         System.out.println("ok compat");
     }
 
-
 }

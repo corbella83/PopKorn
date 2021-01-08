@@ -3,7 +3,6 @@ package cc.popkorn
 import cc.popkorn.mapping.Mapping
 import kotlinx.cinterop.ObjCClass
 
-
 /**
  * Compatibility class to use PopKorn from ios code
  *
@@ -11,9 +10,7 @@ import kotlinx.cinterop.ObjCClass
  * @since 2.0.0
  */
 
-
 internal lateinit var classCreator: (ObjCClass) -> Mapping
-
 internal lateinit var resolverMappings: Set<Mapping>
 internal lateinit var providerMappings: Set<Mapping>
 
@@ -28,7 +25,6 @@ fun setup(creator: (ObjCClass) -> Mapping) {
     if (::classCreator.isInitialized) return
     classCreator = creator
 }
-
 
 /**
  * Secondary method to initialize popkorn from IOS in case the first doesn't work

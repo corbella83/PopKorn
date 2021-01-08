@@ -22,4 +22,3 @@ annotation class InjectableProvider(
     val propagation: Propagation = Propagation.NONE,
     vararg val exclude: KClass<*> = arrayOf()
 )
-

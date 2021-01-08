@@ -33,7 +33,6 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
         assertCompileFail(test)
     }
 
-
     @Test
     fun testPublicClassInjectable() {
         val inject = JavaClass().modifiers("public")
@@ -44,7 +43,6 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
         assertCompileSuccess(inject, test)
     }
 
-
     @Test
     fun testPublicClassWithAlias() {
         val inject = JavaClass().modifiers("public")
@@ -54,13 +52,12 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
         assertCompileSuccess(inject, test)
 
-        //If already have this alias, should fail
+        // If already have this alias, should fail
         val test2 = JavaClass().modifiers("public")
             .injectableProvider(alias = "alias")
             .method(JavaMethod("testFun").modifiers("public").returns(inject.qualifiedName()))
         assertCompileFail(inject, test, test2)
     }
-
 
     @Test
     fun testPublicClassWithEnvironments() {
@@ -72,7 +69,6 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
         assertCompileSuccess(inject, test)
     }
-
 
     @Test
     fun testPublicClassWithPrimitiveType() {

@@ -21,4 +21,3 @@ annotation class Injectable(
     val propagation: Propagation = Propagation.ALL,
     vararg val exclude: KClass<*> = arrayOf()
 )
-

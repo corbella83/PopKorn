@@ -1,6 +1,5 @@
 package cc.popkorn.compiler.utils
 
-
 /**
  * Splits this qualified class into package (first) and class name (second)
  *

@@ -4,7 +4,6 @@ import cc.popkorn.core.model.Environment
 import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
-
 /**
  * PopKorn DI
  *
@@ -27,7 +26,7 @@ inline fun <reified T : Any> popkorn(environment: String? = null) = lazy { T::cl
 
 inline fun <reified T : Any> injecting(environment: String? = null) = lazy { T::class.inject(environment) }
 
-//TODO
+// TODO
 inline fun <reified T : Any> creating(vararg assistedInstances: Any) = lazy {
     val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
     T::class.create(environment?.value) {

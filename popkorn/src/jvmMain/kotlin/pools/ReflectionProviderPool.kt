@@ -33,5 +33,4 @@ internal class ReflectionProviderPool : ProviderPool {
         return "${normalizeQualifiedName(original.getName())}_$PROVIDER_SUFFIX"
     }
 
-
 }

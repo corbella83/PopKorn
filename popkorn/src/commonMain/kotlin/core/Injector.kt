@@ -13,7 +13,6 @@ import cc.popkorn.resolvers.Resolver
 import cc.popkorn.resolvers.RuntimeResolver
 import kotlin.reflect.KClass
 
-
 /**
  * Main class to perform injections
  *
@@ -27,7 +26,6 @@ class Injector(
 
     internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
-
 
     /**
      * This method allows to add an injectable instance at runtime. No scopes are defined here,
@@ -57,7 +55,6 @@ class Injector(
             ?: throw AlreadyInjectableException()
     }
 
-
     /**
      * This method allows to remove an injectable instance at runtime.
      *
@@ -80,7 +77,6 @@ class Injector(
             ?.also { instances.remove(type) }
     }
 
-
     /**
      * Resets all instances created by this time. This will force to recreate all instances
      * Notice that objects which already have an injected classes will maintain them until recreated.
@@ -90,7 +86,6 @@ class Injector(
         instances.clear()
         resolvers.clear()
     }
-
 
     /**
      * Frees memory that is not needed anymore
@@ -107,7 +102,6 @@ class Injector(
             .forEach { it.purge() }
     }
 
-
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
      *
@@ -121,7 +115,6 @@ class Injector(
             provide(clazz, environment)
         }
     }
-
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
@@ -148,7 +141,6 @@ class Injector(
         }
     }
 
-
     /**
      * Creates an object of type clazz using given instances preferentially. If not assisting a certain parameter
      * it will be injected normally. Notice that this function will always return a new instance ignoring the scope it has.
@@ -168,7 +160,6 @@ class Injector(
         val wrapper = InjectorWrapper(this, parametersFactory ?: ParametersFactory.Builder().build())
         return pool.create(wrapper, environment)
     }
-
 
     private fun <T : Any> provide(clazz: KClass<T>, environment: String?): T {
         return instances.getOrPut(clazz, { clazz.getInstances() })

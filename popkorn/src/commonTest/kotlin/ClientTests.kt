@@ -38,7 +38,6 @@ internal class ClientTests : PopKornTest() {
         injector.removeInjectable(tmp::class)
 
         injector.reset()
-
     }
 
 }

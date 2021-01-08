@@ -43,7 +43,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return "${file.packageName}.${file.name}"
     }
 
-
     // Writes a provider from a provided injectable element
     fun write(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {
         val property = PropertySpec.builder("inner", provider.asClassName())
@@ -91,7 +90,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return codeBlock.build()
     }
 
-
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
         val params = parameters.map { param ->
             if (param.asType().asTypeName() == Injector::class.asTypeName()) {
@@ -108,7 +106,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             val impl = param.get(Alias::class)?.value
                 ?.let {
                     val alternate = namesMapper[it] ?: throw PopKornException("Could not find any Injectable class with name $it")
-                    if (!typeUtils.isAssignable(alternate, param.asType())) throw PopKornException("Parameter specified as $it (${alternate}) is not assignable to ${param.asType()} while creating $this")
+                    if (!typeUtils.isAssignable(alternate, param.asType())) throw PopKornException("Parameter specified as $it ($alternate) is not assignable to ${param.asType()} while creating $this")
                     alternate
                 }
                 ?: param.asType()
@@ -129,7 +127,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         }
 
     }
-
 
     private fun TypeElement.getProviderFile(property: PropertySpec?, creationCode: CodeBlock, scope: Scope): FileSpec {
         val filePackage = "${normalizeQualifiedName(qualifiedName.toString())}_$PROVIDER_SUFFIX"

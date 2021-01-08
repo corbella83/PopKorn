@@ -11,7 +11,6 @@ import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
-
 /**
  * AbstractProcessor to handle all PopKorn annotations and generate the necessary source code files
  *

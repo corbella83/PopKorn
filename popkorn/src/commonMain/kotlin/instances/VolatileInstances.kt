@@ -5,7 +5,6 @@ import cc.popkorn.WeakReference
 import cc.popkorn.providers.Provider
 import kotlin.jvm.Synchronized
 
-
 /**
  * Instances implementation for Scope.BY_USE
  * Calling get() for the same environment and T::class will return the same instance as long as

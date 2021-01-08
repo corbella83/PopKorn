@@ -15,7 +15,6 @@ import kotlin.reflect.KClass
 
 actual typealias WeakReference<T> = java.lang.ref.WeakReference<T>
 
-
 internal actual fun <T : Any> KClass<T>.getName() = java.name
 
 internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool) = isInterface() || isAbstract()
@@ -27,7 +26,6 @@ private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
 
 // Must check it's primitiveness because java considers them abstract (int, long, float, double, etc)
 private fun <T : Any> KClass<T>.isAbstract() = (!this.java.isPrimitive && Modifier.isAbstract(this.java.modifiers))
-
 
 private fun jvmResolverPool(): ResolverPool {
     return loadMappings(RESOLVER_MAPPINGS)
@@ -42,7 +40,6 @@ private fun jvmProviderPool(): ProviderPool {
         ?.let { MappingProviderPool(it) }
         ?: ReflectionProviderPool()
 }
-
 
 private fun loadMappings(resource: String): Set<Mapping> {
     val set = HashSet<Mapping>()
@@ -69,4 +66,3 @@ private fun loadMappings(resource: String): Set<Mapping> {
         }
     return set
 }
-

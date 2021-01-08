@@ -1,6 +1,5 @@
 package cc.popkorn.instances
 
-
 /**
  * Interface that defines if a class is able to be purged
  *

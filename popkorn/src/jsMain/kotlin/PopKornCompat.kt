@@ -2,14 +2,12 @@ package cc.popkorn
 
 import cc.popkorn.mapping.Mapping
 
-
 /**
  * Compatibility class to use PopKorn from js code
  *
  * @author Pau Corbella
  * @since 2.0.0
  */
-
 
 internal lateinit var resolverMappings: Set<Mapping>
 internal lateinit var providerMappings: Set<Mapping>
@@ -26,4 +24,3 @@ fun setup(resolvers: Set<Mapping>, providers: Set<Mapping>) {
     resolverMappings = resolvers
     providerMappings = providers
 }
-

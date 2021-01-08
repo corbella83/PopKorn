@@ -3,7 +3,6 @@ package cc.popkorn
 import cc.popkorn.core.model.Environment
 import cc.popkorn.core.model.Instance
 
-
 /**
  * Wrapper for Injector to be used from the JS (pure js)
  *
@@ -46,6 +45,7 @@ class InjectorJS(private val injector: InjectorController) {
         return injector.create(clazz.kotlinClass(), environment?.value, factory)
     }
 
+
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
@@ -59,6 +59,6 @@ class InjectorJS(private val injector: InjectorController) {
 
     private fun <T : Any> InstanceJS<T>.toKotlin() = Instance(instance, type.kotlinClass(), environment)
 
-    //If it doesn't exist, creates a SimpleKClassImpl
+    // If it doesn't exist, creates a SimpleKClassImpl
     private fun <T : Any> JsClass<T>.kotlinClass() = kotlin
 }

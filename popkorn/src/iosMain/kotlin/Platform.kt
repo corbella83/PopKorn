@@ -16,7 +16,6 @@ import platform.objc.objc_copyClassNamesForImage
 import platform.objc.objc_getClass
 import kotlin.reflect.KClass
 
-
 /**
  * Implementation for Ios of the methods/classes that are Platform-dependent
  *
@@ -25,7 +24,6 @@ import kotlin.reflect.KClass
  */
 
 actual typealias WeakReference<T> = kotlin.native.ref.WeakReference<T>
-
 
 internal actual fun <T : Any> KClass<T>.getName() = qualifiedName ?: throw NonExistingClassException(this)
 
@@ -57,7 +55,6 @@ private fun loadMappings(type: String): Set<Mapping> {
         .toSet()
 }
 
-
 private fun getMappings(type: String): Set<ObjCClass> {
     val allExecutables = getAllExecutables()
     val outCount = getUIntPointer()
@@ -82,7 +79,6 @@ private fun getMappings(type: String): Set<ObjCClass> {
     return set
 }
 
-
 private fun getAllExecutables(): List<String> {
     val allBundles = CFBundleGetAllBundles()
 
@@ -98,7 +94,6 @@ private fun getAllExecutables(): List<String> {
 
     return result
 }
-
 
 private fun getUIntPointer(): Pinned<CPointer<UIntVar>> {
     val memScope = MemScope()
@@ -118,4 +113,3 @@ private fun CFBundleRef.getExecutableUrl(): String? {
         ?.fileSystemRepresentation
         ?.toKString()
 }
-

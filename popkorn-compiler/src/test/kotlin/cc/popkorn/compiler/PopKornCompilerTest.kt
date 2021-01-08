@@ -8,7 +8,6 @@ import com.google.testing.compile.JavaFileObjects
 import org.apache.commons.io.FileUtils
 import java.io.File
 
-
 /**
  * Parent class of all compilation tests
  *
@@ -18,7 +17,6 @@ import java.io.File
 abstract class PopKornCompilerTest {
     private val projectFolder = System.getProperty("user.dir")
     private val generatedFolder = "$projectFolder/build/generated/source/kaptKotlin/test"
-
 
     fun assertCompileSuccess(vararg classes: JavaClass) {
         try {
@@ -35,7 +33,7 @@ abstract class PopKornCompilerTest {
             val compilation = compile(*classes)
             CompilationSubject.assertThat(compilation).failed()
         } catch (e: Exception) {
-            // assertion ok
+            // Assertion OK
         } finally {
             clean()
         }
@@ -55,13 +53,11 @@ abstract class PopKornCompilerTest {
         File(generatedFolder).listFiles()?.forEach { FileUtils.forceDelete(it) }
     }
 
-
     private fun assertFiles(vararg classes: JavaClass) {
         classes.mapNotNull { it.getGeneratedFile()?.replace(".", "/") }
             .map { File("$generatedFolder/$it.kt") }
             .takeIf { files -> files.all { it.exists() } }
             ?: throw RuntimeException("Some providers/resolvers have not been generated")
     }
-
 
 }

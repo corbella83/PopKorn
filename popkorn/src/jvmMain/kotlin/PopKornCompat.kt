@@ -1,6 +1,5 @@
 package cc.popkorn
 
-
 /**
  * Compatibility class to use PopKorn from java code
  * Use it like PopKornCompat.inject(class)
@@ -33,7 +32,6 @@ class PopKornCompat {
         fun <T : Any> addInjectable(instance: T) {
             injectorJVM.addInjectable(instance)
         }
-
 
         @JvmStatic
         fun <T : Any> removeInjectable(type: Class<T>, environment: String) {

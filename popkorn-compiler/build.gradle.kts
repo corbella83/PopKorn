@@ -5,6 +5,7 @@ val compileTestVersion = "0.19"
 
 plugins {
     kotlin("jvm")
+    id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     id("pk-publish")
 }
@@ -36,15 +37,12 @@ publishing {
     }
 }
 
-
 repositories {
     mavenCentral()
     jcenter()
 }
 
-
 dependencies {
-
     implementation(project(":popkorn"))
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
@@ -55,5 +53,4 @@ dependencies {
     testImplementation(kotlin("test-junit"))
     testImplementation("com.google.testing.compile:compile-testing:$compileTestVersion")
     testImplementation("commons-io:commons-io:$apacheVersion")
-
 }

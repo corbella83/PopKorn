@@ -2,16 +2,14 @@ package cc.popkorn.pools
 
 import kotlin.reflect.KClass
 
-
 internal fun <T : Any> KClass<T>.getHierarchyName(): String {
     val parent = java.enclosingClass
-    return if (parent == null) { //If the class its on its own
+    return if (parent == null) { // If the class its on its own
         java.name
     } else {
         "${parent.name}_${java.simpleName}"
     }
 }
-
 
 internal fun existClass(fullName: String): Boolean {
     return try {
@@ -29,4 +27,3 @@ internal fun <T : Any> createClass(fullName: String): T? {
         null
     }
 }
-

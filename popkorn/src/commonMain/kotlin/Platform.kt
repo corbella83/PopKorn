@@ -11,7 +11,6 @@ import kotlin.reflect.KClass
  * @since 2.0.0
  */
 
-
 expect class WeakReference<T : Any>(referred: T) {
     fun clear()
     fun get(): T?

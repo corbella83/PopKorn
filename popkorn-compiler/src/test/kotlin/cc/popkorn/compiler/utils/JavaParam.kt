@@ -1,6 +1,5 @@
 package cc.popkorn.compiler.utils
 
-
 /**
  * Class to create a java parameter by code
  *
@@ -25,4 +24,3 @@ class JavaParam(private val name: String, private val type: String) {
     }
 
 }
-

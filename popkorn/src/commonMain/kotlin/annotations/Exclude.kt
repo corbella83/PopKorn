@@ -11,4 +11,3 @@ package cc.popkorn.annotations
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 annotation class Exclude
-

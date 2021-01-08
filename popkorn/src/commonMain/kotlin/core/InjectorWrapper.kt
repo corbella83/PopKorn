@@ -6,7 +6,6 @@ import cc.popkorn.core.exceptions.AssistedNotFoundException
 import cc.popkorn.core.exceptions.ProviderNotFoundException
 import kotlin.reflect.KClass
 
-
 /**
  * Define an Injector Manager that firstly resolves dependencies based on the ones passed. If not passed, will
  * resolve them with the base injector

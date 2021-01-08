@@ -1,9 +1,9 @@
 plugins {
     kotlin("multiplatform")
+    id("org.jlleitschuh.gradle.ktlint")
     id("org.jetbrains.dokka")
     id("pk-publish")
 }
-
 
 tasks.dokka {
     outputFormat = "html"
@@ -26,7 +26,6 @@ publishing {
         }
     }
 }
-
 
 repositories {
     mavenCentral()
@@ -68,7 +67,6 @@ kotlin {
         val iosMain by getting
         val iosTest by getting
 
-
         val linuxX64Main by getting
         val linuxArm64Main by getting
         val macosX64Main by getting
@@ -83,8 +81,4 @@ kotlin {
         }
     }
 
-
 }
-
-
-

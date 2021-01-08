@@ -11,4 +11,3 @@ package cc.popkorn.annotations
 @Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class ForEnvironments(vararg val value: String)
-

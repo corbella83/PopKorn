@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 internal abstract class PopKornTest {
     private val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmptwxyz".toList()
 
-
     fun randEnvironment(): String {
         val len = Random.nextInt(10)
         val sb = StringBuilder(len)
@@ -25,7 +24,6 @@ internal abstract class PopKornTest {
         return sb.toString()
     }
 
-
     fun Injector.assertNumberInstances(numberOfProviders: Int) {
         assertEquals(instances.size, numberOfProviders)
     }
@@ -34,6 +32,5 @@ internal abstract class PopKornTest {
         val size = instances[clazz]?.size() ?: 0
         assertEquals(size, numberOfInstances)
     }
-
 
 }

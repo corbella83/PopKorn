@@ -3,7 +3,6 @@ package cc.popkorn.instances
 import cc.popkorn.InjectorManager
 import cc.popkorn.providers.Provider
 
-
 /**
  * Instances implementation for Scope.BY_NEW
  * Doesn't matter the number of times get() is called, it will always return a new instance

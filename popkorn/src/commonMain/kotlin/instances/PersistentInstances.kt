@@ -3,7 +3,6 @@ package cc.popkorn.instances
 import cc.popkorn.InjectorManager
 import cc.popkorn.providers.Provider
 
-
 /**
  * Instances implementation for Scope.BY_APP
  * Calling get() for the same environment and T::class will return always the same instance

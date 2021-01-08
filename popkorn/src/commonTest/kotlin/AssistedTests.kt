@@ -28,7 +28,6 @@ internal class AssistedTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testParam2NotProvided() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -38,7 +37,6 @@ internal class AssistedTests : PopKornTest() {
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
-
 
     @Test
     fun testParamsNotProvided() {
@@ -91,7 +89,6 @@ internal class AssistedTests : PopKornTest() {
         assertEquals(1, injector.resolvers.size)
     }
 
-
     @Test
     fun testParamsMissingEnvironment() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -99,7 +96,6 @@ internal class AssistedTests : PopKornTest() {
         val params = ParametersFactory.Builder().build()
 
         assertFailsWith<AssistedNotFoundException> { injector.create(TestAssistedClass2::class, params) }
-
     }
 
     @Test
@@ -122,8 +118,7 @@ internal class AssistedTests : PopKornTest() {
         assertTrue(obj1 !== obj2)
 
         assertEquals(0, injector.instances.size)
-        assertEquals(1, injector.resolvers.size) //Resolvers have to be cached
+        assertEquals(1, injector.resolvers.size) // Resolvers have to be cached
     }
-
 
 }

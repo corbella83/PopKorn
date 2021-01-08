@@ -32,24 +32,21 @@ class DirectInjectableTests : PopKornCompilerTest() {
         assertCompileFail(test)
     }
 
-
     @Test
     fun testPublicClassInjectable() {
         val test = JavaClass().modifiers("public").injectable()
         assertCompileSuccess(test)
     }
 
-
     @Test
     fun testPublicClassWithAlias() {
         val test = JavaClass().modifiers("public").injectable(alias = "alias")
         assertCompileSuccess(test)
 
-        //If already have this alias, should fail
+        // If already have this alias, should fail
         val test2 = JavaClass().modifiers("public").injectable(alias = "alias")
         assertCompileFail(test, test2)
     }
-
 
     @Test
     fun testPublicClassWithEnvironments() {
@@ -57,14 +54,12 @@ class DirectInjectableTests : PopKornCompilerTest() {
         assertCompileSuccess(test)
     }
 
-
     @Test
     fun testPublicClassWithSuper() {
         val test = JavaClass("interface").modifiers("public")
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         assertCompileSuccess(test, test2)
     }
-
 
     @Test
     fun testPublicClassWithSameSuper() {
@@ -82,7 +77,6 @@ class DirectInjectableTests : PopKornCompilerTest() {
         assertCompileFail(test, test2, test3)
     }
 
-
     @Test
     fun testPublicClassWithSameSuperWithDifferentEnvironments() {
         val test = JavaClass("interface").modifiers("public")
@@ -90,6 +84,5 @@ class DirectInjectableTests : PopKornCompilerTest() {
         val test3 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         assertCompileSuccess(test, test2, test3)
     }
-
 
 }

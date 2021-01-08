@@ -5,7 +5,6 @@ import kotlinx.cinterop.ObjCProtocol
 import platform.Foundation.NSStringFromClass
 import kotlin.reflect.KClass
 
-
 /**
  * Fake KClass to hold platform-specific types
  *
@@ -19,7 +18,7 @@ internal class ReferenceClass<T : Any> private constructor(
 
     constructor(objClass: ObjCClass) : this(NSStringFromClass(objClass), NSStringFromClass(objClass))
 
-    //TODO should be the name of the protocol
+    // TODO should be the name of the protocol
     constructor(objProtocol: ObjCProtocol) : this(objProtocol.hashCode().toString(), objProtocol.hashCode().toString())
 
     override fun equals(other: Any?): Boolean {

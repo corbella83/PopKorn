@@ -13,4 +13,3 @@ package cc.popkorn.annotations
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.SOURCE)
 annotation class WithEnvironment(val value: String)
-

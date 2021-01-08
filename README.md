@@ -35,9 +35,9 @@ Scopes are the way to define the life span of an instance. There are 3 types of 
 Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom.
 
 ```kotlin
-val r1 = inject<Retrofit>("pro") //This will inject a persistent instance of Retrofit attached to "pro"
-val r2 = inject<Retrofit>("des") //This will inject a persistent instance of Retrofit attached to "des"
-//r1 !== r2 as they have different environments.
+val r1 = inject<Retrofit>("pro") // This will inject a persistent instance of Retrofit attached to "pro"
+val r2 = inject<Retrofit>("des") // This will inject a persistent instance of Retrofit attached to "des"
+// r1 !== r2 as they have different environments.
 ```
 
 Injecting Project Classes
@@ -54,7 +54,7 @@ class HelloWorld
 ```kotlin
 val helloWorld = inject<HelloWorld>()
 
-// or by lazy
+// Or by lazy
 val helloWorld by popkorn<HelloWorld>()
 ```
 
@@ -89,9 +89,9 @@ class HelloWorld {
 and then can inject it like this:
 
 ```kotlin
-val helloWorld = inject<HelloWorld>() // will inject a HelloWorld instance without parameters
-val helloWorld = inject<HelloWorld>("europe") // will inject a HelloWorld instance with parameters HelloBarcelona and HelloParis
-val helloWorld = inject<HelloWorld>("usa") // will inject a HelloWorld instance with parameters HelloNewYork and HelloLosAngeles
+val helloWorld = inject<HelloWorld>() // Will inject a HelloWorld instance without parameters
+val helloWorld = inject<HelloWorld>("europe") // Will inject a HelloWorld instance with parameters HelloBarcelona and HelloParis
+val helloWorld = inject<HelloWorld>("usa") // Will inject a HelloWorld instance with parameters HelloNewYork and HelloLosAngeles
 ```
 
 ### Using Interfaces
@@ -112,7 +112,7 @@ class HelloWorld : Hello
 We can now inject by an interface:
 
 ```kotlin
-val helloWorld = inject<Hello>() //This will inject a HelloWorld instance 
+val helloWorld = inject<Hello>() // This will inject a HelloWorld instance 
 ```
 
 And just like before, if you have different implementations of the same interface, you can distinguish them with environments
@@ -126,8 +126,8 @@ class HelloPlanet : Hello
 so,
 
 ```kotlin
-val hello = inject<Hello>("planet") // this will return an instance of HelloPlanet
-val hello = inject<Hello>() // this will return an instance of HelloWorld
+val hello = inject<Hello>("planet") // This will return an instance of HelloPlanet
+val hello = inject<Hello>() // This will return an instance of HelloWorld
 ```
 
 ### Using runtime arguments (or assisted dependencies)
@@ -180,7 +180,7 @@ class MyRetrofitProvider {
 and use it the same way:
 
 ```kotlin
-val hello = inject<Retrofit>() //This will inject a persistent instance of Retrofit
+val hello = inject<Retrofit>() // This will inject a persistent instance of Retrofit
 ```
 
 Injecting Runtime Instances
@@ -192,11 +192,11 @@ val someInstance = SomeType()
 
 popKorn().addInjectable(someInstance)
 
-val copy1 = inject<SomeType>() //Will inject someInstance
+val copy1 = inject<SomeType>() // Will inject someInstance
 
 popKorn().removeInjectable(someInstance)
 
-val copy2 = inject<SomeType>() //Will fail, because SomeType is not injectable anymore
+val copy2 = inject<SomeType>() // Will fail, because SomeType is not injectable anymore
 ```
 
 In Android this is very useful when injecting the Context (An instance that is provided and cannot be created)
@@ -277,11 +277,11 @@ let someInstance = SomeType()
 
 injector.addInjectable(instance: someInstance, clazz: SomeType.self)
 
-let copy1 = injector.inject(clazz: SomeType.self) as! SomeType  //Will inject someInstance
+let copy1 = injector.inject(clazz: SomeType.self) as! SomeType // Will inject someInstance
 
 injector.removeInjectable(clazz: SomeType.self)
 
-let copy2 = injector.inject(clazz: SomeType.self) as! SomeType //Will fail, because SomeType is not injectable anymore
+let copy2 = injector.inject(clazz: SomeType.self) as! SomeType // Will fail, because SomeType is not injectable anymore
 ```
 
 Using JS / Native
@@ -309,12 +309,12 @@ interface Location
 class RealLocation : Location {
 
     constructor() : this() {
-        //get LocationManager.GPS_PROVIDER
+        // Get LocationManager.GPS_PROVIDER
     }
 
     @ForEnvironemnt("network")
     constructor() : this() {
-        //get LocationManager.NETWORK_PROVIDER
+        // Get LocationManager.NETWORK_PROVIDER
     }
 }
 
@@ -326,9 +326,9 @@ class FakeLocation : Location
 and then
 
 ```kotlin
-val r1 = inject<Location>() //This will inject a persistent instance of RealLocation to get GPS locations
-val r2 = inject<Location>("network") //This will inject a persistent instance RealLocation to get Network locations
-val r2 = inject<Location>("fake") //This will inject a volatile instance of FakeLocation
+val r1 = inject<Location>() // This will inject a persistent instance of RealLocation to get GPS locations
+val r2 = inject<Location>("network") // This will inject a persistent instance RealLocation to get Network locations
+val r2 = inject<Location>("fake") // This will inject a volatile instance of FakeLocation
 ```
 
 or use it in any constructor of other injectable classes:

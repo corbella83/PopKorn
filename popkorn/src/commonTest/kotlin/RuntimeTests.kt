@@ -56,7 +56,6 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testAddInjectableDirectInterface() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -75,7 +74,6 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testAddInjectableFarInterface() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -93,7 +91,6 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
-
 
     @Test
     fun testAddInjectableTwoInterface() {
@@ -118,7 +115,6 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testAddInjectableClassAndInterface() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -140,9 +136,7 @@ internal class RuntimeTests : PopKornTest() {
 
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
-
     }
-
 
     @Test
     fun testAddInjectableClassWithEnvironments() {
@@ -154,7 +148,6 @@ internal class RuntimeTests : PopKornTest() {
         testInjectAs(C1::class)
     }
 
-
     @Test
     fun testAddInjectableDirectInterfaceWithEnvironments() {
         testInjectAs(I2::class)
@@ -164,7 +157,6 @@ internal class RuntimeTests : PopKornTest() {
     fun testAddInjectableFarInterfaceWithEnvironments() {
         testInjectAs(I1::class)
     }
-
 
     private fun testInjectAs(clazz: KClass<out Any>) {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -211,7 +203,6 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testPurge() {
         val resolverPool = TestResolverPool()
@@ -231,11 +222,10 @@ internal class RuntimeTests : PopKornTest() {
 
         injector.purge()
 
-        //Purge must not affect to runtime injections
+        // Purge must not affect to runtime injections
         assertEquals(4, injector.instances.size)
         assertEquals(addedInterfaces, injector.resolvers.size)
     }
-
 
     @Test
     fun testReset() {
@@ -259,6 +249,5 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
-
 
 }

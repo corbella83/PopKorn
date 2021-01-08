@@ -89,8 +89,7 @@ class InjectorObjC(private val injector: InjectorController) {
         }
     }
 
-
-    //If it doesn't exist, creates a ReferenceClass
+    // If it doesn't exist, creates a ReferenceClass
 
     private fun ObjCClass.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
 

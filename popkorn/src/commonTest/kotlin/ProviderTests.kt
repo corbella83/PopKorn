@@ -14,10 +14,9 @@ internal class ProviderTests : PopKornTest() {
 
     @Test
     fun testClassWithoutProvider() {
-        testClassWithoutProvider(randEnvironment())  // Custom Environment
-        testClassWithoutProvider(null)      // Default Environment
+        testClassWithoutProvider(randEnvironment()) // Custom Environment
+        testClassWithoutProvider(null) // Default Environment
     }
-
 
     private fun testClassWithoutProvider(environment: String?) {
         val factory = Injector(TestResolverPool(), TestProviderPool())
@@ -27,11 +26,10 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstances(0)
     }
 
-
     @Test
     fun testClassByApp() {
-        testClassByApp(randEnvironment())  // Custom Environment
-        testClassByApp(null)      // Default Environment
+        testClassByApp(randEnvironment()) // Custom Environment
+        testClassByApp(null) // Default Environment
     }
 
     private fun testClassByApp(environment: String?) {
@@ -40,7 +38,7 @@ internal class ProviderTests : PopKornTest() {
         val inject = factory.inject(TestClassByApp::class, environment)
         assertEquals(inject.value, environment)
 
-        //If injected again, should return the same instance
+        // If injected again, should return the same instance
         val inject2 = factory.inject(TestClassByApp::class, environment)
         assertSame(inject, inject2)
 
@@ -48,11 +46,10 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByApp::class, 1)
     }
 
-
     @Test
     fun testClassByUse() {
-        testClassByUse(randEnvironment())  // Custom Environment
-        testClassByUse(null)      // Default Environment
+        testClassByUse(randEnvironment()) // Custom Environment
+        testClassByUse(null) // Default Environment
     }
 
     private fun testClassByUse(environment: String?) {
@@ -61,7 +58,7 @@ internal class ProviderTests : PopKornTest() {
         val inject = factory.inject(TestClassByUse::class, environment)
         assertEquals(inject.value, environment)
 
-        //If injected again, should return the same instance
+        // If injected again, should return the same instance
         val inject2 = factory.inject(TestClassByUse::class, environment)
         assertSame(inject, inject2)
 
@@ -69,11 +66,10 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByUse::class, 1)
     }
 
-
     @Test
     fun testClassByNew() {
-        testClassByNew(randEnvironment())  // Custom Environment
-        testClassByNew(null)      // Default Environment
+        testClassByNew(randEnvironment()) // Custom Environment
+        testClassByNew(null) // Default Environment
     }
 
     private fun testClassByNew(environment: String?) {
@@ -82,7 +78,7 @@ internal class ProviderTests : PopKornTest() {
         val inject = factory.inject(TestClassByNew::class, environment)
         assertEquals(inject.value, environment)
 
-        //If injected again, should return the same new instance
+        // If injected again, should return the same new instance
         val inject2 = factory.inject(TestClassByNew::class, environment)
         assertTrue(inject !== inject2)
 
@@ -90,13 +86,11 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByNew::class, 0)
     }
 
-
     @Test
     fun testClassByManual() {
-        testClassByManual(randEnvironment())  // Custom Environment
-        testClassByManual(null)      // Default Environment
+        testClassByManual(randEnvironment()) // Custom Environment
+        testClassByManual(null) // Default Environment
     }
-
 
     private fun testClassByManual(environment: String?) {
         val factory = Injector(TestResolverPool(), TestProviderPool())
@@ -108,27 +102,26 @@ internal class ProviderTests : PopKornTest() {
         val inject = factory.inject(TestClassNoProvider::class, environment)
         assertEquals(inject.value, environment)
 
-        //If injected again, should return the same instance
+        // If injected again, should return the same instance
         val inject2 = factory.inject(TestClassNoProvider::class, environment)
         assertSame(inject, inject2)
 
-        if (environment == null) { //If try to inject another environment, will return the default instance
+        if (environment == null) { // If try to inject another environment, will return the default instance
             val secondaryEnvironment = randEnvironment()
             val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
             assertSame(inject, inject3)
-        } else { //If try to inject the default environment or any other, will fail
+        } else { // If try to inject the default environment or any other, will fail
             val secondaryEnvironment = "${environment}_secondary"
             assertFails { factory.inject(TestClassNoProvider::class, null) }
             assertFails { factory.inject(TestClassNoProvider::class, secondaryEnvironment) }
         }
 
-        //Once removed the instance, should fail
+        // Once removed the instance, should fail
         factory.removeInjectable(instance::class, environment)
         assertFails { factory.inject(TestClassNoProvider::class, environment) }
 
         factory.assertNumberInstances(0)
     }
-
 
     @Test
     fun testClassByManualTogether() {
@@ -148,7 +141,7 @@ internal class ProviderTests : PopKornTest() {
         val inject2 = factory.inject(TestClassNoProvider::class, environment)
         assertEquals(inject2.value, environment)
 
-        //If any other environment must return the default one
+        // If any other environment must return the default one
         val secondaryEnvironment = "${environment}_secondary"
         val inject3 = factory.inject(TestClassNoProvider::class, secondaryEnvironment)
         assertSame(inject, inject3)
@@ -157,10 +150,9 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassNoProvider::class, 1)
 
-        //If no default one, the same injection must crash
+        // If no default one, the same injection must crash
         assertFails { factory.inject(TestClassNoProvider::class, secondaryEnvironment) }
     }
-
 
     @Test
     fun testClassByManualWithExistingProviderFile() {
@@ -172,7 +164,6 @@ internal class ProviderTests : PopKornTest() {
 
         factory.assertNumberInstances(0)
     }
-
 
     @Test
     fun testClassByManualWithExistingProviderInstance() {
@@ -187,7 +178,6 @@ internal class ProviderTests : PopKornTest() {
 
         factory.assertNumberInstances(1)
     }
-
 
     @Test
     fun testReset() {

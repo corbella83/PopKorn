@@ -1,6 +1,5 @@
 package cc.popkorn.instances
 
-
 /**
  * Interface that defines how to get an instance from a specific environment
  *
