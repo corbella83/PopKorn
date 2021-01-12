@@ -17,7 +17,7 @@ tasks.dokka {
 val dokkaJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
-    classifier = "javadoc"
+    archiveClassifier.set("javadoc")
     from(tasks.dokka)
 }
 
@@ -34,11 +34,6 @@ publishing {
             artifact(sourcesJar)
         }
     }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
 }
 
 dependencies {

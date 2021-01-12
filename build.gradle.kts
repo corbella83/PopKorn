@@ -1,5 +1,5 @@
 buildscript {
-    val kotlinVersion by System.getProperties()
+    val kotlinVersion:String by System.getProperties()
     val dokkaVersion = "0.10.1"
 
     repositories {
@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath(kotlin("gradle-plugin", kotlinVersion))
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
     }
 
@@ -20,4 +20,9 @@ allprojects {
 
     group = libraryGroup
     version = libraryVersion
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 }
