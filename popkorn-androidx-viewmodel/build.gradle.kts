@@ -38,7 +38,6 @@ repositories {
 android.androidConfig()
 
 kotlin {
-    jvm()
     android {
         publishLibraryVariants("release", "debug")
     }
