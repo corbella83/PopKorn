@@ -38,8 +38,6 @@ public class ExampleCompat {
 
         PopKornCompat.removeInjectable(D10.class);
         PopKornCompat.reset();
-
-        System.out.println("ok compat");
     }
 
 }
