@@ -53,7 +53,7 @@ kotlin {
         named("androidMain") {
             dependencies {
                 implementation(project(":popkorn"))
-                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+                implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
             }
         }
 
