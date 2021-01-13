@@ -28,7 +28,7 @@ internal class ClientTests : PopKornTest() {
 
         val interfaceApp = injector.inject(TestInterface::class, "app")
         val interfaceUse = injector.inject(TestInterface::class, "use")
-        val interfaceNew = injector.injectNullable(TestInterface::class, "new")
+        val interfaceNew = injector.injectOrNull(TestInterface::class, "new")
 
         assertSame(classApp, interfaceApp)
         assertSame(classUse, interfaceUse)

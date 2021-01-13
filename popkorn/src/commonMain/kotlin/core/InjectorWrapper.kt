@@ -26,8 +26,8 @@ internal class InjectorWrapper(
         }
     }
 
-    override fun <T : Any> injectNullable(clazz: KClass<T>, environment: String?): T? {
-        return parameters.get(clazz, environment) ?: baseInjector.injectNullable(clazz, environment)
+    override fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String?): T? {
+        return parameters.get(clazz, environment) ?: baseInjector.injectOrNull(clazz, environment)
     }
 
 }

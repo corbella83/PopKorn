@@ -123,7 +123,7 @@ class Injector(
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
-    override fun <T : Any> injectNullable(clazz: KClass<T>, environment: String?): T? {
+    override fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String?): T? {
         return try {
             inject(clazz, environment)
         } catch (e: ProviderNotFoundException) {

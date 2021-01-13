@@ -47,13 +47,13 @@ class InjectorObjC(private val injector: InjectorController) {
     fun inject(protocol: ObjCProtocol) = injector.inject(protocol.kotlinClass(), null)
 
 
-    fun injectNullable(clazz: ObjCClass, environment: String) = injector.injectNullable(clazz.kotlinClass(), environment)
+    fun injectOrNull(clazz: ObjCClass, environment: String) = injector.injectOrNull(clazz.kotlinClass(), environment)
 
-    fun injectNullable(clazz: ObjCClass) = injector.injectNullable(clazz.kotlinClass(), null)
+    fun injectOrNull(clazz: ObjCClass) = injector.injectOrNull(clazz.kotlinClass(), null)
 
-    fun injectNullable(protocol: ObjCProtocol, environment: String) = injector.injectNullable(protocol.kotlinClass(), environment)
+    fun injectOrNull(protocol: ObjCProtocol, environment: String) = injector.injectOrNull(protocol.kotlinClass(), environment)
 
-    fun injectNullable(protocol: ObjCProtocol) = injector.injectNullable(protocol.kotlinClass(), null)
+    fun injectOrNull(protocol: ObjCProtocol) = injector.injectOrNull(protocol.kotlinClass(), null)
 
 
     // Provide raw objects or an InstanceObjC<*> object for more information

@@ -31,9 +31,9 @@ class InjectorJVM(private val injector: InjectorController) {
 
     fun <T : Any> inject(clazz: Class<T>) = injector.inject(clazz.kotlinClass(), null)
 
-    fun <T : Any> injectNullable(clazz: Class<T>, environment: String) = injector.injectNullable(clazz.kotlinClass(), environment)
+    fun <T : Any> injectOrNull(clazz: Class<T>, environment: String) = injector.injectOrNull(clazz.kotlinClass(), environment)
 
-    fun <T : Any> injectNullable(clazz: Class<T>) = injector.injectNullable(clazz.kotlinClass(), null)
+    fun <T : Any> injectOrNull(clazz: Class<T>) = injector.injectOrNull(clazz.kotlinClass(), null)
 
 
     // Provide raw objects or an InstanceJVM<*> object for more information

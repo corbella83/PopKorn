@@ -32,9 +32,9 @@ class InjectorJS(private val injector: InjectorController) {
 
     fun <T : Any> inject(clazz: JsClass<T>) = injector.inject(clazz.kotlinClass(), null)
 
-    fun <T : Any> injectNullable(clazz: JsClass<T>, environment: String) = injector.injectNullable(clazz.kotlinClass(), environment)
+    fun <T : Any> injectOrNull(clazz: JsClass<T>, environment: String) = injector.injectOrNull(clazz.kotlinClass(), environment)
 
-    fun <T : Any> injectNullable(clazz: JsClass<T>) = injector.injectNullable(clazz.kotlinClass(), null)
+    fun <T : Any> injectOrNull(clazz: JsClass<T>) = injector.injectOrNull(clazz.kotlinClass(), null)
 
 
     // Provide raw objects or an InstanceJS<*> object for more information

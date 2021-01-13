@@ -45,11 +45,11 @@ fun <T : Any> KClass<T>.inject(environment: String? = null) = injector.inject(th
 
 
 /**
- * Methods to inject nullable instances anywhere like injectNullable<SomeClass>()
+ * Methods to inject nullable instances anywhere like injectOrNull<SomeClass>()
  */
-inline fun <reified T : Any> injectNullable(environment: String? = null) = T::class.injectNullable(environment)
+inline fun <reified T : Any> injectOrNull(environment: String? = null) = T::class.injectOrNull(environment)
 
-fun <T : Any> KClass<T>.injectNullable(environment: String? = null) = injector.injectNullable(this, environment)
+fun <T : Any> KClass<T>.injectOrNull(environment: String? = null) = injector.injectOrNull(this, environment)
 
 
 /**

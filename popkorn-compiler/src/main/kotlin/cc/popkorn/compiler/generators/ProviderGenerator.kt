@@ -112,7 +112,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                 ?: param.asType()
 
             val name = impl.supportTypeName().toString()
-            val method = if (param.has(Nullable::class)) "injectNullable" else "inject"
+            val method = if (param.has(Nullable::class)) "injectOrNull" else "inject"
             if (nextEnv != null) {
                 "injector.$method($name::class, \"$nextEnv\")"
             } else {

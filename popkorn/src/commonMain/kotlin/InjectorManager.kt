@@ -12,6 +12,6 @@ interface InjectorManager {
 
     fun <T : Any> inject(clazz: KClass<T>, environment: String? = null): T
 
-    fun <T : Any> injectNullable(clazz: KClass<T>, environment: String? = null): T?
+    fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String? = null): T?
 
 }
