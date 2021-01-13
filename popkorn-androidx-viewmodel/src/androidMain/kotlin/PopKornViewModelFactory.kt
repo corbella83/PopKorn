@@ -8,6 +8,5 @@ import cc.popkorn.popKorn
 class PopKornViewModelFactory(private val parametersFactory: ParametersFactory?) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>) =
-        if (parametersFactory == null) popKorn().inject(modelClass.kotlin)
-        else popKorn().create(modelClass.kotlin, parametersFactory)
+       popKorn().create(modelClass.kotlin, parametersFactory)
 }
