@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import cc.popkorn.ParametersFactory
-import cc.popkorn.androidx.viewmodel.factory.PopKornViewModelFactory
 
 /**
  * Method to create a `ViewModel` if `ViewModelStoreOwner is the context`

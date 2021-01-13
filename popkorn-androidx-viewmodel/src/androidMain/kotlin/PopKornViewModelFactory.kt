@@ -1,4 +1,4 @@
-package cc.popkorn.androidx.viewmodel.factory
+package cc.popkorn.androidx.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
