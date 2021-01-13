@@ -6,9 +6,6 @@ fun BaseExtension.androidConfig() {
 
     defaultConfig {
         minSdkVersion(14)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
     }
 
     compileOptions {
