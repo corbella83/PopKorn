@@ -1,6 +1,7 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
+import cc.popkorn.instances.*
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals
@@ -31,6 +32,18 @@ internal abstract class PopKornTest {
     fun <T : Any> Injector.assertNumberInstancesForClass(clazz: KClass<T>, numberOfInstances: Int) {
         val size = instances[clazz]?.size() ?: 0
         assertEquals(size, numberOfInstances)
+    }
+
+
+    private fun Instances<*>.size(): Int {
+        return when (this) {
+            is RuntimeInstances -> size()
+            is PersistentInstances -> size()
+            is VolatileInstances -> size()
+            is HolderInstances -> size()
+            is NewInstances -> 0
+            else -> throw RuntimeException("Should not happen")
+        }
     }
 
 }

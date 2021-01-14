@@ -2,11 +2,12 @@
 
 package cc.popkorn.core
 
-import cc.popkorn.InjectorController
-import cc.popkorn.ParametersFactory
+import cc.popkorn.*
+import cc.popkorn.core.builder.Config
+import cc.popkorn.core.builder.CreatorBuilder
+import cc.popkorn.core.builder.InjectorBuilder
 import cc.popkorn.core.exceptions.*
 import cc.popkorn.instances.*
-import cc.popkorn.needsResolver
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
 import cc.popkorn.resolvers.Resolver
@@ -104,28 +105,50 @@ class Injector(
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
+     * If you need to provide some configuration (like assisted parameters or holders) use {@link Injector#willInject}
      *
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
     override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return if (clazz.needsResolver(resolverPool)) {
-            provide(clazz.getImplementation(environment), environment)
-        } else {
-            provide(clazz, environment)
-        }
+        return injectInternal(clazz, environment, null)
     }
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
+     * If you need to provide some configuration (like assisted parameters or holders) use {@link Injector#willInject}
      * If fails getting it, will return null
      *
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
      */
     override fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String?): T? {
+        return injectOrNullInternal(clazz, environment, null)
+    }
+
+
+    /**
+     * Creates a deferred injector of type clazz that lets you set extra configuration before injecting the object
+     * Usage: willInject(SomeClass::class).holder(this).assisted(34).inject()
+     *
+     * @param clazz Class or Interface that you want to inject
+     * @param environment The environment in which you would like to retrieve the object
+     */
+    override fun <T : Any> willInject(clazz: KClass<T>, environment: String?): InjectorBuilder<T> {
+        return InjectorBuilder({ injectInternal(clazz, environment, it) }, { injectOrNullInternal(clazz, environment, it) })
+    }
+
+    // Generic method to create instances
+    private inline fun <T : Any> injectInternal(clazz: KClass<T>, environment: String?, config: Config.Inject?): T {
+        val resolved = clazz.resolve(environment)
+        return (instances.getOrPut(resolved) { resolved.createInstances() } as Instances<T>)
+            .provide(resolved as KClass<T>, environment, config)
+    }
+
+    // Generic method to create nullable instances
+    private inline fun <T : Any> injectOrNullInternal(clazz: KClass<T>, environment: String?, config: Config.Inject?): T? {
         return try {
-            inject(clazz, environment)
+            injectInternal(clazz, environment, config)
         } catch (e: ProviderNotFoundException) {
             null
         } catch (e: ResolverNotFoundException) {
@@ -141,41 +164,65 @@ class Injector(
         }
     }
 
+
     /**
-     * Creates an object of type clazz using given instances preferentially. If not assisting a certain parameter
-     * it will be injected normally. Notice that this function will always return a new instance ignoring the scope it has.
-     * It doesn't propagate. Assisted instances will only be used at the constructor of 'clazz'
+     * Creates an object of type clazz. Notice that this function will always returns a new instance
+     * ignoring the scope it has.
      *
      * @param clazz Class or Interface that you want to create
      * @param environment The environment in which you would like to create the object
-     * @param parametersFactory The instances you would like to use (preferentially) when creating the object.
      */
-    override fun <T : Any> create(clazz: KClass<T>, environment: String?, parametersFactory: ParametersFactory?): T {
-        val pool = if (clazz.needsResolver(resolverPool)) {
-            providerPool.create(clazz.getImplementation(environment))
+    override fun <T : Any> create(clazz: KClass<T>, environment: String?): T {
+        return createInternal(clazz, environment, null)
+    }
+
+    /**
+     * Creates a deferred creator of type clazz that lets you set extra configuration before creating the object
+     * Usage: willCreate(SomeClass::class).assisted(34).override(someInstance).create()
+     *
+     * @param clazz Class or Interface that you want to create
+     * @param environment The environment in which you would like to create the object
+     */
+    override fun <T : Any> willCreate(clazz: KClass<T>, environment: String?): CreatorBuilder<T> {
+        return CreatorBuilder { createInternal(clazz, environment, it) }
+    }
+
+    // Generic method to create instances internally
+    private inline fun <T : Any> createInternal(clazz: KClass<T>, environment: String?, config: Config.Create?): T {
+        val injector = config?.overridden?.let { InjectorWithPreference(this, it) } ?: this
+
+        return clazz.resolve(environment)
+            .let { providerPool.create(it) }
+            .create(injector, config?.assisted ?: Parameters.EMPTY, environment)
+    }
+
+
+    private fun <T : Any> KClass<T>.resolve(environment: String?): KClass<out T> {
+        return if (this.needsResolver(resolverPool)) {
+            resolvers.getOrPut(this, { resolverPool.create(this) })
+                .resolve(environment) as KClass<out T>
         } else {
-            providerPool.create(clazz)
+            this
         }
-
-        val wrapper = InjectorWrapper(this, parametersFactory ?: ParametersFactory.Builder().build())
-        return pool.create(wrapper, environment)
     }
 
-    private fun <T : Any> provide(clazz: KClass<T>, environment: String?): T {
-        return instances.getOrPut(clazz, { clazz.getInstances() })
-            .get(environment) as T
+    private fun <T : Any> Instances<T>.provide(clazz: KClass<T>, environment: String?, config: Config.Inject?): T {
+        return when (this) {
+            is RuntimeInstances -> get(environment)
+            is PersistentInstances -> get(environment)
+            is VolatileInstances -> get(environment)
+            is HolderInstances -> get(config?.holder ?: throw HolderNotProvidedException(clazz), environment)
+            is NewInstances -> get(config?.assisted ?: Parameters.EMPTY, environment)
+            else -> throw RuntimeException("Should not happen")
+        }
     }
 
-    private fun <T : Any> KClass<T>.getImplementation(environment: String?): KClass<out T> {
-        return resolvers.getOrPut(this, { resolverPool.create(this) })
-            .resolve(environment) as KClass<out T>
-    }
-
-    private fun <T : Any> KClass<T>.getInstances(): Instances<T> {
+    private fun <T : Any> KClass<T>.createInstances(): Instances<T> {
         val provider = providerPool.create(this)
         return when (provider.scope()) {
             Scope.BY_APP -> PersistentInstances(this@Injector, provider)
             Scope.BY_USE -> VolatileInstances(this@Injector, provider)
+            Scope.BY_HOLDER -> HolderInstances(this@Injector, provider)
             Scope.BY_NEW -> NewInstances(this@Injector, provider)
         }
     }

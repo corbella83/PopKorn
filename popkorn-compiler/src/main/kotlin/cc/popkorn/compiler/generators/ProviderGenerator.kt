@@ -6,6 +6,7 @@ import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.core.Injector
+import cc.popkorn.core.Parameters
 import cc.popkorn.core.Scope
 import cc.popkorn.core.exceptions.DefaultConstructorNotFoundException
 import cc.popkorn.core.exceptions.DefaultMethodNotFoundException
@@ -35,9 +36,8 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     // Writes a provider from a direct injectable element
     fun write(element: TypeElement, namesMapper: Map<String, TypeMirror>): String {
-        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName())
-
         val scope = element.get(Injectable::class)?.scope ?: Scope.BY_APP
+        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
         val file = element.getProviderFile(null, creationCode, scope)
         file.writeTo(directory)
         return "${file.packageName}.${file.name}"
@@ -50,15 +50,15 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             .delegate("lazy { ${provider.simpleName}() }")
             .build()
 
-        val creationCode = getCreationCode(provider.getMethods(), namesMapper, provider.asClassName(), DefaultMethodNotFoundException::class.asClassName())
         val scope = provider.get(InjectableProvider::class)?.scope ?: Scope.BY_APP
+        val creationCode = getCreationCode(provider.getMethods(), namesMapper, provider.asClassName(), DefaultMethodNotFoundException::class.asClassName(), scope)
         val file = element.getProviderFile(property, creationCode, scope)
         file.writeTo(directory)
         return "${file.packageName}.${file.name}"
     }
 
 
-    private fun getCreationCode(list: List<ExecutableElement>, namesMapper: Map<String, TypeMirror>, caller: ClassName, error: ClassName): CodeBlock {
+    private fun getCreationCode(list: List<ExecutableElement>, namesMapper: Map<String, TypeMirror>, caller: ClassName, error: ClassName, scope: Scope): CodeBlock {
         val elements = list.map { it to (it.get(ForEnvironments::class)?.value ?: arrayOf()) }.toMap()
 
         val default = elements.filterValues { it.isEmpty() }.keys.let {
@@ -72,7 +72,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                 if (all.size != all.distinct().size) throw PopKornException("$caller has more than one constructor/method for the same environment")
             }
 
-        val defaultCode = default?.getCreationString(namesMapper) ?: "throw $error(\"$caller\")"
+        val defaultCode = default?.getCreationString(namesMapper, scope) ?: "throw $error(\"$caller\")"
 
         val codeBlock = CodeBlock.builder()
         if (others.isEmpty()) {
@@ -81,7 +81,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             codeBlock.add("return when(environment){\n")
             others.forEach { (exe, env) ->
                 val environmentsList = env.joinToString { "\"$it\"" }
-                codeBlock.add("    $environmentsList -> ${exe.getCreationString(namesMapper)}\n")
+                codeBlock.add("    $environmentsList -> ${exe.getCreationString(namesMapper, scope)}\n")
             }
             codeBlock.addStatement("    else -> $defaultCode\n")
             codeBlock.add("}\n")
@@ -90,7 +90,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return codeBlock.build()
     }
 
-    private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>): String {
+    private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>, scope: Scope): String {
         val params = parameters.map { param ->
             if (param.asType().asTypeName() == Injector::class.asTypeName()) {
                 throw PopKornException("Constructors cannot use 'Injector' as a parameter, use 'InjectorManager' instead")
@@ -112,11 +112,12 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
                 ?: param.asType()
 
             val name = impl.supportTypeName().toString()
-            val method = if (param.has(Nullable::class)) "injectOrNull" else "inject"
-            if (nextEnv != null) {
-                "injector.$method($name::class, \"$nextEnv\")"
+
+            if (param.has(Assisted::class)) {
+                if (scope != Scope.BY_NEW) throw PopKornException("Cannot use assisted dependencies with a scope other than BY_NEW: $this. Either change the scope or use an injectable parameter.")
+                constructCall("assisted", if (param.has(Nullable::class)) "getOrNull" else "get", name, nextEnv)
             } else {
-                "injector.$method($name::class)"
+                constructCall("injector", if (param.has(Nullable::class)) "injectOrNull" else "inject", name, nextEnv)
             }
         }
 
@@ -128,6 +129,14 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     }
 
+    private fun constructCall(caller: String, method: String, clazz: String, env: String?): String {
+        return if (env != null) {
+            "$caller.$method($clazz::class, \"$env\")"
+        } else {
+            "$caller.$method($clazz::class)"
+        }
+    }
+
     private fun TypeElement.getProviderFile(property: PropertySpec?, creationCode: CodeBlock, scope: Scope): FileSpec {
         val filePackage = "${normalizeQualifiedName(qualifiedName.toString())}_$PROVIDER_SUFFIX"
 
@@ -135,6 +144,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
         val createFun = FunSpec.builder("create")
             .addParameter("injector", InjectorManager::class)
+            .addParameter("assisted", Parameters::class)
             .addParameter("environment", String::class.asTypeName().copy(nullable = true))
             .addModifiers(KModifier.OVERRIDE)
             .returns(className)

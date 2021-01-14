@@ -60,14 +60,16 @@ class InjectorObjC(private val injector: InjectorController) {
     // If want to specify the environment, do it with Environment("value")
     fun create(clazz: ObjCClass, vararg assistedInstances: Any): Any {
         val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        val factory = assistedInstances.filterNot { it is Environment }.toFactory()
-        return injector.create(clazz.kotlinClass(), environment?.value, factory)
+        return injector.willCreate(clazz.kotlinClass(), environment?.value)
+            .assistedAll(assistedInstances.filterNot { it is Environment }.toKotlin())
+            .create()
     }
 
     fun create(clazz: ObjCProtocol, vararg assistedInstances: Any): Any {
         val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        val factory = assistedInstances.filterNot { it is Environment }.toFactory()
-        return injector.create(clazz.kotlinClass(), environment?.value, factory)
+        return injector.willCreate(clazz.kotlinClass(), environment?.value)
+            .assistedAll(assistedInstances.filterNot { it is Environment }.toKotlin())
+            .create()
     }
 
 
@@ -76,10 +78,8 @@ class InjectorObjC(private val injector: InjectorController) {
     fun purge() = injector.purge()
 
 
-    private fun List<Any>.toFactory(): ParametersFactory {
-        return ParametersFactory.Builder().apply {
-            forEach { add(if (it is InstanceObjC) it.toKotlin() else Instance(it)) }
-        }.build()
+    private fun List<Any>.toKotlin(): List<Any> {
+        return map { if (it is InstanceObjC) it.toKotlin() else it }
     }
 
     private fun InstanceObjC.toKotlin(): Instance<*> {

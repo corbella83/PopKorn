@@ -32,7 +32,7 @@ import javax.tools.StandardLocation
  * @author Pau Corbella
  * @since 1.1.0
  */
-internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer, private val types: Types, private val elements: Elements, private val logger: Logger) {
+internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer, private val types: Types, private val elements: Elements, val logger: Logger) {
     private val providerGenerator = ProviderGenerator(generatedSourcesDir, types)
     private val resolverGenerator = ResolverGenerator(generatedSourcesDir)
     private val mappingGenerator = MappingGenerator(generatedSourcesDir, filer)

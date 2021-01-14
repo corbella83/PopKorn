@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
  * @since 1.3.0
  */
 internal class RuntimeResolver : Resolver<Any> {
-    private val resolvers = HashMap<String?, KClass<out Any>>()
+    private val resolvers = hashMapOf<String?, KClass<out Any>>()
 
     override fun resolve(environment: String?): KClass<out Any> {
         return resolvers[environment] ?: (resolvers[null] ?: throw InstanceNotFoundException())

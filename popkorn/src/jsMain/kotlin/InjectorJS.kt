@@ -41,8 +41,9 @@ class InjectorJS(private val injector: InjectorController) {
     // If want to specify the environment, do it with Environment("value")
     fun <T : Any> create(clazz: JsClass<T>, vararg assistedInstances: Any): T {
         val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        val factory = assistedInstances.filterNot { it is Environment }.toFactory()
-        return injector.create(clazz.kotlinClass(), environment?.value, factory)
+        return injector.willCreate(clazz.kotlinClass(), environment?.value)
+            .assistedAll(assistedInstances.filterNot { it is Environment }.toKotlin())
+            .create()
     }
 
 
@@ -51,10 +52,8 @@ class InjectorJS(private val injector: InjectorController) {
     fun purge() = injector.purge()
 
 
-    private fun List<Any>.toFactory(): ParametersFactory {
-        return ParametersFactory.Builder().apply {
-            forEach { add(if (it is InstanceJS<*>) it.toKotlin() else Instance(it)) }
-        }.build()
+    private fun List<Any>.toKotlin(): List<Any> {
+        return map { if (it is InstanceJS<*>) it.toKotlin() else it }
     }
 
     private fun <T : Any> InstanceJS<T>.toKotlin() = Instance(instance, type.kotlinClass(), environment)

@@ -1,8 +1,11 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
+import cc.popkorn.core.Parameters
+import cc.popkorn.core.builder.Config
 import cc.popkorn.core.exceptions.AssistedNotFoundException
 import cc.popkorn.data.*
+import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -42,7 +45,7 @@ internal class AssistedTests : PopKornTest() {
     fun testParamsNotProvided() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val params = ParametersFactory.Builder().apply {
+        val params = Parameters.Builder().apply {
             add(34f)
         }.build()
 
@@ -56,7 +59,7 @@ internal class AssistedTests : PopKornTest() {
     fun testMissingParams() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val params = ParametersFactory.Builder().apply {
+        val params = Parameters.Builder().apply {
             add(34)
         }.build()
 
@@ -70,7 +73,7 @@ internal class AssistedTests : PopKornTest() {
     fun testParamsOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val params = ParametersFactory.Builder().apply {
+        val params = Parameters.Builder().apply {
             add("test")
             add(34)
         }.build()
@@ -93,7 +96,7 @@ internal class AssistedTests : PopKornTest() {
     fun testParamsMissingEnvironment() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val params = ParametersFactory.Builder().build()
+        val params = Parameters.Builder().build()
 
         assertFailsWith<AssistedNotFoundException> { injector.create(TestAssistedClass2::class, params) }
     }
@@ -102,7 +105,7 @@ internal class AssistedTests : PopKornTest() {
     fun testParamsWithEnvironments() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val params = ParametersFactory.Builder().apply {
+        val params = Parameters.Builder().apply {
             add("test", "env1")
             add("more", "env2")
         }.build()
@@ -119,6 +122,15 @@ internal class AssistedTests : PopKornTest() {
 
         assertEquals(0, injector.instances.size)
         assertEquals(1, injector.resolvers.size) // Resolvers have to be cached
+    }
+
+
+    private fun <T : Any> Injector.create(clazz: KClass<T>, environment: String? = null, params: Parameters): T {
+        return willCreate(clazz, environment).create(Config.Create(assisted = params))
+    }
+
+    private fun <T : Any> Injector.create(clazz: KClass<T>, params: Parameters): T {
+        return willCreate(clazz).create(Config.Create(assisted = params))
     }
 
 }

@@ -11,9 +11,9 @@ import cc.popkorn.core.exceptions.InstanceNotFoundException
  * @since 1.0.0
  */
 internal class RuntimeInstances<T : Any> : Instances<T> {
-    private val instances = HashMap<String?, T>()
+    private val instances = hashMapOf<String?, T>()
 
-    override fun get(environment: String?): T {
+    fun get(environment: String?): T {
         return instances[environment] ?: instances[null] ?: throw InstanceNotFoundException()
     }
 
@@ -23,6 +23,6 @@ internal class RuntimeInstances<T : Any> : Instances<T> {
         instances.remove(environment)
     }
 
-    override fun size() = instances.size
+    fun size() = instances.size
 
 }

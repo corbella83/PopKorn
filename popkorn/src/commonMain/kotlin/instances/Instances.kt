@@ -6,10 +6,4 @@ package cc.popkorn.instances
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal interface Instances<T : Any> {
-
-    fun get(environment: String?): T
-
-    fun size(): Int
-
-}
+internal interface Instances<T : Any>

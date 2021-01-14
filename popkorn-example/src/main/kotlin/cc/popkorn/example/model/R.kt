@@ -2,6 +2,7 @@ package cc.popkorn.example.model
 
 import cc.popkorn.InjectorManager
 import cc.popkorn.annotations.*
+import cc.popkorn.core.Scope
 import cc.popkorn.core.model.Empty
 import cc.popkorn.core.model.Environment
 
@@ -46,12 +47,16 @@ class R8B : R8i
 class R9 : R9i
 class R10 : R9i
 
-@Injectable
-class R11(id: Long, r1: R9, d1: D3, d2: D15) : R10i
+@Injectable(Scope.BY_NEW)
+class R11(@Assisted id: Long, @Assisted r1: R9, @Assisted r2: R10?, d1: D3, d2: D15) : R10i
 
-@Injectable
+@Injectable(Scope.BY_NEW)
 @ForEnvironments("env2")
-class R12(id: Long, @WithEnvironment("second") id2: Long, r1: R10, d1: D5, d2: D15) : R10i
+class R12(@Assisted id: Long, @Assisted @WithEnvironment("second") id2: Long, @Assisted r1: R10, d1: D5, d2: D15) : R10i
+
+@Injectable(Scope.BY_HOLDER)
+@ForEnvironments("env3")
+class R13(d1: D3, d2: D15) : R9i
 
 @InjectableProvider
 class RCustom {

@@ -66,7 +66,7 @@ internal class ResolverGenerator(private val directory: File) {
             val options = this.joinToString { "\"${it.element}\"" }
             return "throw ${DefaultImplementationNotFoundException::class.asClassName()}(\"$element\", arrayListOf($options))"
         }
-        return elements.singleOrNull()?.element?.let { "$it::class" } ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
+        return elements.distinct().singleOrNull()?.element?.let { "$it::class" } ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
     }
 
     private fun List<DefaultImplementation>.getImplementation(element: TypeElement, environment: String): String {

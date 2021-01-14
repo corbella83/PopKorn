@@ -12,15 +12,15 @@ import javax.tools.Diagnostic
 internal class Logger(private val messenger: Messager) {
 
     fun message(text: String) {
-        messenger.printMessage(Diagnostic.Kind.NOTE, text)
+        messenger.printMessage(Diagnostic.Kind.NOTE, "PopKorn: $text \r\n")
     }
 
     fun warning(text: String) {
-        messenger.printMessage(Diagnostic.Kind.WARNING, text)
+        messenger.printMessage(Diagnostic.Kind.WARNING, "PopKorn: $text \r\n")
     }
 
     fun error(text: String) {
-        messenger.printMessage(Diagnostic.Kind.ERROR, text)
+        messenger.printMessage(Diagnostic.Kind.ERROR, "PopKorn: $text \r\n")
     }
 
 }

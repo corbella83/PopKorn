@@ -2,6 +2,7 @@ package cc.popkorn.instances
 
 import cc.popkorn.InjectorManager
 import cc.popkorn.WeakReference
+import cc.popkorn.core.Parameters
 import cc.popkorn.providers.Provider
 import kotlin.jvm.Synchronized
 
@@ -14,16 +15,16 @@ import kotlin.jvm.Synchronized
  * @since 1.0.0
  */
 internal class VolatileInstances<T : Any>(private val injector: InjectorManager, private val provider: Provider<T>) : Instances<T>, Purgeable {
-    private val instances = HashMap<String?, WeakReference<T>>()
+    private val instances = hashMapOf<String?, WeakReference<T>>()
 
     @Synchronized
-    override fun get(environment: String?): T {
-        return instances[environment]?.get() ?: provider.create(injector, environment)
+    fun get(environment: String?): T {
+        return instances[environment]?.get() ?: provider.create(injector, Parameters.EMPTY, environment)
             .also { instances[environment] = WeakReference(it) }
     }
 
     @Synchronized
-    override fun size() = instances.size
+    fun size() = instances.size
 
     @Synchronized
     override fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }

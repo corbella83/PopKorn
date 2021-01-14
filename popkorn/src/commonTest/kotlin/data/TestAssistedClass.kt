@@ -1,12 +1,13 @@
 package cc.popkorn.data
 
 import cc.popkorn.InjectorManager
+import cc.popkorn.core.Parameters
 import cc.popkorn.core.Scope
 import cc.popkorn.providers.Provider
 
 class TestAssistedClass(val param1: String, val param2: Int, environment: String?) : TestClassNoProvider(environment)
 
 class TestAssistedClassProvider : Provider<TestAssistedClass> {
-    override fun create(injector: InjectorManager, environment: String?): TestAssistedClass = TestAssistedClass(injector.inject(String::class), injector.inject(Int::class), environment)
+    override fun create(injector: InjectorManager, assisted: Parameters, environment: String?): TestAssistedClass = TestAssistedClass(assisted.get(String::class), assisted.get(Int::class), environment)
     override fun scope() = Scope.BY_NEW
 }
