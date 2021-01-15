@@ -3,9 +3,9 @@ package cc.popkorn.example
 fun main() {
 
     Example().execute()
-    println("ok")
+    println("ok kotlin")
 
-    ExampleCompat().execute()
-    println("ok compat")
+    ExampleJava().execute()
+    println("ok java")
 
 }

@@ -4,7 +4,7 @@ import cc.popkorn.PopKornCompat;
 import cc.popkorn.core.model.Environment;
 import cc.popkorn.example.model.*;
 
-public class ExampleCompat {
+public class ExampleJava {
 
     void execute() {
         D10 d10 = new D10();

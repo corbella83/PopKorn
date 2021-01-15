@@ -1,7 +1,6 @@
 package cc.popkorn.example
 
 import cc.popkorn.*
-import cc.popkorn.core.model.Environment
 import cc.popkorn.example.model.*
 
 class Example {
@@ -16,7 +15,6 @@ class Example {
 
         val string1 by popkorn<R2i>()
         val string2 by injecting<R2i>()
-        val string3 by creating<R2i>("", 33)
 
         inject<String>()
         inject<Int>()
@@ -39,24 +37,20 @@ class Example {
         inject<R8i>("env4")
         inject<R9i>()
 
-        create<R10i> {
+        popKorn().create(R10i::class) {
             assist(10L)
             assist(R9())
         }
-        val c1 by creating<R10i>(10L, R9())
 
-        create<R10i>("env2") {
+        popKorn().create(R10i::class, "env2") {
             assist(10L)
             assist(15L, "second")
             assist(R10())
         }
-        val c2 by creating<R10i>(Environment("env2"), 10L, R10())
 
-        create<R8i>()
-        val c3 by creating<R8i>()
+        val c3 = popKorn().create(R8i::class)
 
-        create<R8i>("env1")
-        val c4 by creating<R8i>("env1")
+        popKorn().create(R8i::class, "env1")
 
         popKorn().inject(R9i::class, "env3") {
             holder(c3)

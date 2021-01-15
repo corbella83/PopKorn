@@ -11,7 +11,7 @@ class PopKornCompat {
 
     companion object {
         @JvmStatic
-        private val injectorJVM = InjectorJVM(injector)
+        private val injectorJVM = InjectorJVM(popKorn())
 
         @JvmStatic
         fun <T : Any> addInjectable(instance: T, type: Class<out T>, environment: String) {
