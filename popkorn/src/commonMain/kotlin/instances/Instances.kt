@@ -6,4 +6,8 @@ package cc.popkorn.instances
  * @author Pau Corbella
  * @since 1.0.0
  */
-internal interface Instances<T : Any>
+internal interface Instances<T : Any> {
+
+    fun size(): Int
+
+}

@@ -34,16 +34,4 @@ internal abstract class PopKornTest {
         assertEquals(size, numberOfInstances)
     }
 
-
-    private fun Instances<*>.size(): Int {
-        return when (this) {
-            is RuntimeInstances -> size()
-            is PersistentInstances -> size()
-            is VolatileInstances -> size()
-            is HolderInstances -> size()
-            is NewInstances -> 0
-            else -> throw RuntimeException("Should not happen")
-        }
-    }
-
 }

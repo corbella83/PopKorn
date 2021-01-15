@@ -2,7 +2,7 @@ package cc.popkorn.instances
 
 import cc.popkorn.InjectorManager
 import cc.popkorn.WeakReference
-import cc.popkorn.core.Parameters
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.providers.Provider
 import kotlin.jvm.Synchronized
 
@@ -24,7 +24,7 @@ internal class VolatileInstances<T : Any>(private val injector: InjectorManager,
     }
 
     @Synchronized
-    fun size() = instances.size
+    override fun size() = instances.size
 
     @Synchronized
     override fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }

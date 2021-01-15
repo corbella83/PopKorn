@@ -23,6 +23,6 @@ internal class RuntimeInstances<T : Any> : Instances<T> {
         instances.remove(environment)
     }
 
-    fun size() = instances.size
+    override fun size() = instances.size
 
 }

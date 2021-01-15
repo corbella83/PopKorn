@@ -6,8 +6,8 @@ import cc.popkorn.annotations.*
 import cc.popkorn.compiler.PopKornException
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.core.Injector
-import cc.popkorn.core.Parameters
 import cc.popkorn.core.Scope
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.core.exceptions.DefaultConstructorNotFoundException
 import cc.popkorn.core.exceptions.DefaultMethodNotFoundException
 import cc.popkorn.core.model.Empty

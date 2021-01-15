@@ -1,6 +1,6 @@
 package cc.popkorn
 
-import cc.popkorn.core.builder.InjectorBuilder
+import cc.popkorn.core.config.InjectorConfig
 import kotlin.reflect.KClass
 
 /**
@@ -11,10 +11,8 @@ import kotlin.reflect.KClass
  */
 interface InjectorManager {
 
-    fun <T : Any> inject(clazz: KClass<T>, environment: String? = null): T
+    fun <T : Any> inject(clazz: KClass<T>, environment: String? = null, config: (InjectorConfig.Builder.() -> Unit)? = null): T
 
-    fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String? = null): T?
-
-    fun <T : Any> willInject(clazz: KClass<T>, environment: String? = null): InjectorBuilder<T>
+    fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String? = null, config: (InjectorConfig.Builder.() -> Unit)? = null): T?
 
 }

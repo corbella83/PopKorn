@@ -1,8 +1,8 @@
 package cc.popkorn.providers
 
 import cc.popkorn.InjectorManager
-import cc.popkorn.core.Parameters
 import cc.popkorn.core.Scope
+import cc.popkorn.core.config.Parameters
 
 /**
  * Interface that defines how a certain class can be created

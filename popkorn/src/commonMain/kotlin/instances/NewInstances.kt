@@ -1,7 +1,7 @@
 package cc.popkorn.instances
 
 import cc.popkorn.InjectorManager
-import cc.popkorn.core.Parameters
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.providers.Provider
 
 /**
@@ -16,5 +16,7 @@ internal class NewInstances<T : Any>(private val injector: InjectorManager, priv
     fun get(parameters: Parameters, environment: String?): T {
         return provider.create(injector, parameters, environment)
     }
+
+    override fun size() = 0
 
 }

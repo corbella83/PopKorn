@@ -40,9 +40,9 @@ class InjectorJVM(private val injector: InjectorController) {
     // If want to specify the environment, do it with Environment("value")
     fun <T : Any> create(clazz: Class<T>, vararg assistedInstances: Any): T {
         val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        return injector.willCreate(clazz.kotlinClass(), environment?.value)
-            .assistedAll(assistedInstances.filterNot { it is Environment }.toKotlin())
-            .create()
+        return injector.create(clazz.kotlinClass(), environment?.value) {
+            assistAll(assistedInstances.filterNot { it is Environment }.toKotlin())
+        }
     }
 
 

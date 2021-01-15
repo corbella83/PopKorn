@@ -1,6 +1,6 @@
 package cc.popkorn
 
-import cc.popkorn.core.builder.CreatorBuilder
+import cc.popkorn.core.config.CreatorConfig
 import kotlin.reflect.KClass
 
 /**
@@ -17,9 +17,7 @@ interface InjectorController : InjectorManager {
 
     fun <T : Any> removeInjectable(type: KClass<T>, environment: String? = null)
 
-    fun <T : Any> create(clazz: KClass<T>, environment: String? = null): T
-
-    fun <T : Any> willCreate(clazz: KClass<T>, environment: String? = null): CreatorBuilder<T>
+    fun <T : Any> create(clazz: KClass<T>, environment: String? = null, config: (CreatorConfig.Builder.() -> Unit)? = null): T
 
     fun purge()
 

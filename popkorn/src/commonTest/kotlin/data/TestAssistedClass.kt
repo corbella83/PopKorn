@@ -1,8 +1,8 @@
 package cc.popkorn.data
 
 import cc.popkorn.InjectorManager
-import cc.popkorn.core.Parameters
 import cc.popkorn.core.Scope
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.providers.Provider
 
 class TestAssistedClass(val param1: String, val param2: Int, environment: String?) : TestClassNoProvider(environment)

@@ -1,6 +1,6 @@
 package cc.popkorn
 
-import cc.popkorn.core.builder.CreatorBuilder
+import cc.popkorn.core.config.CreatorConfig
 import cc.popkorn.core.model.Environment
 import kotlin.reflect.KClass
 
@@ -30,7 +30,7 @@ inline fun <reified T : Any> injecting(environment: String? = null) = lazy { T::
 inline fun <reified T : Any> creating(vararg assistedInstances: Any) = lazy {
     val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
     T::class.create(environment?.value) {
-        assistedAll(assistedInstances.filterNot { it is Environment })
+        assistAll(assistedInstances.filterNot { it is Environment })
     }
 }
 
@@ -54,12 +54,8 @@ fun <T : Any> KClass<T>.injectOrNull(environment: String? = null) = injector.inj
 /**
  * Methods to create instances anywhere like create<SomeClass>{ assisted("param1"); assisted("param2"); }
  */
-inline fun <reified T : Any> create(environment: String? = null, noinline builder: (CreatorBuilder<T>.() -> Unit)? = null) = T::class.create(environment, builder)
+inline fun <reified T : Any> create(environment: String? = null, noinline builder: (CreatorConfig.Builder.() -> Unit)? = null) = T::class.create(environment, builder)
 
-fun <T : Any> KClass<T>.create(environment: String? = null, builder: (CreatorBuilder<T>.() -> Unit)? = null): T {
-    return if (builder != null) {
-        injector.willCreate(this, environment).also(builder).create()
-    } else {
-        injector.create(this, environment)
-    }
+fun <T : Any> KClass<T>.create(environment: String? = null, builder: (CreatorConfig.Builder.() -> Unit)? = null): T {
+    return injector.create(this, environment, builder)
 }

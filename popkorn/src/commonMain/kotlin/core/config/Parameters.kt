@@ -1,4 +1,4 @@
-package cc.popkorn.core
+package cc.popkorn.core.config
 
 import cc.popkorn.core.exceptions.AssistedNotFoundException
 import cc.popkorn.core.model.Instance
@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
  */
 class Parameters private constructor(private val params: List<Instance<*>>) {
 
-    class Builder {
+    internal class Builder {
         private val parameters = arrayListOf<Instance<*>>()
 
         fun <T : Any> add(instance: Instance<T>) = parameters.add(instance)
@@ -25,21 +25,26 @@ class Parameters private constructor(private val params: List<Instance<*>>) {
 
     }
 
-    fun <T : Any> get(type: KClass<T>, environment: String? = null): T {
-        return getOrNull(type, environment) ?: throw AssistedNotFoundException(type, environment)
-    }
-
-    fun <T : Any> getOrNull(type: KClass<T>, environment: String? = null): T? {
-        return params.filter { it.type == type }
+    fun <T : Any> get(clazz: KClass<T>, environment: String? = null): T {
+        return params.filter { it.type == clazz }
             .let { list ->
                 list.singleOrNull { it.environment == environment } ?: list.singleOrNull { it.environment == null }
             }
             ?.instance
-            ?.let { it as? T }
+            ?.let { it as T }
+            ?: throw AssistedNotFoundException(clazz, environment)
+    }
+
+    fun <T : Any> getOrNull(clazz: KClass<T>, environment: String? = null): T? {
+        return try {
+            get(clazz, environment)
+        } catch (e: AssistedNotFoundException) {
+            null
+        }
     }
 
     companion object {
-        val EMPTY = Parameters(listOf())
+        internal val EMPTY = Parameters(listOf())
     }
 
 }

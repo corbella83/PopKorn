@@ -1,7 +1,7 @@
 package cc.popkorn.instances
 
 import cc.popkorn.InjectorManager
-import cc.popkorn.core.Parameters
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.providers.Provider
 
 /**
@@ -18,6 +18,6 @@ internal class PersistentInstances<T : Any>(private val injector: InjectorManage
         return instances.getOrPut(environment) { provider.create(injector, Parameters.EMPTY, environment) }
     }
 
-    fun size() = instances.size
+    override fun size() = instances.size
 
 }

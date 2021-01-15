@@ -3,9 +3,9 @@
 package cc.popkorn.core
 
 import cc.popkorn.*
-import cc.popkorn.core.builder.Config
-import cc.popkorn.core.builder.CreatorBuilder
-import cc.popkorn.core.builder.InjectorBuilder
+import cc.popkorn.core.config.CreatorConfig
+import cc.popkorn.core.config.InjectorConfig
+import cc.popkorn.core.config.Parameters
 import cc.popkorn.core.exceptions.*
 import cc.popkorn.instances.*
 import cc.popkorn.pools.ProviderPool
@@ -105,50 +105,31 @@ class Injector(
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
-     * If you need to provide some configuration (like assisted parameters or holders) use {@link Injector#willInject}
      *
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
+     * @param config Some extra configuration needed when injecting the object.
      */
-    override fun <T : Any> inject(clazz: KClass<T>, environment: String?): T {
-        return injectInternal(clazz, environment, null)
+    override fun <T : Any> inject(clazz: KClass<T>, environment: String?, config: (InjectorConfig.Builder.() -> Unit)?): T {
+        val configuration = config?.let { InjectorConfig.Builder().apply(it).build() }
+
+        val resolved = clazz.resolve(environment) as KClass<T>
+        return instances.getOrPut(resolved, { resolved.createInstances() })
+            .let { it as Instances<T> }
+            .get(resolved, environment, configuration)
     }
 
     /**
      * Retrieves an object of type clazz (it will be created or provided depending on its Scope)
-     * If you need to provide some configuration (like assisted parameters or holders) use {@link Injector#willInject}
      * If fails getting it, will return null
      *
      * @param clazz Class or Interface that you want to retrieve
      * @param environment The environment in which you would like to retrieve the object
+     * @param config Some extra configuration needed when injecting the object.
      */
-    override fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String?): T? {
-        return injectOrNullInternal(clazz, environment, null)
-    }
-
-
-    /**
-     * Creates a deferred injector of type clazz that lets you set extra configuration before injecting the object
-     * Usage: willInject(SomeClass::class).holder(this).assisted(34).inject()
-     *
-     * @param clazz Class or Interface that you want to inject
-     * @param environment The environment in which you would like to retrieve the object
-     */
-    override fun <T : Any> willInject(clazz: KClass<T>, environment: String?): InjectorBuilder<T> {
-        return InjectorBuilder({ injectInternal(clazz, environment, it) }, { injectOrNullInternal(clazz, environment, it) })
-    }
-
-    // Generic method to create instances
-    private inline fun <T : Any> injectInternal(clazz: KClass<T>, environment: String?, config: Config.Inject?): T {
-        val resolved = clazz.resolve(environment)
-        return (instances.getOrPut(resolved) { resolved.createInstances() } as Instances<T>)
-            .provide(resolved as KClass<T>, environment, config)
-    }
-
-    // Generic method to create nullable instances
-    private inline fun <T : Any> injectOrNullInternal(clazz: KClass<T>, environment: String?, config: Config.Inject?): T? {
+    override fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String?, config: (InjectorConfig.Builder.() -> Unit)?): T? {
         return try {
-            injectInternal(clazz, environment, config)
+            inject(clazz, environment, config)
         } catch (e: ProviderNotFoundException) {
             null
         } catch (e: ResolverNotFoundException) {
@@ -164,36 +145,21 @@ class Injector(
         }
     }
 
-
     /**
      * Creates an object of type clazz. Notice that this function will always returns a new instance
      * ignoring the scope it has.
      *
      * @param clazz Class or Interface that you want to create
      * @param environment The environment in which you would like to create the object
+     * @param config Some extra configuration needed when creating the object.
      */
-    override fun <T : Any> create(clazz: KClass<T>, environment: String?): T {
-        return createInternal(clazz, environment, null)
-    }
+    override fun <T : Any> create(clazz: KClass<T>, environment: String?, config: (CreatorConfig.Builder.() -> Unit)?): T {
+        val configuration = config?.let { CreatorConfig.Builder().apply(it).build() }
 
-    /**
-     * Creates a deferred creator of type clazz that lets you set extra configuration before creating the object
-     * Usage: willCreate(SomeClass::class).assisted(34).override(someInstance).create()
-     *
-     * @param clazz Class or Interface that you want to create
-     * @param environment The environment in which you would like to create the object
-     */
-    override fun <T : Any> willCreate(clazz: KClass<T>, environment: String?): CreatorBuilder<T> {
-        return CreatorBuilder { createInternal(clazz, environment, it) }
-    }
-
-    // Generic method to create instances internally
-    private inline fun <T : Any> createInternal(clazz: KClass<T>, environment: String?, config: Config.Create?): T {
-        val injector = config?.overridden?.let { InjectorWithPreference(this, it) } ?: this
-
+        val injector = configuration?.overridden?.let { InjectorWithPreference(this, it) } ?: this
         return clazz.resolve(environment)
             .let { providerPool.create(it) }
-            .create(injector, config?.assisted ?: Parameters.EMPTY, environment)
+            .create(injector, configuration?.assisted ?: Parameters.EMPTY, environment)
     }
 
 
@@ -206,7 +172,7 @@ class Injector(
         }
     }
 
-    private fun <T : Any> Instances<T>.provide(clazz: KClass<T>, environment: String?, config: Config.Inject?): T {
+    private fun <T : Any> Instances<T>.get(clazz: KClass<T>, environment: String?, config: InjectorConfig?): T {
         return when (this) {
             is RuntimeInstances -> get(environment)
             is PersistentInstances -> get(environment)
