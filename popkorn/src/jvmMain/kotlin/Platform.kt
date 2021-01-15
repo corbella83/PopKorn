@@ -24,7 +24,7 @@ internal actual fun createDefaultInjector() = Injector(jvmResolverPool(), jvmPro
 
 private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
 
-// Must check it's primitiveness because java considers them abstract (int, long, float, double, etc)
+// Must check its primitiveness because java considers them abstract (int, long, float, double, etc)
 private fun <T : Any> KClass<T>.isAbstract() = (!this.java.isPrimitive && Modifier.isAbstract(this.java.modifiers))
 
 private fun jvmResolverPool(): ResolverPool {

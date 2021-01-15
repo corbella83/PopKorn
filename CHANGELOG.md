@@ -5,9 +5,9 @@ Version 2.1.0 *(2021-XX-XX)*
 -----------------------------
 
 * New: Add assisted dependencies
-* New: Now you can create any `Injectable` class overriding any of it's dependencies
+* New: Now you can create any `Injectable` class overriding any of its dependencies
 * Maintenance: Update to Kotlin 1.4.21
-* New: Add lazy initialization `by popkorn`, `by injecting` and `by creating`
+* New: Add lazy initialization `by popkorn` and `by injecting`
 * New: Add new scope: BY_HOLDER
 * Fix: Compiler error logger wasn't showing the correct message
 

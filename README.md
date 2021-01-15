@@ -31,6 +31,7 @@ Scopes are the way to define the life span of an instance. There are 3 types of 
 
 * Scope.BY_APP (default) -> Instance will be created only once, for hence will live forever. Normally for classes that have heavy construction or saves states (Retrofit, OkHttp, RoomDB, etc)
 * Scope.BY_USE -> Instance will be created if no one is using it, meaning will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc...)
+* Scope.BY_HOLDER -> Instance will be created if used with a different holder, will live as long as its holder(container). Normally for instances that needs to be shared by a common parent (presenters, viewModels, etc...)
 * Scope.BY_NEW -> Instance will be created every time it's needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, viewModels, screens, etc...)
 
 Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom.
@@ -133,33 +134,21 @@ val hello = inject<Hello>() // This will return an instance of HelloWorld
 
 ### Using runtime arguments (or assisted dependencies)
 
-If you have this injectable class where 'id' is not injectable
+For injectable classes with BY_NEW scope, you can have assisted arguments
 
 ```kotlin
 @Injectable(BY_NEW)
-class HelloViewModel(val id: Long, val param2: HelloBarcelona, val param2: HelloNewYork) : Hello
+class HelloViewModel(@Assisted val id: Long, val param2: HelloBarcelona, val param2: HelloNewYork) : Hello
 ```
 
-You can create a HelloViewModel like this to provide runtime 'id':
+that you provide in runtime as:
 
 ```kotlin
-val hello = create<Hello> {
-    add(id)
+val id = 4
+val hello = inject<Hello> {
+    assist(id)
 }
 ```
-
-You can even override dependencies using this. So, if you create the object like this:
-
-```kotlin
-val hello = create<Hello> {
-    add(id)
-    add(HelloTestBarcelona())
-}
-```
-
-Will create a hello instance using HelloTestBarcelona instead of the default HelloBarcelona
-
-
 
 Injecting External Classes
 --------
@@ -212,6 +201,20 @@ class MyApplication : Application() {
 
 }
 ```
+
+Testing
+--------
+PopKorn also offers the ability to create injectable classes at any time (ignoring its scope), overriding any dependency you like
+
+```kotlin
+class Hello(val param: HelloBarcelona, val param: HelloParis)
+
+val hello = popKorn().create<Hello> {
+    override(HelloTestBarcelona())
+}
+```
+
+This will create a hello instance using HelloTestBarcelona instead of the default HelloBarcelona
 
 Using Android / JVM
 --------
