@@ -1,7 +1,6 @@
 package cc.popkorn.core.config
 
 import cc.popkorn.core.exceptions.AssistedNotFoundException
-import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
 /**
@@ -10,16 +9,21 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 2.1.0
  */
-class Parameters private constructor(private val params: List<Instance<*>>) {
+class Parameters private constructor(private val params: List<Builder.Instance<*>>) {
 
     internal class Builder {
+
+        inner class Instance<T : Any>(
+            val instance: T,
+            val type: KClass<out T> = instance::class,
+            val environment: String? = null
+        )
+
         private val parameters = arrayListOf<Instance<*>>()
 
-        fun <T : Any> add(instance: Instance<T>) = parameters.add(instance)
+        fun <T : Any> add(instance: T, type: KClass<out T>, environment: String? = null) = parameters.add(Instance(instance, type, environment))
 
-        fun <T : Any> add(instance: T, type: KClass<out T>, environment: String? = null) = add(Instance(instance, type, environment))
-
-        fun <T : Any> add(instance: T, environment: String? = null) = add(instance, instance::class, environment)
+        fun <T : Any> add(instance: T, environment: String? = null) = parameters.add(Instance(instance, instance::class, environment))
 
         fun build() = Parameters(parameters)
 

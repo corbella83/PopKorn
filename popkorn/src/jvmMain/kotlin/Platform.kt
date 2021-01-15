@@ -13,6 +13,8 @@ import kotlin.reflect.KClass
  * @since 2.0.0
  */
 
+internal fun <T : Any> Class<T>.kotlinClass() = kotlin
+
 actual typealias WeakReference<T> = java.lang.ref.WeakReference<T>
 
 internal actual fun <T : Any> KClass<T>.getName() = java.name

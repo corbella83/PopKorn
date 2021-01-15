@@ -1,7 +1,7 @@
 package cc.popkorn
 
-import cc.popkorn.core.model.Environment
-import cc.popkorn.core.model.Instance
+import cc.popkorn.config.CreatorConfigBuilder
+import cc.popkorn.config.InjectorConfigBuilder
 
 /**
  * Wrapper for Injector to be used from the JS (pure js)
@@ -10,9 +10,6 @@ import cc.popkorn.core.model.Instance
  * @since 2.0.0
  */
 class InjectorJS(private val injector: InjectorController) {
-
-    class InstanceJS<T : Any>(val instance: T, val type: JsClass<out T>, val environment: String? = null)
-
 
     fun <T : Any> addInjectable(instance: T, type: JsClass<out T>, environment: String) = injector.addInjectable(instance, type.kotlinClass(), environment)
 
@@ -28,36 +25,35 @@ class InjectorJS(private val injector: InjectorController) {
     fun <T : Any> removeInjectable(type: JsClass<T>) = injector.removeInjectable(type.kotlinClass())
 
 
+    fun <T : Any> inject(clazz: JsClass<T>) = injector.inject(clazz.kotlinClass())
+
     fun <T : Any> inject(clazz: JsClass<T>, environment: String) = injector.inject(clazz.kotlinClass(), environment)
 
-    fun <T : Any> inject(clazz: JsClass<T>) = injector.inject(clazz.kotlinClass(), null)
+    fun <T : Any> inject(clazz: JsClass<T>, config: InjectorConfigBuilder) = injector.inject(clazz.kotlinClass()) { config.apply(this) }
+
+    fun <T : Any> inject(clazz: JsClass<T>, environment: String, config: InjectorConfigBuilder) = injector.inject(clazz.kotlinClass(), environment) { config.apply(this) }
+
+
+    fun <T : Any> injectOrNull(clazz: JsClass<T>) = injector.injectOrNull(clazz.kotlinClass())
 
     fun <T : Any> injectOrNull(clazz: JsClass<T>, environment: String) = injector.injectOrNull(clazz.kotlinClass(), environment)
 
-    fun <T : Any> injectOrNull(clazz: JsClass<T>) = injector.injectOrNull(clazz.kotlinClass(), null)
+    fun <T : Any> injectOrNull(clazz: JsClass<T>, config: InjectorConfigBuilder) = injector.injectOrNull(clazz.kotlinClass()) { config.apply(this) }
+
+    fun <T : Any> injectOrNull(clazz: JsClass<T>, environment: String, config: InjectorConfigBuilder) = injector.injectOrNull(clazz.kotlinClass(), environment) { config.apply(this) }
 
 
-    // Provide raw objects or an InstanceJS<*> object for more information
-    // If want to specify the environment, do it with Environment("value")
-    fun <T : Any> create(clazz: JsClass<T>, vararg assistedInstances: Any): T {
-        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        return injector.create(clazz.kotlinClass(), environment?.value) {
-            assistAll(assistedInstances.filterNot { it is Environment }.toKotlin())
-        }
-    }
+    fun <T : Any> create(clazz: JsClass<T>) = injector.create(clazz.kotlinClass())
+
+    fun <T : Any> create(clazz: JsClass<T>, environment: String) = injector.create(clazz.kotlinClass(), environment)
+
+    fun <T : Any> create(clazz: JsClass<T>, config: CreatorConfigBuilder) = injector.create(clazz.kotlinClass()) { config.apply(this) }
+
+    fun <T : Any> create(clazz: JsClass<T>, environment: String, config: CreatorConfigBuilder) = injector.create(clazz.kotlinClass(), environment) { config.apply(this) }
 
 
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
 
-
-    private fun List<Any>.toKotlin(): List<Any> {
-        return map { if (it is InstanceJS<*>) it.toKotlin() else it }
-    }
-
-    private fun <T : Any> InstanceJS<T>.toKotlin() = Instance(instance, type.kotlinClass(), environment)
-
-    // If it doesn't exist, creates a SimpleKClassImpl
-    private fun <T : Any> JsClass<T>.kotlinClass() = kotlin
 }

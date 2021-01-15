@@ -1,10 +1,9 @@
 package cc.popkorn
 
-import cc.popkorn.core.model.Environment
-import cc.popkorn.core.model.Instance
+import cc.popkorn.config.CreatorConfigBuilder
+import cc.popkorn.config.InjectorConfigBuilder
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCProtocol
-import kotlinx.cinterop.getOriginalKotlinClass
 
 /**
  * Wrapper for Injector to be used from the ObjectiveC (pure objc)
@@ -13,12 +12,6 @@ import kotlinx.cinterop.getOriginalKotlinClass
  * @since 2.0.0
  */
 class InjectorObjC(private val injector: InjectorController) {
-
-    sealed class InstanceObjC(val instance: Any, val environment: String?) {
-        class InstanceObjCClass(instance: Any, val type: ObjCClass, environment: String? = null) : InstanceObjC(instance, environment)
-        class InstanceObjCProtocol(instance: Any, val type: ObjCProtocol, environment: String? = null) : InstanceObjC(instance, environment)
-    }
-
 
     fun addInjectable(instance: Any, clazz: ObjCClass, environment: String) = injector.addInjectable(instance, clazz.kotlinClass(), environment)
 
@@ -38,61 +31,62 @@ class InjectorObjC(private val injector: InjectorController) {
     fun removeInjectable(protocol: ObjCProtocol) = injector.removeInjectable(protocol.kotlinClass())
 
 
+    fun inject(clazz: ObjCClass) = injector.inject(clazz.kotlinClass())
+
     fun inject(clazz: ObjCClass, environment: String) = injector.inject(clazz.kotlinClass(), environment)
 
-    fun inject(clazz: ObjCClass) = injector.inject(clazz.kotlinClass(), null)
+    fun inject(clazz: ObjCClass, config: InjectorConfigBuilder) = injector.inject(clazz.kotlinClass()) { config.apply(this) }
+
+    fun inject(clazz: ObjCClass, environment: String, config: InjectorConfigBuilder) = injector.inject(clazz.kotlinClass(), environment) { config.apply(this) }
+
+
+    fun inject(protocol: ObjCProtocol) = injector.inject(protocol.kotlinClass())
 
     fun inject(protocol: ObjCProtocol, environment: String) = injector.inject(protocol.kotlinClass(), environment)
 
-    fun inject(protocol: ObjCProtocol) = injector.inject(protocol.kotlinClass(), null)
+    fun inject(protocol: ObjCProtocol, config: InjectorConfigBuilder) = injector.inject(protocol.kotlinClass()) { config.apply(this) }
 
+    fun inject(protocol: ObjCProtocol, environment: String, config: InjectorConfigBuilder) = injector.inject(protocol.kotlinClass(), environment) { config.apply(this) }
+
+
+    fun injectOrNull(clazz: ObjCClass) = injector.injectOrNull(clazz.kotlinClass())
 
     fun injectOrNull(clazz: ObjCClass, environment: String) = injector.injectOrNull(clazz.kotlinClass(), environment)
 
-    fun injectOrNull(clazz: ObjCClass) = injector.injectOrNull(clazz.kotlinClass(), null)
+    fun injectOrNull(clazz: ObjCClass, config: InjectorConfigBuilder) = injector.injectOrNull(clazz.kotlinClass()) { config.apply(this) }
+
+    fun injectOrNull(clazz: ObjCClass, environment: String, config: InjectorConfigBuilder) = injector.injectOrNull(clazz.kotlinClass(), environment) { config.apply(this) }
+
+
+    fun injectOrNull(protocol: ObjCProtocol) = injector.injectOrNull(protocol.kotlinClass())
 
     fun injectOrNull(protocol: ObjCProtocol, environment: String) = injector.injectOrNull(protocol.kotlinClass(), environment)
 
-    fun injectOrNull(protocol: ObjCProtocol) = injector.injectOrNull(protocol.kotlinClass(), null)
+    fun injectOrNull(protocol: ObjCProtocol, config: InjectorConfigBuilder) = injector.injectOrNull(protocol.kotlinClass()) { config.apply(this) }
+
+    fun injectOrNull(protocol: ObjCProtocol, environment: String, config: InjectorConfigBuilder) = injector.injectOrNull(protocol.kotlinClass(), environment) { config.apply(this) }
 
 
-    // Provide raw objects or an InstanceObjC<*> object for more information
-    // If want to specify the environment, do it with Environment("value")
-    fun create(clazz: ObjCClass, vararg assistedInstances: Any): Any {
-        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        return injector.create(clazz.kotlinClass(), environment?.value) {
-            assistAll(assistedInstances.filterNot { it is Environment }.toKotlin())
-        }
-    }
+    fun create(clazz: ObjCClass) = injector.create(clazz.kotlinClass())
 
-    fun create(clazz: ObjCProtocol, vararg assistedInstances: Any): Any {
-        val environment = assistedInstances.singleOrNull { it is Environment } as? Environment
-        return injector.create(clazz.kotlinClass(), environment?.value) {
-            assistAll(assistedInstances.filterNot { it is Environment }.toKotlin())
-        }
-    }
+    fun create(clazz: ObjCClass, environment: String) = injector.create(clazz.kotlinClass(), environment)
+
+    fun create(clazz: ObjCClass, config: CreatorConfigBuilder) = injector.create(clazz.kotlinClass()) { config.apply(this) }
+
+    fun create(clazz: ObjCClass, environment: String, config: CreatorConfigBuilder) = injector.create(clazz.kotlinClass(), environment) { config.apply(this) }
+
+
+    fun create(protocol: ObjCProtocol) = injector.create(protocol.kotlinClass())
+
+    fun create(protocol: ObjCProtocol, environment: String) = injector.create(protocol.kotlinClass(), environment)
+
+    fun create(protocol: ObjCProtocol, config: CreatorConfigBuilder) = injector.create(protocol.kotlinClass()) { config.apply(this) }
+
+    fun create(protocol: ObjCProtocol, environment: String, config: CreatorConfigBuilder) = injector.create(protocol.kotlinClass(), environment) { config.apply(this) }
 
 
     fun reset() = injector.reset()
 
     fun purge() = injector.purge()
-
-
-    private fun List<Any>.toKotlin(): List<Any> {
-        return map { if (it is InstanceObjC) it.toKotlin() else it }
-    }
-
-    private fun InstanceObjC.toKotlin(): Instance<*> {
-        return when (this) {
-            is InstanceObjC.InstanceObjCClass -> Instance(instance, type.kotlinClass(), environment)
-            is InstanceObjC.InstanceObjCProtocol -> Instance(instance, type.kotlinClass(), environment)
-        }
-    }
-
-    // If it doesn't exist, creates a ReferenceClass
-
-    private fun ObjCClass.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
-
-    private fun ObjCProtocol.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
 
 }

@@ -15,6 +15,8 @@ import kotlin.reflect.KClass
  * @since 2.0.0
  */
 
+internal fun <T : Any> JsClass<T>.kotlinClass() = kotlin
+
 actual class WeakReference<T : Any> actual constructor(referred: T) {
     private var pointer: T? = referred
 

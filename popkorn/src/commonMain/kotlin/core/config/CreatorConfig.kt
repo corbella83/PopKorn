@@ -1,6 +1,5 @@
 package cc.popkorn.core.config
 
-import cc.popkorn.core.model.Instance
 import kotlin.reflect.KClass
 
 /**
@@ -19,29 +18,24 @@ class CreatorConfig private constructor(
         private val overridden = Parameters.Builder()
 
         fun assistAll(instances: List<Any>) =
-            instances.map { if (it is Instance<*>) it else Instance(it) }.forEach { assist(it) }
+            instances.forEach { assisted.add(it) }
 
         fun <P : Any> assist(instance: P, type: KClass<out P>, environment: String? = null) =
-            assist(Instance(instance, type, environment))
+            assisted.add(instance, type, environment)
 
         fun assist(instance: Any, environment: String? = null) =
-            assist(instance, instance::class, environment)
-
-        private fun assist(instance: Instance<*>) =
-            assisted.add(instance)
+            assisted.add(instance, instance::class, environment)
 
 
         fun overrideAll(instances: List<Any>) =
-            instances.map { if (it is Instance<*>) it else Instance(it) }.forEach { override(it) }
+            instances.forEach { overridden.add(it) }
 
         fun <P : Any> override(instance: P, type: KClass<out P>, environment: String? = null) =
-            override(Instance(instance, type, environment))
+            overridden.add(instance, type, environment)
 
         fun override(instance: Any, environment: String? = null) =
-            override(instance, instance::class, environment)
+            overridden.add(instance, instance::class, environment)
 
-        private fun override(instance: Instance<*>) =
-            overridden.add(instance)
 
         internal fun build() = CreatorConfig(assisted.build(), overridden.build())
 

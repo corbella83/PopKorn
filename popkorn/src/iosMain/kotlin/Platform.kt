@@ -23,6 +23,10 @@ import kotlin.reflect.KClass
  * @since 2.0.0
  */
 
+internal fun ObjCClass.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
+
+internal fun ObjCProtocol.kotlinClass() = getOriginalKotlinClass(this) ?: ReferenceClass<Any>(this)
+
 actual typealias WeakReference<T> = kotlin.native.ref.WeakReference<T>
 
 internal actual fun <T : Any> KClass<T>.getName() = qualifiedName ?: throw NonExistingClassException(this)

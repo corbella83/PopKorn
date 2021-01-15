@@ -1,7 +1,6 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
-import cc.popkorn.instances.*
 import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals

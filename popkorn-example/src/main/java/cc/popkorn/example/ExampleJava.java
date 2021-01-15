@@ -1,7 +1,7 @@
 package cc.popkorn.example;
 
 import cc.popkorn.PopKornCompat;
-import cc.popkorn.core.model.Environment;
+import cc.popkorn.config.CreatorConfigBuilder;
 import cc.popkorn.example.model.*;
 
 public class ExampleJava {
@@ -31,8 +31,8 @@ public class ExampleJava {
         PopKornCompat.inject(R8i.class, "env4");
         PopKornCompat.inject(R9i.class);
 
-        PopKornCompat.create(R10i.class, 10L, new R9());
-        PopKornCompat.create(R10i.class, new Environment("env2"), 10L, new R10());
+        PopKornCompat.create(R10i.class, new CreatorConfigBuilder().assist(10L).assist(new R9()));
+        PopKornCompat.create(R10i.class, "env2", new CreatorConfigBuilder().assist(10L).assist(20L, "second").assist(new R10()));
         PopKornCompat.create(R8i.class);
         PopKornCompat.create(R8i.class, "env1");
 
