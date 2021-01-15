@@ -3,41 +3,52 @@ package cc.popkorn.androidx.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import cc.popkorn.ParametersFactory
+import cc.popkorn.core.config.InjectorConfig
 
 /**
- * Method to create a `ViewModel` if `ViewModelStoreOwner is the context`
- * Sample: `injectViewModel<SomeViewModel>() `
+ * Method to inject a `ViewModel` with params if `ViewModelStoreOwner is the context`
+ *
+ * Sample:
+ * ```
+ * val viewModel = getViewModel()
+ * ```
+ *
+ * Sample with assisted params:
+ * ```
+ * val viewModel: SomeViewModel = getViewModel {
+ *     assist("param1")
+ *     assist("param2")
+ * }
+ * ```
  */
-inline fun <reified T : ViewModel> ViewModelStoreOwner.injectViewModel(): T {
-    return ViewModelProvider(this, PopKornViewModelFactory(null)).get(T::class.java)
-}
-
-/**
- * Method to create a `ViewModel`, lazily, if `ViewModelStoreOwner is the context`
- * Sample: `by injectingViewModel<SomeViewModel>() `
- */
-inline fun <reified T : ViewModel> ViewModelStoreOwner.injectingViewModel(): Lazy<T> =
-    lazy { ViewModelProvider(this, PopKornViewModelFactory(null)).get(T::class.java) }
-
-/**
- * Method to create a `ViewModel` with params if `ViewModelStoreOwner is the context`
- * Sample: `create<SomeViewModel> { add("some param") } `
- */
-inline fun <reified T : ViewModel> ViewModelStoreOwner.createViewModel(
-    noinline parameters: (ParametersFactory.Builder.() -> Unit)? = null,
+inline fun <reified T : ViewModel> ViewModelStoreOwner.getViewModel(
+    environment: String? = null,
+    noinline config: (InjectorConfig.Builder.() -> Unit)? = null,
 ): T {
-    val params = parameters?.let { ParametersFactory.Builder().also(it).build() }
-    return ViewModelProvider(this, PopKornViewModelFactory(params)).get(T::class.java)
+    return ViewModelProvider(this, PopKornViewModelFactory(environment, config)).get(T::class.java)
 }
 
 /**
- * Method to create a `ViewModel` with params, lazily, if `ViewModelStoreOwner is the context`
- * Sample: `by creatingViewModel<SomeViewModel> { add("param1"); add("param2"); } `
+ * Method to inject a `ViewModel` with params, lazily, if `ViewModelStoreOwner is the context`
+ *
+ * Sample:
+ * ```
+ * val viewModel: SomeViewModel by viewModel()
+ * ```
+ *
+ * Sample with assisted params:
+ * ```
+ * val viewModel: SomeViewModel by viewModel {
+ *     assist("param1")
+ *     assist("param2")
+ * }
+ * ```
  */
-inline fun <reified T : ViewModel> ViewModelStoreOwner.creatingViewModel(
-    noinline parameters: (ParametersFactory.Builder.() -> Unit)? = null,
+inline fun <reified T : ViewModel> ViewModelStoreOwner.viewModel(
+    environment: String? = null,
+    noinline config: (InjectorConfig.Builder.() -> Unit)? = null,
 ): Lazy<T> {
-    val params = parameters?.let { ParametersFactory.Builder().also(it).build() }
-    return lazy { ViewModelProvider(this, PopKornViewModelFactory(params)).get(T::class.java) }
+    return lazy {
+        ViewModelProvider(this, PopKornViewModelFactory(environment, config)).get(T::class.java)
+    }
 }

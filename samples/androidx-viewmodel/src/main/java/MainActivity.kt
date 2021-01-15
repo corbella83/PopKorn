@@ -10,14 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cc.popkorn.androidx.viewModel.injectingViewModel
+import cc.popkorn.androidx.viewModel.viewModel
 import cc.popkorn.annotations.Injectable
 import cc.popkorn.core.Propagation
 import cc.popkorn.core.Scope
 
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    private val viewModel: HelloViewModel by injectingViewModel()
+    private val viewModel: HelloViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

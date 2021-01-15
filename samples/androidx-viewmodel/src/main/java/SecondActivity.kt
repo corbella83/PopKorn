@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import cc.popkorn.androidx.viewModel.createViewModel
+import cc.popkorn.androidx.viewModel.getViewModel
 import cc.popkorn.annotations.Injectable
 import cc.popkorn.core.Propagation
 import cc.popkorn.core.Scope
@@ -19,7 +19,7 @@ class SecondActivity : AppCompatActivity(R.layout.second_activity) {
 
         val nameArg: String = intent.getStringExtra("name") ?: "Name not found"
 
-        val viewModel: NameViewModel = createViewModel { add(nameArg) }
+        val viewModel: NameViewModel = getViewModel { assist(nameArg) }
 
         viewModel.name.observe(this, { name ->
             findViewById<TextView>(R.id.textViewName).text = name
