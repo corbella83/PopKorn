@@ -148,7 +148,7 @@ internal class ProviderTests : PopKornTest() {
     private fun testClassByNewWithAssistedOk(environment: String?) {
         val factory = Injector(TestResolverPool(), TestProviderPool())
 
-        val obj1 = factory.inject(TestClassByNewAssisted::class) {
+        val obj1 = factory.inject(TestClassByNewAssisted::class, environment) {
             assist("test")
             assist(34)
         }
