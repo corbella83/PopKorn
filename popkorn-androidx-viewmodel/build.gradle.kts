@@ -1,4 +1,5 @@
 val lifecycleVersion = "2.2.0"
+val fragmentVersion = "1.2.5"
 
 plugins {
     id("com.android.library")
@@ -53,6 +54,7 @@ kotlin {
         named("androidMain") {
             dependencies {
                 implementation(project(":popkorn"))
+                implementation("androidx.fragment:fragment:$fragmentVersion")
                 implementation("androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion")
             }
         }

@@ -7,24 +7,22 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textViewGreeting"
+        android:id="@+id/textViewFragment"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Main activity" />
+        tools:text="Sample fragment text" />
 
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        android:hint="Add a name to use as argument" />
+        android:layout_margin="32dp" />
 
     <Button
-        android:id="@+id/buttonNext"
+        android:id="@+id/buttonChangeName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/holo_blue_light"
-        android:text="Next activity" />
+        android:text="Change name" />
 
 </LinearLayout>

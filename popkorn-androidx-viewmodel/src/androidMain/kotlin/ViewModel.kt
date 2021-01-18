@@ -1,5 +1,6 @@
 package cc.popkorn.androidx.viewModel
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -51,4 +52,28 @@ inline fun <reified T : ViewModel> ViewModelStoreOwner.viewModel(
     return lazy {
         ViewModelProvider(this, PopKornViewModelFactory(environment, config)).get(T::class.java)
     }
+}
+
+/**
+ * Method to inject a `ViewModel` with params if `ViewModelStoreOwner is the context`
+ *
+ * Sample:
+ * ```
+ * val viewModel = getSharedViewModel()
+ * ```
+ */
+inline fun <reified T : ViewModel> Fragment.getSharedViewModel(environment: String? = null): T {
+    return ViewModelProvider(viewModelStore, PopKornViewModelFactory(environment) { holder(requireActivity()) }).get(T::class.java)
+}
+
+/**
+ * Method to inject a shared `ViewModel` in fragments
+ *
+ * Sample:
+ * ```
+ * val viewModel: SomeViewModel by sharedViewModel()
+ * ```
+ */
+inline fun <reified T : ViewModel> Fragment.sharedViewModel(environment: String? = null): Lazy<T> {
+    return lazy { ViewModelProvider(viewModelStore, PopKornViewModelFactory(environment) { holder(requireActivity()) }).get(T::class.java) }
 }

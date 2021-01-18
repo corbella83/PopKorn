@@ -17,14 +17,15 @@ import cc.popkorn.core.Scope
 
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    private val viewModel: HelloViewModel by viewModel()
+    private val viewModel: FirstViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.greeting.observe(this, { greeting ->
-            findViewById<TextView>(R.id.textViewGreeting).text = greeting
-        })
+        viewModel.greeting.observe(
+            this,
+            { greeting -> findViewById<TextView>(R.id.textViewGreeting).text = greeting },
+        )
 
         findViewById<Button>(R.id.buttonNext).setOnClickListener {
             val name = findViewById<EditText>(R.id.editTextName).text.toString()
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 }
 
 @Injectable(scope = Scope.BY_NEW, propagation = Propagation.NONE)
-class HelloViewModel : ViewModel() {
+class FirstViewModel : ViewModel() {
 
     private val _greeting: MutableLiveData<String> = MutableLiveData()
     val greeting: LiveData<String> = _greeting

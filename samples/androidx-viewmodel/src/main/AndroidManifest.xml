@@ -24,6 +24,10 @@
             android:name=".SecondActivity"
             android:label="SecondActivity" />
 
+        <activity
+            android:name=".ThirdActivity"
+            android:label="ThirdActivity" />
+
     </application>
 
 </manifest>
