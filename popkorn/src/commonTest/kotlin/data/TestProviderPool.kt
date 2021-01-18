@@ -19,8 +19,9 @@ class TestProviderPool : ProviderPool {
             TestClassByUse::class -> true
             TestClassByHolder::class -> true
             TestClassByNew::class -> true
-            TestAssistedClass::class -> true
-            TestAssistedClass2::class -> true
+            TestClassByNewAssisted::class -> true
+            TestClassByNewAssisted2::class -> true
+            TestCascadeClass::class -> true
             else -> false
         }
     }
@@ -31,8 +32,9 @@ class TestProviderPool : ProviderPool {
             TestClassByUse::class -> TestClassByUseProvider() as Provider<T>
             TestClassByHolder::class -> TestClassByHolderProvider() as Provider<T>
             TestClassByNew::class -> TestClassByNewProvider() as Provider<T>
-            TestAssistedClass::class -> TestAssistedClassProvider() as Provider<T>
-            TestAssistedClass2::class -> TestAssistedClass2Provider() as Provider<T>
+            TestClassByNewAssisted::class -> TestClassByNewAssistedProvider() as Provider<T>
+            TestClassByNewAssisted2::class -> TestClassByNewAssisted2Provider() as Provider<T>
+            TestCascadeClass::class -> TestCascadeClassProvider() as Provider<T>
             else -> throw ProviderNotFoundException(clazz)
         }
     }

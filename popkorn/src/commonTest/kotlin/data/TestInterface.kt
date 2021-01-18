@@ -13,8 +13,8 @@ class TestInterfaceResolver : Resolver<TestInterface> {
             "app" -> TestClassByApp::class
             "use" -> TestClassByUse::class
             "new" -> TestClassByNew::class
-            "assist1" -> TestAssistedClass::class
-            "assist2" -> TestAssistedClass2::class
+            "assist1" -> TestClassByNewAssisted::class
+            "assist2" -> TestClassByNewAssisted2::class
             else -> TestClassByApp::class
         }
     }

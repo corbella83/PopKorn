@@ -3,10 +3,7 @@ package cc.popkorn
 import cc.popkorn.core.Injector
 import cc.popkorn.core.exceptions.AssistedNotFoundException
 import cc.popkorn.data.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Class to test creations
@@ -14,10 +11,10 @@ import kotlin.test.assertTrue
  * @author Pau Corbella
  * @since 2.1.0
  */
-internal class AssistedTests : PopKornTest() {
+internal class CreationTests : PopKornTest() {
 
     @Test
-    fun testNoParameters() {
+    fun testPlainOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
         val instance1 = injector.create(TestClassByApp::class)
@@ -28,22 +25,42 @@ internal class AssistedTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
+
     @Test
-    fun testParam2NotProvided() {
+    fun testOverrideOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        assertFailsWith<AssistedNotFoundException> { injector.create(TestAssistedClass::class) }
+        val obj1 = injector.create(TestCascadeClass::class)
+        val obj2 = injector.create(TestCascadeClass::class)
+        assertSame(obj1.param1, obj2.param1)
+
+        val use = TestClassByApp(null)
+        val obj3 = injector.create(TestCascadeClass::class) { override(use) }
+
+        assertSame(use, obj3.param1)
+        assertNotSame(obj1.param1, obj3.param1)
+
+        assertEquals(2, injector.instances.size)
+        assertEquals(0, injector.resolvers.size)
+    }
+
+
+    @Test
+    fun testWithParamsNotAssisted() {
+        val injector = Injector(TestResolverPool(), TestProviderPool())
+
+        assertFailsWith<AssistedNotFoundException> { injector.create(TestClassByNewAssisted::class) }
 
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
 
     @Test
-    fun testParamsNotProvided() {
+    fun testWithParamsMissingAssisted() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
         assertFailsWith<AssistedNotFoundException> {
-            injector.create(TestAssistedClass::class) {
+            injector.create(TestClassByNewAssisted::class) {
                 assist(34f)
             }
         }
@@ -53,24 +70,10 @@ internal class AssistedTests : PopKornTest() {
     }
 
     @Test
-    fun testMissingParams() {
+    fun testWithParamsOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        assertFailsWith<AssistedNotFoundException> {
-            injector.create(TestAssistedClass::class) {
-                assist(34f)
-            }
-        }
-
-        assertEquals(0, injector.instances.size)
-        assertEquals(0, injector.resolvers.size)
-    }
-
-    @Test
-    fun testParamsOk() {
-        val injector = Injector(TestResolverPool(), TestProviderPool())
-
-        val obj1 = injector.create(TestAssistedClass::class) {
+        val obj1 = injector.create(TestClassByNewAssisted::class) {
             assist("test")
             assist(34)
         }
@@ -91,17 +94,20 @@ internal class AssistedTests : PopKornTest() {
     }
 
     @Test
-    fun testParamsMissingEnvironment() {
+    fun testWithParamsSameTypeParamsNotAssisted() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        assertFailsWith<AssistedNotFoundException> { injector.create(TestAssistedClass2::class) }
+        assertFailsWith<AssistedNotFoundException> { injector.create(TestClassByNewAssisted2::class) }
+
+        assertEquals(0, injector.instances.size)
+        assertEquals(0, injector.resolvers.size)
     }
 
     @Test
-    fun testParamsWithEnvironments() {
+    fun testWithParamsSameTypeOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
 
-        val obj1 = injector.create(TestAssistedClass2::class) {
+        val obj1 = injector.create(TestClassByNewAssisted2::class) {
             assist("test", "env1")
             assist("more", "env2")
         }

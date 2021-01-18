@@ -1,6 +1,7 @@
 package cc.popkorn
 
 import cc.popkorn.core.Injector
+import cc.popkorn.core.exceptions.AssistedNotFoundException
 import cc.popkorn.data.*
 import kotlin.test.*
 
@@ -120,6 +121,42 @@ internal class ProviderTests : PopKornTest() {
 
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassByNew::class, 0)
+    }
+
+    @Test
+    fun testClassByNewWithAssistedNotAssisted() {
+        testClassByNewWithAssistedNotAssisted(randEnvironment()) // Custom Environment
+        testClassByNewWithAssistedNotAssisted(null) // Default Environment
+    }
+
+    private fun testClassByNewWithAssistedNotAssisted(environment: String?) {
+        val factory = Injector(TestResolverPool(), TestProviderPool())
+
+        assertFailsWith<AssistedNotFoundException> { factory.inject(TestClassByNewAssisted::class, environment) }
+
+        factory.assertNumberInstances(1)
+        factory.assertNumberInstancesForClass(TestClassByNewAssisted::class, 0)
+    }
+
+
+    @Test
+    fun testClassByNewWithAssistedOk() {
+        testClassByNewWithAssistedOk(randEnvironment()) // Custom Environment
+        testClassByNewWithAssistedOk(null) // Default Environment
+    }
+
+    private fun testClassByNewWithAssistedOk(environment: String?) {
+        val factory = Injector(TestResolverPool(), TestProviderPool())
+
+        val obj1 = factory.inject(TestClassByNewAssisted::class) {
+            assist("test")
+            assist(34)
+        }
+        assertEquals("test", obj1.param1)
+        assertEquals(34, obj1.param2)
+
+        factory.assertNumberInstances(1)
+        factory.assertNumberInstancesForClass(TestClassByNewAssisted::class, 0)
     }
 
     @Test
