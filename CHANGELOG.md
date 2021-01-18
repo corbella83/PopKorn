@@ -10,6 +10,7 @@ Version 2.1.0 *(2021-XX-XX)*
 * New: Add lazy initialization `by popkorn` and `by injecting`
 * New: Add new scope: BY_HOLDER
 * Fix: Compiler error logger wasn't showing the correct message
+* New: Can annotate custom annotations with `@Injectable` to be used for injectable classes too
 
 Version 2.0.0 *(2020-09-05)*
 -----------------------------
