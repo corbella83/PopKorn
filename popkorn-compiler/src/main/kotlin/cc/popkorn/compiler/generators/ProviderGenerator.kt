@@ -35,7 +35,7 @@ import kotlin.reflect.jvm.internal.impl.name.FqName
 internal class ProviderGenerator(private val directory: File, private val typeUtils: Types) {
 
     // Writes a provider from a direct injectable element
-    fun write(element: TypeElement, namesMapper: Map<String, TypeMirror>): String {
+    fun writeDirect(element: TypeElement, namesMapper: Map<String, TypeMirror>): String {
         val scope = element.get(Injectable::class)?.scope ?: Scope.BY_APP
         val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
         val file = element.getProviderFile(null, creationCode, scope)
@@ -43,8 +43,17 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return "${file.packageName}.${file.name}"
     }
 
+    // Writes a provider from a direct injectable element
+    fun writeIndirect(element: TypeElement, annotation: TypeElement, namesMapper: Map<String, TypeMirror>): String {
+        val scope = annotation.get(Injectable::class)?.scope ?: Scope.BY_APP
+        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
+        val file = element.getProviderFile(null, creationCode, scope)
+        file.writeTo(directory)
+        return "${file.packageName}.${file.name}"
+    }
+
     // Writes a provider from a provided injectable element
-    fun write(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {
+    fun writeProvided(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {
         val property = PropertySpec.builder("inner", provider.asClassName())
             .addModifiers(KModifier.PRIVATE)
             .delegate("lazy { ${provider.simpleName}() }")

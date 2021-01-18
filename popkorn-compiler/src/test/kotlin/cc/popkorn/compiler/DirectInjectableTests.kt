@@ -102,7 +102,7 @@ class DirectInjectableTests : PopKornCompilerTest() {
         testAssistedInvalidScope(Scope.BY_HOLDER)
     }
 
-    private fun testAssistedInvalidScope(scope:Scope) {
+    private fun testAssistedInvalidScope(scope: Scope) {
         val test = JavaClass().modifiers("public")
         val param = JavaParam("id", "int").assisted()
         val test2 = JavaClass().modifiers("public").injectable(scope).constructor(null, param)

@@ -37,6 +37,9 @@ class Example {
         inject<R8i>("env4")
         inject<R9i>()
 
+        inject<M1>()
+        inject<M1>("env1")
+
         popKorn().create(R10i::class) {
             assist(10L)
             assist(R9())
