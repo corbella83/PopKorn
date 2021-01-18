@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.SOURCE)
 annotation class Injectable(
     val scope: Scope = Scope.BY_APP,
-    val alias: String = "",
+    @Deprecated("Use environments instead") val alias: String = "",
     val propagation: Propagation = Propagation.ALL,
     vararg val exclude: KClass<*> = arrayOf()
 )

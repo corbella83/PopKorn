@@ -10,6 +10,7 @@ package cc.popkorn.annotations
  * @author Pau Corbella
  * @since 1.0.0
  */
+@Deprecated("Use environments instead")
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Alias(val value: String)
