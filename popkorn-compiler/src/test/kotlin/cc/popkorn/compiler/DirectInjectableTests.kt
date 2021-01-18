@@ -1,6 +1,8 @@
 package cc.popkorn.compiler
 
 import cc.popkorn.compiler.utils.JavaClass
+import cc.popkorn.compiler.utils.JavaParam
+import cc.popkorn.core.Scope
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -83,6 +85,28 @@ class DirectInjectableTests : PopKornCompilerTest() {
         val test2 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName()).forEnvironments("4")
         val test3 = JavaClass().modifiers("public").injectable().implements(test.qualifiedName())
         assertCompileSuccess(test, test2, test3)
+    }
+
+    @Test
+    fun testAssistedOk() {
+        val test = JavaClass().modifiers("public")
+        val param = JavaParam("id", "int").assisted()
+        val test2 = JavaClass().modifiers("public").injectable(Scope.BY_NEW).constructor(null, param)
+        assertCompileSuccess(test, test2)
+    }
+
+    @Test
+    fun testAssistedInvalidScope() {
+        testAssistedInvalidScope(Scope.BY_APP)
+        testAssistedInvalidScope(Scope.BY_USE)
+        testAssistedInvalidScope(Scope.BY_HOLDER)
+    }
+
+    private fun testAssistedInvalidScope(scope:Scope) {
+        val test = JavaClass().modifiers("public")
+        val param = JavaParam("id", "int").assisted()
+        val test2 = JavaClass().modifiers("public").injectable(scope).constructor(null, param)
+        assertCompileFail(test, test2)
     }
 
 }

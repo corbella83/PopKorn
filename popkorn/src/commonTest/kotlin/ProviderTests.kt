@@ -66,6 +66,42 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByUse::class, 1)
     }
 
+
+    @Test
+    fun testClassByHolder() {
+        testClassByHolder(randEnvironment()) // Custom Environment
+        testClassByHolder(null) // Default Environment
+    }
+
+    private fun testClassByHolder(environment: String?) {
+        val holder = ""
+        val factory = Injector(TestResolverPool(), TestProviderPool())
+
+        val inject = factory.inject(TestClassByHolder::class, environment) {
+            holder(holder)
+        }
+        assertEquals(inject.value, environment)
+
+        // If injected again, should return the same instance
+        val inject2 = factory.inject(TestClassByHolder::class, environment) {
+            holder(holder)
+        }
+        assertSame(inject, inject2)
+
+        factory.assertNumberInstances(1)
+        factory.assertNumberInstancesForClass(TestClassByHolder::class, 1)
+
+        val newHolder = "other"
+        // If injected again, with different holder, should be different
+        val inject3 = factory.inject(TestClassByHolder::class, environment) {
+            holder(newHolder)
+        }
+        assertTrue(inject !== inject3)
+
+        factory.assertNumberInstances(1)
+        factory.assertNumberInstancesForClass(TestClassByHolder::class, 2)
+    }
+
     @Test
     fun testClassByNew() {
         testClassByNew(randEnvironment()) // Custom Environment

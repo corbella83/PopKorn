@@ -2,6 +2,8 @@ package cc.popkorn.compiler
 
 import cc.popkorn.compiler.utils.JavaClass
 import cc.popkorn.compiler.utils.JavaMethod
+import cc.popkorn.compiler.utils.JavaParam
+import cc.popkorn.core.Scope
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -90,7 +92,6 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
             .method(JavaMethod("testFun2").modifiers("public").returns(type2.qualifiedName()))
 
         assertCompileFail(type1, type2, test)
-
     }
 
     @Test
@@ -103,7 +104,35 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
             .method(JavaMethod("testFun").modifiers("public").returns(inter.qualifiedName(), "new ${impl.qualifiedName()}()"))
 
         assertCompileSuccess(inter, impl, test)
-
     }
+
+    @Test
+    fun testAssistedOk() {
+        val inject = JavaClass().modifiers("public")
+        val param = JavaParam("id", "int").assisted()
+        val test = JavaClass().modifiers("public")
+            .injectableProvider(Scope.BY_NEW)
+            .method(JavaMethod("testFun").modifiers("public").param(param).returns(inject.qualifiedName()))
+
+        assertCompileSuccess(inject, test)
+    }
+
+    @Test
+    fun testAssistedInvalidScope() {
+        testAssistedInvalidScope(Scope.BY_APP)
+        testAssistedInvalidScope(Scope.BY_USE)
+        testAssistedInvalidScope(Scope.BY_HOLDER)
+    }
+
+    private fun testAssistedInvalidScope(scope: Scope) {
+        val inject = JavaClass().modifiers("public")
+        val param = JavaParam("id", "int").assisted()
+        val test = JavaClass().modifiers("public")
+            .injectableProvider(scope)
+            .method(JavaMethod("testFun").modifiers("public").param(param).returns(inject.qualifiedName()))
+
+        assertCompileFail(inject, test)
+    }
+
 
 }

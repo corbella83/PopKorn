@@ -19,6 +19,11 @@ class JavaParam(private val name: String, private val type: String) {
         return this
     }
 
+    fun assisted(): JavaParam {
+        this.annotations.add("@Assisted")
+        return this
+    }
+
     fun construct(): String {
         return "${annotations.joinToString(" ")} $type $name"
     }

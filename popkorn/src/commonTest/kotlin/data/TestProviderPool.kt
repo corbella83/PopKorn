@@ -16,8 +16,9 @@ class TestProviderPool : ProviderPool {
     override fun <T : Any> isPresent(clazz: KClass<T>): Boolean {
         return when (clazz) {
             TestClassByApp::class -> true
-            TestClassByNew::class -> true
             TestClassByUse::class -> true
+            TestClassByHolder::class -> true
+            TestClassByNew::class -> true
             TestAssistedClass::class -> true
             TestAssistedClass2::class -> true
             else -> false
@@ -27,8 +28,9 @@ class TestProviderPool : ProviderPool {
     override fun <T : Any> create(clazz: KClass<T>): Provider<T> {
         return when (clazz) {
             TestClassByApp::class -> TestClassByAppProvider() as Provider<T>
-            TestClassByNew::class -> TestClassByNewProvider() as Provider<T>
             TestClassByUse::class -> TestClassByUseProvider() as Provider<T>
+            TestClassByHolder::class -> TestClassByHolderProvider() as Provider<T>
+            TestClassByNew::class -> TestClassByNewProvider() as Provider<T>
             TestAssistedClass::class -> TestAssistedClassProvider() as Provider<T>
             TestAssistedClass2::class -> TestAssistedClass2Provider() as Provider<T>
             else -> throw ProviderNotFoundException(clazz)

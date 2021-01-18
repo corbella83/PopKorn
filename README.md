@@ -28,7 +28,7 @@ kapt 'cc.popkorn:popkorn-compiler:2.1.0'
 
 Working with Scopes and Environments
 --------
-Scopes are the way to define the life span of an instance. There are 3 types of scopes:
+Scopes are the way to define the life span of an instance. There are 4 types of scopes:
 
 * Scope.BY_APP (default) -> Instance will be created only once, for hence will live forever. Normally for classes that have heavy construction or saves states (Retrofit, OkHttp, RoomDB, etc)
 * Scope.BY_USE -> Instance will be created if no one is using it, meaning will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc...)
