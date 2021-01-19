@@ -36,7 +36,7 @@ internal class ResolverGenerator(private val directory: File) {
         val environments = classes.getAvailableEnvironments()
 
         val codeBlock = CodeBlock.builder()
-        if (environments.isEmpty()) { //If no environments are defined, return the default constructor
+        if (environments.isEmpty()) { // If no environments are defined, return the default constructor
             codeBlock.add("return ${classes.getDefaultImplementation(element)}")
         } else {
             codeBlock.add("return when(environment){\n")
@@ -49,7 +49,6 @@ internal class ResolverGenerator(private val directory: File) {
 
         return codeBlock.build()
     }
-
 
     private fun List<DefaultImplementation>.getAvailableEnvironments(): List<String> {
         val list = map { it.environments }
@@ -67,9 +66,8 @@ internal class ResolverGenerator(private val directory: File) {
             val options = this.joinToString { "\"${it.element}\"" }
             return "throw ${DefaultImplementationNotFoundException::class.asClassName()}(\"$element\", arrayListOf($options))"
         }
-        return elements.singleOrNull()?.element?.let { "$it::class" } ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
+        return elements.distinct().singleOrNull()?.element?.let { "$it::class" } ?: throw PopKornException("$element has more than one class default Injectable: ${this.map { it.element }.joinToString()}")
     }
-
 
     private fun List<DefaultImplementation>.getImplementation(element: TypeElement, environment: String): String {
         val elements = filter { it.environments.contains(environment) }
@@ -107,15 +105,13 @@ internal class ResolverGenerator(private val directory: File) {
             .build()
     }
 
-
     private fun TypeElement.getHierarchyName(): String {
         val parent = enclosingElement?.takeIf { it.kind == ElementKind.INTERFACE || it.kind == ElementKind.CLASS }
-        return if (parent == null) { //If the class its on its own
+        return if (parent == null) { // If the class its on its own
             toString()
         } else {
-            "${parent}_${simpleName}"
+            "${parent}_$simpleName"
         }
     }
-
 
 }

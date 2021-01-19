@@ -57,7 +57,6 @@ internal class MappingGenerator(private val directory: File, private val filer: 
             .addCode(creationCode)
             .build()
 
-
         val pack = filePackage.splitPackage()
         return FileSpec.builder(pack.first, pack.second)
             .addType(
@@ -69,7 +68,6 @@ internal class MappingGenerator(private val directory: File, private val filer: 
             )
             .build()
     }
-
 
     private fun getModuleName(): String {
         val split = directory.absolutePath.split("/")

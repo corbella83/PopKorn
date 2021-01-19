@@ -1,6 +1,5 @@
 package cc.popkorn.compiler.utils
 
-
 /**
  * Class to create a java method by code
  *
@@ -13,7 +12,6 @@ class JavaMethod(private val name: String) {
     private val params = arrayListOf<JavaParam>()
     private var returnType: String? = null
     private var returnValue: String? = null
-
 
     fun getReturnType(): String? {
         return when (returnType) {

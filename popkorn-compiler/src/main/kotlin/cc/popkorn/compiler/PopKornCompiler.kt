@@ -11,7 +11,6 @@ import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
-
 /**
  * AbstractProcessor to handle all PopKorn annotations and generate the necessary source code files
  *
@@ -49,9 +48,15 @@ internal class PopKornCompiler : AbstractProcessor() {
     }
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        mainGenerator.process(roundEnv)
-        if (roundEnv.processingOver()) mainGenerator.end()
-        return true
+        if (roundEnv.errorRaised()) return false
+        return try {
+            mainGenerator.process(roundEnv)
+            if (roundEnv.processingOver()) mainGenerator.end()
+            true
+        } catch (e: Throwable) {
+            mainGenerator.logger.error(e.message ?: "")
+            false
+        }
     }
 
 }

@@ -34,7 +34,6 @@ class JavaClass(private val type: String = "class", private val name: String = "
         }
     }
 
-
     fun import(import: String): JavaClass {
         this.imports.add(import)
         return this
@@ -91,7 +90,6 @@ class JavaClass(private val type: String = "class", private val name: String = "
         this.methods.add(method)
         return this
     }
-
 
     fun construct(): String {
         val runImports = imports.joinToString("\n") { "import $it;" }

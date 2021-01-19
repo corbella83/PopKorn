@@ -32,14 +32,13 @@ import javax.tools.StandardLocation
  * @author Pau Corbella
  * @since 1.1.0
  */
-internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer, private val types: Types, private val elements: Elements, private val logger: Logger) {
+internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer, private val types: Types, private val elements: Elements, val logger: Logger) {
     private val providerGenerator = ProviderGenerator(generatedSourcesDir, types)
     private val resolverGenerator = ResolverGenerator(generatedSourcesDir)
     private val mappingGenerator = MappingGenerator(generatedSourcesDir, filer)
 
     private val resolverMappings = hashMapOf<TypeElement, String>()
     private val providerMappings = hashMapOf<TypeElement, String>()
-
 
     // At the beginning we don't need to do anything
     fun init() {
@@ -54,9 +53,9 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         val aliasMapper = getAliasMapper(directInjectableClasses, providedInjectableClasses)
 
         logger.message("Generating providers of ${directInjectableClasses.size} direct injectable classes")
-        directInjectableClasses.forEach { providerMappings[it] = providerGenerator.write(it, aliasMapper) }
+        directInjectableClasses.forEach { providerMappings[it] = providerGenerator.writeDirect(it, aliasMapper) }
         logger.message("Generating providers of ${providedInjectableClasses.size} provided injectable classes")
-        providedInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.write(it.key, it.value, aliasMapper) }
+        providedInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.writeProvided(it.key, it.value, aliasMapper) }
         logger.message("Generating ${interfacesClasses.size} resolvers")
         interfacesClasses.forEach { (i, c) -> resolverMappings[i] = resolverGenerator.write(i, c) }
     }
@@ -74,12 +73,14 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
     }
 
 
+    // Classes annotated with Injectable annotation
     private fun RoundEnvironment.getDirectInjectableClasses(): List<TypeElement> {
         val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
         injectableElements.forEach { it.checkConstruction() }
         return injectableElements.toList()
     }
 
+    // Classes annotated with InjectableProvider annotation
     private fun RoundEnvironment.getProvidedInjectableClasses(): Map<TypeElement, TypeElement> {
         return ElementFilter.typesIn(getElementsAnnotatedWith(InjectableProvider::class.java))
             .groupBy { element ->
@@ -88,7 +89,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             }
             .mapValues { it.value.singleOrNull() ?: throw PopKornException("Only one InjectableProvider per type is allowed: ${it.value.joinToString()} are providing the same class: ${it.key}") }
     }
-
 
     // Gets the injectable element from an InjectableProvider
     private fun resolveType(element: TypeElement): TypeElement {
@@ -106,7 +106,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             ?.also { if (it.has(Injectable::class)) throw PopKornException("$element not needed, as $it has already been annotated with @Injectable") }
             ?: throw PopKornException("All public methods in $element must return the same type. Remember that in Kotlin, getters and setters are generated automatically for properties)")
     }
-
 
     // Gets a mapping of alias-elements defined by Injectable and InjectableProvider annotations
     private fun getAliasMapper(direct: List<TypeElement>, provided: Map<TypeElement, TypeElement>): Map<String, TypeMirror> {
@@ -130,7 +129,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
 
     }
 
-
     // Gets a list of all supertypes (of Injectable and InjectableProvider) that will also be injectable
     private fun getInterfaces(direct: List<TypeElement>, provided: Map<TypeElement, TypeElement>): Map<TypeElement, List<DefaultImplementation>> {
         val map = hashMapOf<TypeElement, ArrayList<DefaultImplementation>>()
@@ -151,7 +149,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         return map
     }
 
-
     // Checks that a TypeElement can be constructed
     private fun TypeElement.checkConstruction() {
         checkVisibility()
@@ -165,7 +162,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         if (isInner()) throw PopKornException("$this can not be an inner class")
         if (isPrivate()) throw PopKornException("$this cannot be a private class")
     }
-
 
     // Gets a list of all interfaces of an Element (taking into account the Propagation and Exclusion)
     private fun TypeElement.getHierarchyElements(propagation: Propagation, exclusions: List<TypeMirror>): List<TypeElement> {
@@ -196,7 +192,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         val iMore = this.interfaces.mapNotNull { types.asElement(it) as? TypeElement }.map { it.getAllInterfaces() }.flatten()
         return s + i + iMore + parent
     }
-
 
     // Gets the exclusions of the element annotated with Injectable
     // Because the excluded class is not yet compiled, it will throw an exception
@@ -231,12 +226,10 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         return environments
     }
 
-
     // Checks if a TypeMirror is an abstract class
     private fun TypeMirror.isAbstract(): Boolean {
         val element = types.asElement(this) as? TypeElement
         return element?.isAbstract() ?: false
     }
-
 
 }

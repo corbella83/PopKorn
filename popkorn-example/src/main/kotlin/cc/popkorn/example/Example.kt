@@ -1,37 +1,63 @@
 package cc.popkorn.example
 
+import cc.popkorn.*
 import cc.popkorn.example.model.*
-import cc.popkorn.inject
-import cc.popkorn.popKorn
 
-fun main() {
-    val d10 = D10()
-    popKorn().addInjectable(d10)
+class Example {
 
-    inject<String>()
-    inject<Int>()
+    fun execute() {
+        val d10 = D10()
+        popKorn().addInjectable(d10)
 
-    inject<R1i>()
-    inject<R2i>()
-    inject<R3i>()
-    inject<R4i>("envX")
-    inject<R5i>()
+        popKorn().create(R1i::class) {
+            assist(this@Example)
+        }
 
-    System.gc()
-    popKorn().purge()
+        val string1 by popkorn<R2i>()
+        val string2 by injecting<R2i>()
 
-    inject<R6i>()
-    inject<R7i>()
-    inject<R8i>()
-    inject<R8i>("env1")
-    inject<R8i>("env2")
-    inject<R8i>("env3")
-    inject<R8i>("env4")
-    inject<R9i>()
+        inject<String>()
+        inject<Int>()
 
-    popKorn().removeInjectable(d10::class)
-    popKorn().reset()
+        inject<R1i>()
+        inject<R2i>()
+        inject<R3i>()
+        inject<R4i>("envX")
+        inject<R5i>()
 
-    println("ok")
-    ExampleCompat().execute()
+        System.gc()
+        popKorn().purge()
+
+        inject<R6i>()
+        inject<R7i>()
+        inject<R8i>()
+        inject<R8i>("env1")
+        inject<R8i>("env2")
+        inject<R8i>("env3")
+        inject<R8i>("env4")
+        inject<R9i>()
+
+        popKorn().create(R10i::class) {
+            assist(10L)
+            assist(R9())
+        }
+
+        popKorn().create(R10i::class, "env2") {
+            assist(10L)
+            assist(15L, "second")
+            assist(R10())
+        }
+
+        val c3 = popKorn().create(R8i::class)
+
+        popKorn().create(R8i::class, "env1")
+
+        popKorn().inject(R9i::class, "env3") {
+            holder(c3)
+        }
+
+        popKorn().removeInjectable(d10::class)
+        popKorn().reset()
+    }
+
 }
