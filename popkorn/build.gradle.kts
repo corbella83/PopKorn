@@ -34,7 +34,8 @@ kotlin {
         nodejs {}
     }
 
-    ios() // Creates iosX64("ios") and iosArm64("ios")
+    iosX64()
+    iosArm64()
 
     linuxX64()
     linuxArm64()
@@ -62,8 +63,21 @@ kotlin {
             }
         }
 
-        val iosMain by getting
-        val iosTest by getting
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+        }
+
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+        }
 
         val linuxX64Main by getting
         val linuxArm64Main by getting
@@ -74,8 +88,15 @@ kotlin {
             linuxArm64Main.dependsOn(this)
             macosX64Main.dependsOn(this)
         }
+
+        val linuxX64Test by getting
+        val linuxArm64Test by getting
+        val macosX64Test by getting
         val nativeTest by creating {
             dependsOn(commonTest)
+            linuxX64Test.dependsOn(this)
+            linuxArm64Test.dependsOn(this)
+            macosX64Test.dependsOn(this)
         }
     }
 
