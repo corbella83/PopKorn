@@ -48,15 +48,12 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
     // For every round, we write all providers and resolvers for the elements received
     fun process(roundEnv: RoundEnvironment) {
         val directInjectableClasses = roundEnv.getDirectInjectableClasses()
-        val indirectInjectableClasses = roundEnv.getIndirectInjectableClasses()
         val providedInjectableClasses = roundEnv.getProvidedInjectableClasses()
-        val interfacesClasses = getInterfaces(directInjectableClasses, indirectInjectableClasses, providedInjectableClasses)
+        val interfacesClasses = getInterfaces(directInjectableClasses, providedInjectableClasses)
         val aliasMapper = getAliasMapper(directInjectableClasses, providedInjectableClasses)
 
         logger.message("Generating providers of ${directInjectableClasses.size} direct injectable classes")
         directInjectableClasses.forEach { providerMappings[it] = providerGenerator.writeDirect(it, aliasMapper) }
-        logger.message("Generating providers of ${indirectInjectableClasses.size} indirect injectable classes")
-        indirectInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.writeIndirect(it.key, it.value, aliasMapper) }
         logger.message("Generating providers of ${providedInjectableClasses.size} provided injectable classes")
         providedInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.writeProvided(it.key, it.value, aliasMapper) }
         logger.message("Generating ${interfacesClasses.size} resolvers")
@@ -78,24 +75,9 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
 
     // Classes annotated with Injectable annotation
     private fun RoundEnvironment.getDirectInjectableClasses(): List<TypeElement> {
-        val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java)).filter { !it.isAnnotation() }
+        val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
         injectableElements.forEach { it.checkConstruction() }
         return injectableElements.toList()
-    }
-
-    // Classes annotated with a custom annotation which has Injectable annotation
-    private fun RoundEnvironment.getIndirectInjectableClasses(): Map<TypeElement, TypeElement> {
-        val result = hashMapOf<TypeElement, TypeElement>()
-        ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
-            .filter { it.isAnnotation() }
-            .forEach { element ->
-                ElementFilter.typesIn(getElementsAnnotatedWith(element)).forEach {
-                    it.checkConstruction()
-                    result[it] = element
-                }
-            }
-
-        return result
     }
 
     // Classes annotated with InjectableProvider annotation
@@ -148,7 +130,7 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
     }
 
     // Gets a list of all supertypes (of Injectable and InjectableProvider) that will also be injectable
-    private fun getInterfaces(direct: List<TypeElement>, indirect: Map<TypeElement, TypeElement>, provided: Map<TypeElement, TypeElement>): Map<TypeElement, List<DefaultImplementation>> {
+    private fun getInterfaces(direct: List<TypeElement>, provided: Map<TypeElement, TypeElement>): Map<TypeElement, List<DefaultImplementation>> {
         val map = hashMapOf<TypeElement, ArrayList<DefaultImplementation>>()
         direct.forEach {
             val environments = it.get(ForEnvironments::class).toList()
@@ -156,13 +138,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             val propagation = it.get(Injectable::class)?.propagation ?: Propagation.ALL
             val envElem = DefaultImplementation(it, environments)
             it.getHierarchyElements(propagation, exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
-        }
-        indirect.forEach {
-            val environments = it.key.get(ForEnvironments::class).toList()
-            val exclusions = it.value.get(Injectable::class).getExclusions()
-            val propagation = it.value.get(Injectable::class)?.propagation ?: Propagation.ALL
-            val envElem = DefaultImplementation(it.key, environments)
-            it.key.getHierarchyElements(propagation, exclusions).forEach { inter -> map.getOrPut(inter) { arrayListOf() }.add(envElem) }
         }
         provided.forEach {
             val environments = it.value.get(ForEnvironments::class).toList()

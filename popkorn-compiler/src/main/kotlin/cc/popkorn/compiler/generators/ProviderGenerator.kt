@@ -43,14 +43,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return "${file.packageName}.${file.name}"
     }
 
-    // Writes a provider from a direct injectable element
-    fun writeIndirect(element: TypeElement, annotation: TypeElement, namesMapper: Map<String, TypeMirror>): String {
-        val scope = annotation.get(Injectable::class)?.scope ?: Scope.BY_APP
-        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
-        val file = element.getProviderFile(null, creationCode, scope)
-        file.writeTo(directory)
-        return "${file.packageName}.${file.name}"
-    }
 
     // Writes a provider from a provided injectable element
     fun writeProvided(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {

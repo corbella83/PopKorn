@@ -32,7 +32,7 @@ Scopes are the way to define the life span of an instance. There are 4 types of 
 
 * Scope.BY_APP (default) -> Instance will be created only once, for hence will live forever. Normally for classes that have heavy construction or saves states (Retrofit, OkHttp, RoomDB, etc)
 * Scope.BY_USE -> Instance will be created if no one is using it, meaning will live as long as others are using it. Normally for classes that are just like helpers (dataSources, repositories, useCases, etc...)
-* Scope.BY_HOLDER -> Instance will be created if used with a different holder, will live as long as its holder(container). Normally for instances that needs to be shared by a common parent (presenters, viewModels, etc...)
+* Scope.BY_HOLDER -> Instance will be created if used with a different holder, will live as long as its holder (container). Normally for instances that needs to be shared by a common parent (presenters, viewModels, etc...)
 * Scope.BY_NEW -> Instance will be created every time it's needed, so won't live at all. Normally for instances that doesn't make sense to reuse (presenters, viewModels, screens, etc...)
 
 Environments allow you to have multiple instances of the same object, but in a complete different configuration. For example, you can have 2 different and persistent Retrofit instances. See more examples at bottom.

@@ -71,11 +71,3 @@ internal fun Element.getMethods(): List<ExecutableElement> {
  * @return Returns if this element represents a kotlin class
  */
 internal fun TypeElement.isKotlinClass() = has(Metadata::class)
-
-/**
- * @return Returns if this Element is an interface
- */
-internal fun TypeElement.isAnnotation() =
-    interfaces.singleOrNull { it.toString() == "java.lang.annotation.Annotation" }
-        ?.let { true }
-        ?: false
