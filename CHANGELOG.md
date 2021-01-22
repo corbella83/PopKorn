@@ -22,7 +22,7 @@ Version 2.1.0 *(2021-01-19)*
 * New: Add new scope: BY_HOLDER
 * Fix: Compiler error logger wasn't showing the correct message
 * Deprecated: `Alias` is no longer useful, use environments instead
-* New: Add Android `ViewModel` support
+* New: Add Android `ViewModel` integration
 
 Version 2.0.0 *(2020-09-05)*
 -----------------------------
