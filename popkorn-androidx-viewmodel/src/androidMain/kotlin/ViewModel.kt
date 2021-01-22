@@ -11,7 +11,7 @@ import cc.popkorn.core.config.InjectorConfig
  *
  * Sample:
  * ```
- * val viewModel = getViewModel()
+ * val viewModel: SomeViewModel = getViewModel()
  * ```
  *
  * Sample with assisted params:
@@ -59,7 +59,7 @@ inline fun <reified T : ViewModel> ViewModelStoreOwner.viewModel(
  *
  * Sample:
  * ```
- * val viewModel = getSharedViewModel()
+ * val viewModel: SomeViewModel = getSharedViewModel()
  * ```
  */
 inline fun <reified T : ViewModel> Fragment.getSharedViewModel(environment: String? = null): T {
