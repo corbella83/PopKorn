@@ -20,13 +20,24 @@ import kotlin.reflect.KClass
  * @author Pau Corbella
  * @since 1.0.0
  */
-class Injector(
-    private val resolverPool: ResolverPool,
+class Injector : InjectorController {
+    private val resolverPool: ResolverPool
     private val providerPool: ProviderPool
-) : InjectorController {
 
     internal val resolvers = hashMapOf<KClass<*>, Resolver<*>>()
     internal val instances = hashMapOf<KClass<*>, Instances<*>>()
+
+    constructor() {
+        with(createDefaultInjector()) {
+            this@Injector.resolverPool = this.resolverPool
+            this@Injector.providerPool = this.providerPool
+        }
+    }
+
+    constructor(resolverPool: ResolverPool, providerPool: ProviderPool) {
+        this.resolverPool = resolverPool
+        this.providerPool = providerPool
+    }
 
     /**
      * This method allows to add an injectable instance at runtime. No scopes are defined here,
