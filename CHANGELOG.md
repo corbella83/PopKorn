@@ -4,7 +4,7 @@ Change Log
 Version 2.2.0 *(2021-XX-XX)*
 -----------------------------
 
-* 
+* Fix: Compilation error when compiling on Windows OS
 
 Version 2.1.0 *(2021-01-19)*
 -----------------------------
@@ -73,4 +73,3 @@ Version 1.0.1 *(2019-11-20)*
 
 * Fix: Internal dependencies are now being resolved
 * New: addInjectable(instance) can define the injectable class as any of the parents
-    
