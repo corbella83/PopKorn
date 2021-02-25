@@ -1,10 +1,12 @@
 Change Log
 ==========
 
-Version 2.2.0 *(2021-XX-XX)*
+Version 2.1.1 *(2021-02-26)*
 -----------------------------
 
 * Fix: Compilation error when compiling on Windows OS
+* New: Add mingwX64 target
+* Maintenance: Update to Kotlin 1.4.30
 
 Version 2.1.0 *(2021-01-19)*
 -----------------------------
