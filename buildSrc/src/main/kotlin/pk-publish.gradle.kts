@@ -3,7 +3,7 @@ plugins {
     signing
 }
 
-val localPropertiesFile = rootProject.file("local.properties")
+val localPropertiesFile = rootProject.file("credentials.properties")
 
 if (localPropertiesFile.exists()) {
     val properties = java.util.Properties()
@@ -90,7 +90,7 @@ if (localPropertiesFile.exists()) {
     } else {
         println(
             "Warning: One or more properties required to publish `${project.name}` to Maven Central has not been " +
-                    "added to local.properties file"
+                    "added to credentials.properties file"
         )
     }
 }

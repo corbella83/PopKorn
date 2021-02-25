@@ -1,4 +1,5 @@
 local.properties
+credentials.properties
 build/
 .idea/
 .gradle/

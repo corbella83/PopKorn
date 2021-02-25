@@ -70,7 +70,7 @@ internal class MappingGenerator(private val directory: File, private val filer: 
     }
 
     private fun getModuleName(): String {
-        val split = directory.absolutePath.split("/")
+        val split = directory.absolutePath.split(File.separatorChar)
         split.forEachIndexed { index, s ->
             if (s == "build") return split[index - 1].replace(Regex("[^a-zA-Z0-9]"), "").capitalize()
         }
