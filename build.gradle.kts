@@ -1,6 +1,5 @@
 buildscript {
-    val kotlinVersion:String by System.getProperties()
-    val dokkaVersion = "1.4.20"
+    val kotlinVersion: String by System.getProperties()
 
     repositories {
         mavenCentral()
@@ -9,9 +8,11 @@ buildscript {
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
     }
+}
 
+plugins {
+    `nexus-publish`
 }
 
 allprojects {

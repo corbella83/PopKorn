@@ -5,19 +5,7 @@ val compileTestVersion = "0.19"
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.dokka")
-    id("pk-publish")
-}
-
-tasks.dokkaHtml {
-    outputDirectory.set(buildDir.resolve("javadoc"))
-}
-
-val dokkaJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles Kotlin docs with Dokka"
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaHtml)
+    `pk-publish`
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -29,7 +17,6 @@ publishing {
     publications {
         create<MavenPublication>("compiler") {
             from(components["kotlin"])
-            artifact(dokkaJar)
             artifact(sourcesJar)
         }
     }
@@ -37,7 +24,6 @@ publishing {
 
 dependencies {
     implementation(project(":popkorn"))
-    implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
     implementation("com.squareup:kotlinpoet:$kotlinPoetVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:$kotlinxMetadataVersion")

@@ -1,28 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.dokka")
-    id("pk-publish")
-}
-
-tasks.dokkaHtml {
-    outputDirectory.set(buildDir.resolve("javadoc"))
-}
-
-val dokkaJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles Kotlin docs with Dokka"
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaHtml)
-}
-
-publishing {
-    publications {
-        publications.configureEach {
-            if (this is MavenPublication) {
-                artifact(dokkaJar)
-            }
-        }
-    }
+    `pk-publish`
 }
 
 kotlin {
@@ -42,11 +20,7 @@ kotlin {
     mingwX64()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib"))
-            }
-        }
+        val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
