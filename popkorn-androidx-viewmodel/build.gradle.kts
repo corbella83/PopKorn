@@ -1,5 +1,5 @@
-val lifecycleVersion = "2.2.0"
-val fragmentVersion = "1.2.5"
+val lifecycleVersion = "2.3.1"
+val fragmentVersion = "1.3.2"
 
 plugins {
     id("com.android.library")
@@ -8,16 +8,15 @@ plugins {
     id("pk-publish")
 }
 
-tasks.dokka {
-    outputFormat = "html"
-    outputDirectory = "$buildDir/javadoc"
+tasks.dokkaHtml {
+    outputDirectory.set(buildDir.resolve("javadoc"))
 }
 
 val dokkaJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
-    classifier = "javadoc"
-    from(tasks.dokka)
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaHtml)
 }
 
 publishing {
