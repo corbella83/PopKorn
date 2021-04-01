@@ -4,14 +4,12 @@ buildscript {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
     }
-
 }
 
 allprojects {
@@ -23,6 +21,5 @@ allprojects {
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 }

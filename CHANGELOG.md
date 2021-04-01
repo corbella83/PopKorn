@@ -4,6 +4,7 @@ Change Log
 Version 2.2.0 *(2021-XX-XX)*
 -----------------------------
 
+* New: Add Android `ViewModel` integration
 
 Version 2.1.1 *(2021-02-26)*
 -----------------------------
