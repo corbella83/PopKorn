@@ -81,10 +81,10 @@ and if we have different constructors for the class, we can define environments 
 @Injectable
 class HelloWorld {
 
-    @ForEnviornmen("europe")
+    @ForEnvironments("europe")
     constructor(val helloBarcelona: HelloBarcelona, val helloParis: HelloParis) : this()
 
-    @ForEnviornmen("usa")
+    @ForEnvironments("usa")
     constructor(val helloNewYork: HelloNewYork, val helloLosAngeles: HelloLosAngeles) : this()
 }
 ```
@@ -122,7 +122,7 @@ And just like before, if you have different implementations of the same interfac
 
 ```kotlin
 @Injectable
-@ForEnvironment("planet")
+@ForEnvironments("planet")
 class HelloPlanet : Hello
 ```
 
@@ -317,14 +317,14 @@ class RealLocation : Location {
         // Get LocationManager.GPS_PROVIDER
     }
 
-    @ForEnvironemnt("network")
+    @ForEnvironments("network")
     constructor() : this() {
         // Get LocationManager.NETWORK_PROVIDER
     }
 }
 
 @Injectable(scope = Scope.BY_NEW)
-@ForEnvironment("fake")
+@ForEnvironments("fake")
 class FakeLocation : Location
 ```
 
