@@ -1,6 +1,7 @@
 package cc.popkorn
 
-private val PROHIBITED_PACKAGES = arrayOf(Regex("java\\..*"), Regex("javax\\..*"))
+private val PROHIBITED_PACKAGES =
+    arrayOf(Regex("java\\..*"), Regex("javax\\..*"), Regex("kotlin\\..*"), Regex("kotlinx\\..*"))
 
 const val RESOLVER_SUFFIX = "Resolver"
 const val PROVIDER_SUFFIX = "Provider"
