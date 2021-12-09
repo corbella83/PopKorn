@@ -31,7 +31,6 @@ publishing {
 
 repositories {
     mavenCentral()
-    jcenter()
     google()
 }
 
