@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+Version 2.2.0 *(2021-12-09)*
+-----------------------------
+
+* New: Add Android `ViewModel` integration
+* Fix: Compilation error when generating internal classes when using kotlin 1.6.0
+* Maintenance: Update to Kotlin 1.6.0
+* Fix: Handle prohibited packages (kotlin.*, kotlinx.*)
+
 Version 2.1.1 *(2021-02-26)*
 -----------------------------
 

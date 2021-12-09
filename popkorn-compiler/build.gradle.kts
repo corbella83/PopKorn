@@ -1,5 +1,5 @@
-val kotlinPoetVersion = "1.7.2"
-val kotlinxMetadataVersion = "0.2.0"
+val kotlinPoetVersion = "1.10.2"
+val kotlinxMetadataVersion = "0.4.1"
 val apacheVersion = "2.6"
 val compileTestVersion = "0.19"
 

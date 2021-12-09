@@ -43,7 +43,7 @@ internal fun Element.isPrivate() = !modifiers.contains(Modifier.PUBLIC) && !modi
  */
 internal fun Element.isInternal(): Boolean {
     return get(Metadata::class)
-        ?.run { KotlinClassHeader(kind, metadataVersion, bytecodeVersion, data1, data2, extraString, packageName, extraInt) }
+        ?.run { KotlinClassHeader(kind, metadataVersion, data1, data2, extraString, packageName, extraInt) }
         ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
         ?.let { Flag.IS_INTERNAL(it.toKmClass().flags) }
         ?: false
