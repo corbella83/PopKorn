@@ -1,5 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cc.popkorn/popkorn/badge.svg)](https://search.maven.org/artifact/cc.popkorn/popkorn)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.4.30-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Slack channel](https://img.shields.io/badge/chat-slack-red.svg?logo=slack)](https://kotlinlang.slack.com/messages/popkorn/)
 
