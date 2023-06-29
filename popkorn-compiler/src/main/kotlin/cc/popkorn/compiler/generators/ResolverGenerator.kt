@@ -79,7 +79,6 @@ internal class ResolverGenerator(private val directory: File) {
         }
     }
 
-
     private fun TypeElement.getResolverFile(creationCode: CodeBlock): FileSpec {
         val filePackage = "${normalizeQualifiedName(getHierarchyName())}_$RESOLVER_SUFFIX"
 
@@ -113,5 +112,4 @@ internal class ResolverGenerator(private val directory: File) {
             "${parent}_$simpleName"
         }
     }
-
 }

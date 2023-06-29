@@ -24,5 +24,4 @@ internal class RuntimeInstances<T : Any> : Instances<T> {
     }
 
     override fun size() = instances.size
-
 }

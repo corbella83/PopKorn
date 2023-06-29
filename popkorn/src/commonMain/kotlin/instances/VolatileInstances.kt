@@ -24,5 +24,4 @@ internal class VolatileInstances<T : Any>(private val injector: InjectorManager,
     override fun size() = instances.size
 
     override fun purge() = instances.filter { it.value.get() == null }.forEach { instances.remove(it.key) }
-
 }

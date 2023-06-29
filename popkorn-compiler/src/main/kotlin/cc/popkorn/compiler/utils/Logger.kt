@@ -22,5 +22,4 @@ internal class Logger(private val messenger: Messager) {
     fun error(text: String) {
         messenger.printMessage(Diagnostic.Kind.ERROR, "PopKorn: $text \r\n")
     }
-
 }

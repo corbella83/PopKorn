@@ -1,7 +1,10 @@
 package cc.popkorn.example
 
-import cc.popkorn.*
 import cc.popkorn.example.model.*
+import cc.popkorn.inject
+import cc.popkorn.injecting
+import cc.popkorn.popKorn
+import cc.popkorn.popkorn
 
 class Example {
 
@@ -59,5 +62,4 @@ class Example {
         popKorn().removeInjectable(d10::class)
         popKorn().reset()
     }
-
 }

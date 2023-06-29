@@ -199,7 +199,6 @@ class MyApplication : Application() {
         super.onCreate()
         popKorn().addInjectable(this, Context::class)
     }
-
 }
 ```
 

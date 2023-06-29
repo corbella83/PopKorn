@@ -2,12 +2,14 @@
 
 package cc.popkorn.core
 
-import cc.popkorn.*
+import cc.popkorn.InjectorController
 import cc.popkorn.core.config.CreatorConfig
 import cc.popkorn.core.config.InjectorConfig
 import cc.popkorn.core.config.Parameters
 import cc.popkorn.core.exceptions.*
+import cc.popkorn.createDefaultInjector
 import cc.popkorn.instances.*
+import cc.popkorn.needsResolver
 import cc.popkorn.pools.ProviderPool
 import cc.popkorn.pools.ResolverPool
 import cc.popkorn.resolvers.Resolver
@@ -173,7 +175,6 @@ class Injector : InjectorController {
             .create(injector, configuration?.assisted ?: Parameters.EMPTY, environment)
     }
 
-
     private fun <T : Any> KClass<T>.resolve(environment: String?): KClass<out T> {
         return if (this.needsResolver(resolverPool)) {
             resolvers.getOrPut(this, { resolverPool.create(this) })
@@ -203,5 +204,4 @@ class Injector : InjectorController {
             Scope.BY_NEW -> NewInstances(this@Injector, provider)
         }
     }
-
 }

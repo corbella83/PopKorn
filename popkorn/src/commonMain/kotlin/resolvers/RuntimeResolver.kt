@@ -21,5 +21,4 @@ internal class RuntimeResolver : Resolver<Any> {
     fun remove(environment: String?) = resolvers.remove(environment)
 
     fun size() = resolvers.size
-
 }

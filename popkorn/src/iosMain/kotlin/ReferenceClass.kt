@@ -30,5 +30,4 @@ internal class ReferenceClass<T : Any> private constructor(
     override fun isInstance(value: Any?) = false
 
     override fun toString() = "class $qualifiedName"
-
 }

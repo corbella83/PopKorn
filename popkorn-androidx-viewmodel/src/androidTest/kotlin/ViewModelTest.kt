@@ -6,10 +6,10 @@ import cc.popkorn.androidx.viewModel.data.TestViewModelResolverPool
 import cc.popkorn.androidx.viewModel.data.TestViewModelWithParams
 import cc.popkorn.core.Injector
 import cc.popkorn.core.exceptions.AssistedNotFoundException
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
-import org.junit.Test
 
 class ViewModelTest {
 
@@ -50,9 +50,9 @@ class ViewModelTest {
         val injector = Injector(TestViewModelResolverPool(), TestViewModelProviderPool())
 
         val testViewModelWithParams = injector.inject(TestViewModelWithParams::class) {
-                assist("test")
-                assist(34)
-            }
+            assist("test")
+            assist(34)
+        }
 
         assertNotNull(testViewModelWithParams)
         assertEquals("test", testViewModelWithParams.name)

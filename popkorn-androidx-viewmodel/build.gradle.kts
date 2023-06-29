@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
     id("pk-publish")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 tasks.dokkaHtml {

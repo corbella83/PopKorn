@@ -16,5 +16,4 @@ interface ProviderPool {
     fun <T : Any> isPresent(clazz: KClass<T>): Boolean
 
     fun <T : Any> create(clazz: KClass<T>): Provider<T>
-
 }

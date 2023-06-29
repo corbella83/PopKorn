@@ -24,7 +24,6 @@ internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool
 
 internal actual fun createDefaultInjector() = Injector(nativeResolverPool(), nativeProviderPool())
 
-
 private fun nativeResolverPool(): ResolverPool {
     if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()
     return MappingResolverPool(resolverMappings)

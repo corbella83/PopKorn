@@ -79,7 +79,5 @@ class PopKornCompat {
         @JvmStatic
         fun <T : Any> create(clazz: Class<T>, environment: String, config: CreatorConfigBuilder) =
             injectorJVM.create(clazz, environment, config)
-
     }
-
 }

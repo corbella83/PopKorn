@@ -11,5 +11,4 @@ class MyString {
 
     @ForEnvironments("pre")
     fun createPre(): String = "Hello Pre"
-
 }

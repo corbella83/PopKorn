@@ -36,7 +36,6 @@ internal class MappingGenerator(private val directory: File, private val filer: 
         return true
     }
 
-
     private fun getCode(values: HashMap<TypeElement, String>): CodeBlock {
         val function = CodeBlock.builder()
         function.add("return when(original){\n")
@@ -76,5 +75,4 @@ internal class MappingGenerator(private val directory: File, private val filer: 
         }
         return "Unknown"
     }
-
 }

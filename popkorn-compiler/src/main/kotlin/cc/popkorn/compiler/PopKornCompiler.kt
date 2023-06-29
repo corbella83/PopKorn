@@ -58,5 +58,4 @@ internal class PopKornCompiler : AbstractProcessor() {
             false
         }
     }
-
 }

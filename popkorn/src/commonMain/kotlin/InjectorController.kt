@@ -22,5 +22,4 @@ interface InjectorController : InjectorManager {
     fun purge()
 
     fun reset()
-
 }

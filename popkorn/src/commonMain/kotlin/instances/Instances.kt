@@ -9,5 +9,4 @@ package cc.popkorn.instances
 internal interface Instances<T : Any> {
 
     fun size(): Int
-
 }

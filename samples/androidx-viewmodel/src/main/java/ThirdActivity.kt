@@ -37,10 +37,9 @@ class FragmentA : Fragment(R.layout.fragment) {
             val name = view.findViewById<EditText>(R.id.editTextName).text.toString()
             viewModel.getGreeting(name)
         }
-        viewModel.greeting.observe(
-            viewLifecycleOwner,
-            { name -> view.findViewById<TextView>(R.id.textViewFragment).text = name },
-        )
+        viewModel.greeting.observe(viewLifecycleOwner) { name ->
+            view.findViewById<TextView>(R.id.textViewFragment).text = name
+        }
     }
 }
 
@@ -56,10 +55,9 @@ class FragmentB : Fragment(R.layout.fragment) {
             viewModel.getGreeting(name)
         }
 
-        viewModel.greeting.observe(
-            viewLifecycleOwner,
-            { name -> view.findViewById<TextView>(R.id.textViewFragment).text = name },
-        )
+        viewModel.greeting.observe(viewLifecycleOwner) { name ->
+            view.findViewById<TextView>(R.id.textViewFragment).text = name
+        }
     }
 }
 

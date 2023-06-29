@@ -12,5 +12,4 @@ import kotlin.reflect.KClass
 interface Resolver<T : Any> {
 
     fun resolve(environment: String?): KClass<out T>
-
 }

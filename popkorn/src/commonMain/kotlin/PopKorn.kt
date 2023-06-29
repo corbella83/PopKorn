@@ -17,7 +17,6 @@ private val injector by lazy { createDefaultInjector() }
  */
 fun popKorn(): InjectorController = injector
 
-
 /**
  * Methods to lazy inject instances anywhere like:
  *  val instance by popkorn<SomeClass>()
@@ -29,7 +28,6 @@ inline fun <reified T : Any> popkorn(environment: String? = null, noinline confi
 inline fun <reified T : Any> injecting(environment: String? = null, noinline config: (InjectorConfig.Builder.() -> Unit)? = null) =
     lazy { popKorn().inject(T::class, environment, config) }
 
-
 /**
  * Methods to inject instances anywhere like inject<SomeClass>()
  */
@@ -38,7 +36,6 @@ inline fun <reified T : Any> inject(environment: String? = null, noinline config
 
 fun <T : Any> KClass<T>.inject(environment: String? = null, config: (InjectorConfig.Builder.() -> Unit)? = null) =
     injector.inject(this, environment, config)
-
 
 /**
  * Methods to inject nullable instances anywhere like injectOrNull<SomeClass>()

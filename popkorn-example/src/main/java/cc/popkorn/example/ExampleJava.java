@@ -39,5 +39,4 @@ public class ExampleJava {
         PopKornCompat.removeInjectable(D10.class);
         PopKornCompat.reset();
     }
-
 }

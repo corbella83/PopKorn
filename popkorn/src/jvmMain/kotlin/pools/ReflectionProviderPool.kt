@@ -32,5 +32,4 @@ internal class ReflectionProviderPool : ProviderPool {
     private fun transform(original: KClass<*>): String {
         return "${normalizeQualifiedName(original.getName())}_$PROVIDER_SUFFIX"
     }
-
 }

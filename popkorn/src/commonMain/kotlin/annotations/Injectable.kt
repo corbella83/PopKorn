@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 
 /**
  * Annotation to define that a class can be injected.
- * By default this annotation adds also as an injectable object all its interfaces (Propagation.ALL) unless otherwise specified
+ * By default, this annotation adds also as an injectable object all its interfaces (Propagation.ALL) unless otherwise specified
  * Also, if not defined, takes the scope BY_APP by default
  * If you want to exclude some of them, do it through parameter 'exclude'
  *

@@ -60,5 +60,4 @@ class JavaMethod(private val name: String) {
         val runReturn = returnValue?.let { "\nreturn $it;\n" } ?: ""
         return "$runAnnotation\n$runModifiers $runRet $name($runParams){$runReturn}"
     }
-
 }

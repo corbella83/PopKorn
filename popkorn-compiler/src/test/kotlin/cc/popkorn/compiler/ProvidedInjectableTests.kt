@@ -133,6 +133,4 @@ class ProvidedInjectableTests : PopKornCompilerTest() {
 
         assertCompileFail(inject, test)
     }
-
-
 }

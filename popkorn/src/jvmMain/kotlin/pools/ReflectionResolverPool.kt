@@ -31,5 +31,4 @@ internal class ReflectionResolverPool : ResolverPool {
     private fun transform(original: KClass<*>): String {
         return "${normalizeQualifiedName(original.getHierarchyName())}_$RESOLVER_SUFFIX"
     }
-
 }

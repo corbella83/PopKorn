@@ -19,5 +19,4 @@ internal class PersistentInstances<T : Any>(private val injector: InjectorManage
     }
 
     override fun size() = instances.size
-
 }

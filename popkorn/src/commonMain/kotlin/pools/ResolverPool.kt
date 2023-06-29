@@ -16,5 +16,4 @@ interface ResolverPool {
     fun <T : Any> isPresent(clazz: KClass<T>): Boolean
 
     fun <T : Any> create(clazz: KClass<T>): Resolver<T>
-
 }

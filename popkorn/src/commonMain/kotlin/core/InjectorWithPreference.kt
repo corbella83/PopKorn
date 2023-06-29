@@ -26,5 +26,4 @@ internal class InjectorWithPreference(
         return overridden?.getOrNull(clazz, environment)
             ?: baseInjector.injectOrNull(clazz, environment, config)
     }
-
 }

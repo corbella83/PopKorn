@@ -21,7 +21,6 @@ class Parameters private constructor(private val params: List<Instance<*>>) {
         fun <T : Any> add(instance: T, environment: String? = null) = parameters.add(Instance(instance, instance::class, environment))
 
         fun build() = Parameters(parameters)
-
     }
 
     fun <T : Any> get(clazz: KClass<T>, environment: String? = null): T {
@@ -45,5 +44,4 @@ class Parameters private constructor(private val params: List<Instance<*>>) {
     companion object {
         internal val EMPTY = Parameters(listOf())
     }
-
 }

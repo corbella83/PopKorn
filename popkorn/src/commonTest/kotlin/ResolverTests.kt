@@ -56,5 +56,4 @@ internal class ResolverTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByUse::class, 1) // One for "use"
         factory.assertNumberInstancesForClass(TestClassByNew::class, 0) // BY_NEW never have instances
     }
-
 }

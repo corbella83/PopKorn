@@ -14,5 +14,4 @@ interface InjectorManager {
     fun <T : Any> inject(clazz: KClass<T>, environment: String? = null, config: (InjectorConfig.Builder.() -> Unit)? = null): T
 
     fun <T : Any> injectOrNull(clazz: KClass<T>, environment: String? = null, config: (InjectorConfig.Builder.() -> Unit)? = null): T?
-
 }

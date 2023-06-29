@@ -39,7 +39,6 @@ class CreatorConfigBuilder {
         return this
     }
 
-
     fun overrideAll(instances: List<Any>): CreatorConfigBuilder {
         instances.forEach { overridden.add(Instance(it)) }
         return this
@@ -65,10 +64,8 @@ class CreatorConfigBuilder {
         return this
     }
 
-
     internal fun apply(builder: CreatorConfig.Builder) {
         assisted.forEach { builder.assist(it.instance, it.type, it.environment) }
         overridden.forEach { builder.override(it.instance, it.type, it.environment) }
     }
-
 }

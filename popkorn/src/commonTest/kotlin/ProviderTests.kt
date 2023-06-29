@@ -67,7 +67,6 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstancesForClass(TestClassByUse::class, 1)
     }
 
-
     @Test
     fun testClassByHolder() {
         testClassByHolder(randEnvironment()) // Custom Environment
@@ -137,7 +136,6 @@ internal class ProviderTests : PopKornTest() {
         factory.assertNumberInstances(1)
         factory.assertNumberInstancesForClass(TestClassByNewAssisted::class, 0)
     }
-
 
     @Test
     fun testClassByNewWithAssistedOk() {
@@ -271,5 +269,4 @@ internal class ProviderTests : PopKornTest() {
 
         factory.assertNumberInstances(0)
     }
-
 }

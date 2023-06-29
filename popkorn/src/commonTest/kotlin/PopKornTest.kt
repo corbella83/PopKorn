@@ -32,5 +32,4 @@ internal abstract class PopKornTest {
         val size = instances[clazz]?.size() ?: 0
         assertEquals(size, numberOfInstances)
     }
-
 }

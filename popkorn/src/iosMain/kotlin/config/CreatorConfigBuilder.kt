@@ -36,7 +36,6 @@ class CreatorConfigBuilder {
         return this
     }
 
-
     fun override(instance: Any, type: ObjCClass, environment: String): CreatorConfigBuilder {
         overridden.add(Instance(instance, type.kotlinClass(), environment))
         return this
@@ -57,10 +56,8 @@ class CreatorConfigBuilder {
         return this
     }
 
-
     internal fun apply(builder: CreatorConfig.Builder) {
         assisted.forEach { builder.assist(it.instance, it.type, it.environment) }
         overridden.forEach { builder.override(it.instance, it.type, it.environment) }
     }
-
 }

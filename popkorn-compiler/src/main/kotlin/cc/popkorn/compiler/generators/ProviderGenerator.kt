@@ -43,7 +43,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return "${file.packageName}.${file.name}"
     }
 
-
     // Writes a provider from a provided injectable element
     fun writeProvided(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {
         val property = PropertySpec.builder("inner", provider.asClassName())
@@ -58,9 +57,8 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         return "${file.packageName}.${file.name}"
     }
 
-
     private fun getCreationCode(list: List<ExecutableElement>, namesMapper: Map<String, TypeMirror>, caller: ClassName, error: ClassName, scope: Scope): CodeBlock {
-        val elements = list.map { it to (it.get(ForEnvironments::class)?.value ?: arrayOf()) }.toMap()
+        val elements = list.associateWith { (it.get(ForEnvironments::class)?.value ?: arrayOf()) }
 
         val default = elements.filterValues { it.isEmpty() }.keys.let {
             if (it.size > 1) throw PopKornException("$caller has more than one default constructor/method with default environment")
@@ -127,7 +125,6 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
         } else {
             "inner.$simpleName(${params.joinToString()})"
         }
-
     }
 
     private fun constructCall(caller: String, method: String, clazz: String, env: String?): String {
@@ -190,5 +187,4 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
             ?.asSingleFqName()
             ?.let { ClassName.bestGuess(it.asString()) }
     }
-
 }

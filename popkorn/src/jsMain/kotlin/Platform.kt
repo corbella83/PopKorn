@@ -25,7 +25,6 @@ actual class WeakReference<T : Any> actual constructor(referred: T) {
     }
 
     actual fun get() = pointer
-
 }
 
 internal actual fun <T : Any> KClass<T>.getName() = js.name
@@ -33,7 +32,6 @@ internal actual fun <T : Any> KClass<T>.getName() = js.name
 internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool) = resolverPool.isPresent(this)
 
 internal actual fun createDefaultInjector() = Injector(jsResolverPool(), jsProviderPool())
-
 
 private fun jsResolverPool(): ResolverPool {
     if (!::resolverMappings.isInitialized || !::providerMappings.isInitialized) throw PopKornNotInitializedException()

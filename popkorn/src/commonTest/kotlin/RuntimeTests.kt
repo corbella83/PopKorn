@@ -249,5 +249,4 @@ internal class RuntimeTests : PopKornTest() {
         assertEquals(0, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
-
 }

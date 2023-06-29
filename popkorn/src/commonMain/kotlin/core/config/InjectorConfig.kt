@@ -31,7 +31,5 @@ class InjectorConfig private constructor(
         }
 
         internal fun build() = InjectorConfig(assisted.build(), holder)
-
     }
-
 }

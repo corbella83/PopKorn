@@ -9,5 +9,4 @@ package cc.popkorn.instances
 internal interface Purgeable {
 
     fun purge()
-
 }

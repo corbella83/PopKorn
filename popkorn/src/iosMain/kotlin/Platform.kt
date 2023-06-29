@@ -35,7 +35,6 @@ internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool
 
 internal actual fun createDefaultInjector() = Injector(objcResolverPool(), objcProviderPool())
 
-
 private fun objcResolverPool(): ResolverPool {
     return if (::resolverMappings.isInitialized) {
         MappingResolverPool(resolverMappings)

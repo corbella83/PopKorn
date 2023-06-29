@@ -16,5 +16,4 @@ interface Provider<T : Any> {
     fun create(injector: InjectorManager, assisted: Parameters, environment: String?): T
 
     fun scope(): Scope
-
 }

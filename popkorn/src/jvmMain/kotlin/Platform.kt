@@ -23,7 +23,6 @@ internal actual fun <T : Any> KClass<T>.needsResolver(resolverPool: ResolverPool
 
 internal actual fun createDefaultInjector() = Injector(jvmResolverPool(), jvmProviderPool())
 
-
 private fun <T : Any> KClass<T>.isInterface() = this.java.isInterface
 
 // Must check its primitiveness because java considers them abstract (int, long, float, double, etc)
@@ -61,7 +60,6 @@ private fun loadMappings(resource: String): Set<Mapping> {
                             println("Warning: PopKorn mapping ($it) could not be loaded. Might not work if using obfuscation")
                         }
                     }
-
             } catch (e: Exception) {
                 println("Warning: Some PopKorn mappings could not be loaded. Might not work if using obfuscation")
             }
