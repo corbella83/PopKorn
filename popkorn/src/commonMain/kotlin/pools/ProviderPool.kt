@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package cc.popkorn.pools
 
 import cc.popkorn.providers.Provider

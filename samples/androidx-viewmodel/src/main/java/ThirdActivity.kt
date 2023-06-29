@@ -68,7 +68,7 @@ class ThirdViewModel : ViewModel() {
     val greeting: LiveData<String> = _greeting
 
     init {
-        getGreeting("Javi")
+        getGreeting("PopKorn")
     }
 
     fun getGreeting(name: String) {

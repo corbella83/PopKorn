@@ -1,9 +1,14 @@
 package cc.popkorn.compiler.utils
 
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.asTypeName
 import kotlinx.metadata.Flag
 import kotlinx.metadata.jvm.KotlinClassHeader
 import kotlinx.metadata.jvm.KotlinClassMetadata
 import javax.lang.model.element.*
+import javax.lang.model.type.TypeMirror
 import kotlin.reflect.KClass
 
 /**
@@ -47,6 +52,20 @@ internal fun Element.isInternal(): Boolean {
         ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
         ?.let { Flag.IS_INTERNAL(it.toKmClass().flags) }
         ?: false
+}
+
+/**
+ * @return Returns the name associated with this element
+ */
+internal fun TypeElement.getClassName(): ClassName {
+    return asClassName()
+}
+
+/**
+ * @return Returns the name associated with this element
+ */
+internal fun TypeMirror.getTypeName(): TypeName {
+    return asTypeName()
 }
 
 /**

@@ -37,7 +37,7 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
     // Writes a provider from a direct injectable element
     fun writeDirect(element: TypeElement, namesMapper: Map<String, TypeMirror>): String {
         val scope = element.get(Injectable::class)?.scope ?: Scope.BY_APP
-        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.asClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
+        val creationCode = getCreationCode(element.getConstructors(), namesMapper, element.getClassName(), DefaultConstructorNotFoundException::class.asClassName(), scope)
         val file = element.getProviderFile(null, creationCode, scope)
         file.writeTo(directory)
         return "${file.packageName}.${file.name}"
@@ -45,13 +45,13 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     // Writes a provider from a provided injectable element
     fun writeProvided(element: TypeElement, provider: TypeElement, namesMapper: Map<String, TypeMirror>): String {
-        val property = PropertySpec.builder("inner", provider.asClassName())
+        val property = PropertySpec.builder("inner", provider.getClassName())
             .addModifiers(KModifier.PRIVATE)
             .delegate("lazy { ${provider.simpleName}() }")
             .build()
 
         val scope = provider.get(InjectableProvider::class)?.scope ?: Scope.BY_APP
-        val creationCode = getCreationCode(provider.getMethods(), namesMapper, provider.asClassName(), DefaultMethodNotFoundException::class.asClassName(), scope)
+        val creationCode = getCreationCode(provider.getMethods(), namesMapper, provider.getClassName(), DefaultMethodNotFoundException::class.asClassName(), scope)
         val file = element.getProviderFile(property, creationCode, scope)
         file.writeTo(directory)
         return "${file.packageName}.${file.name}"
@@ -91,14 +91,14 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
 
     private fun ExecutableElement.getCreationString(namesMapper: Map<String, TypeMirror>, scope: Scope): String {
         val params = parameters.map { param ->
-            if (param.asType().asTypeName() == Injector::class.asTypeName()) {
+            if (param.asType().getTypeName() == Injector::class.asTypeName()) {
                 throw PopKornException("Constructors cannot use 'Injector' as a parameter, use 'InjectorManager' instead")
-            } else if (param.asType().asTypeName() == InjectorManager::class.asTypeName()) {
+            } else if (param.asType().getTypeName() == InjectorManager::class.asTypeName()) {
                 return@map "injector"
-            } else if (param.asType().asTypeName() == Environment::class.asTypeName()) {
-                return@map "${param.asType().asTypeName()}(environment)"
-            } else if (param.asType().asTypeName() == Empty::class.asTypeName()) {
-                return@map "${param.asType().asTypeName()}()"
+            } else if (param.asType().getTypeName() == Environment::class.asTypeName()) {
+                return@map "${param.asType().getTypeName()}(environment)"
+            } else if (param.asType().getTypeName() == Empty::class.asTypeName()) {
+                return@map "${param.asType().getTypeName()}()"
             }
 
             val nextEnv = param.get(WithEnvironment::class)?.value
@@ -173,13 +173,13 @@ internal class ProviderGenerator(private val directory: File, private val typeUt
     private fun TypeElement.supportClassName(): ClassName {
         return this.takeUnless { isKotlinClass() }
             ?.let { toKotlin(it.toString()) }
-            ?: asClassName()
+            ?: getClassName()
     }
 
     private fun TypeMirror.supportTypeName(): TypeName {
         return this.takeUnless { it.getAnnotation(Metadata::class.java) != null }
             ?.let { toKotlin(it.toString()) }
-            ?: asTypeName()
+            ?: getTypeName()
     }
 
     private fun toKotlin(name: String): ClassName? {

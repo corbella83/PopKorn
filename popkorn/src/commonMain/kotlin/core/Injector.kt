@@ -57,13 +57,13 @@ class Injector : InjectorController {
         if (providerPool.isPresent(type) || resolverPool.isPresent(type)) throw AlreadyInjectableException()
 
         if (type.needsResolver(resolverPool)) {
-            resolvers.getOrPut(type, { RuntimeResolver() })
+            resolvers.getOrPut(type) { RuntimeResolver() }
                 .let { it as? RuntimeResolver }
                 ?.apply { put(environment, type) }
                 ?: throw AlreadyInjectableException()
         }
 
-        instances.getOrPut(type, { RuntimeInstances<T>() })
+        instances.getOrPut(type) { RuntimeInstances<T>() }
             .let { it as? RuntimeInstances<T> }
             ?.apply { put(environment, instance) }
             ?: throw AlreadyInjectableException()
@@ -127,7 +127,7 @@ class Injector : InjectorController {
         val configuration = config?.let { InjectorConfig.Builder().apply(it).build() }
 
         val resolved = clazz.resolve(environment) as KClass<T>
-        return instances.getOrPut(resolved, { resolved.createInstances() })
+        return instances.getOrPut(resolved) { resolved.createInstances() }
             .let { it as Instances<T> }
             .get(resolved, environment, configuration)
     }
@@ -159,7 +159,7 @@ class Injector : InjectorController {
     }
 
     /**
-     * Creates an object of type clazz. Notice that this function will always returns a new instance
+     * Creates an object of type clazz. Notice that this function will always return a new instance
      * ignoring the scope it has.
      *
      * @param clazz Class or Interface that you want to create
@@ -177,7 +177,7 @@ class Injector : InjectorController {
 
     private fun <T : Any> KClass<T>.resolve(environment: String?): KClass<out T> {
         return if (this.needsResolver(resolverPool)) {
-            resolvers.getOrPut(this, { resolverPool.create(this) })
+            resolvers.getOrPut(this) { resolverPool.create(this) }
                 .resolve(environment) as KClass<out T>
         } else {
             this
