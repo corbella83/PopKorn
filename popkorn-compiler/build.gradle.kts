@@ -1,7 +1,7 @@
-val kotlinPoetVersion = "1.10.2"
-val kotlinxMetadataVersion = "0.4.1"
+val kotlinPoetVersion = "1.14.2"
+val kotlinxMetadataVersion = "0.6.2"
 val apacheVersion = "2.6"
-val compileTestVersion = "0.19"
+val compileTestVersion = "0.21.0"
 
 plugins {
     kotlin("jvm")
@@ -11,6 +11,10 @@ plugins {
 
 tasks.dokkaHtml {
     outputDirectory.set(buildDir.resolve("javadoc"))
+}
+
+kotlin{
+    jvmToolchain(8)
 }
 
 val dokkaJar by tasks.creating(Jar::class) {

@@ -1,6 +1,6 @@
 buildscript {
     val kotlinVersion:String by System.getProperties()
-    val dokkaVersion = "1.6.0"
+    val dokkaVersion = "1.8.10"
 
     repositories {
         mavenCentral()
