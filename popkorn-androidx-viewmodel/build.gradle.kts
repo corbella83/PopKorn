@@ -34,9 +34,15 @@ repositories {
     google()
 }
 
+android {
+    namespace = "cc.popkorn.androidx.viewmodel"
+}
+
 android.androidConfig()
 
 kotlin {
+    jvmToolchain(8)
+
     android {
         publishLibraryVariants("release", "debug")
     }

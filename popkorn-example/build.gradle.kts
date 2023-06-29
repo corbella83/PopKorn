@@ -1,6 +1,15 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
+    application
+}
+
+application {
+    mainClass.set("cc.popkorn.example.Main")
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 dependencies {

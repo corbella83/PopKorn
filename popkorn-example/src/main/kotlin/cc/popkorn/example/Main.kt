@@ -1,11 +1,13 @@
 package cc.popkorn.example
 
-fun main() {
+object Main {
 
-    Example().execute()
-    println("ok kotlin")
+    @JvmStatic
+    fun main(args: Array<String>) {
+        Example().execute()
+        println("ok kotlin")
 
-    ExampleJava().execute()
-    println("ok java")
-
+        ExampleJava().execute()
+        println("ok java")
+    }
 }
