@@ -1,10 +1,13 @@
 Change Log
 ==========
 
-Version 2.3.0 *(2022-XX-XX)*
+Version 2.3.0 *(2023-07-01)*
 -----------------------------
 
-* 
+* Maintenance: Update to Kotlin 1.8.21
+* Maintenance: Update dependencies versions
+* New: Add KTLint
+* Fix: Internal Class sometimes not detected
 
 Version 2.2.0 *(2021-12-09)*
 -----------------------------
