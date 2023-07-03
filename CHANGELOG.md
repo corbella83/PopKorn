@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Version 2.3.1 *(2023-07-03)*
+-----------------------------
+
+* Fix: Internal classes were crashing sometimes (downgrade metadata)
+* New: Add stacktrace when an error occurs
+* Maintenance: Update apache version
+
 Version 2.3.0 *(2023-07-01)*
 -----------------------------
 
