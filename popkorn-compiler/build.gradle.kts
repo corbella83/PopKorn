@@ -1,6 +1,6 @@
 val kotlinPoetVersion = "1.14.2"
-val kotlinxMetadataVersion = "0.6.2"
-val apacheVersion = "2.6"
+val kotlinxMetadataVersion = "0.5.0"
+val apacheVersion = "2.13.0"
 val compileTestVersion = "0.21.0"
 
 plugins {

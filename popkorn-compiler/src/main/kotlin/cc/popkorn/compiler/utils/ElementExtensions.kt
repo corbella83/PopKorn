@@ -5,8 +5,8 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import kotlinx.metadata.Flag
+import kotlinx.metadata.jvm.KotlinClassHeader
 import kotlinx.metadata.jvm.KotlinClassMetadata
-import kotlinx.metadata.jvm.Metadata
 import javax.lang.model.element.*
 import javax.lang.model.type.TypeMirror
 import kotlin.reflect.KClass
@@ -48,10 +48,15 @@ internal fun Element.isPrivate() = !modifiers.contains(Modifier.PUBLIC) && !modi
  */
 internal fun Element.isInternal(): Boolean {
     return get(Metadata::class)
-        ?.run { Metadata(kind, metadataVersion, data1, data2, extraString, packageName, extraInt) }
-        ?.let { KotlinClassMetadata.read(it) as? KotlinClassMetadata.Class }
+        ?.readOrNull()
         ?.let { Flag.IS_INTERNAL(it.toKmClass().flags) }
         ?: false
+}
+
+private fun Metadata.readOrNull(): KotlinClassMetadata.Class? {
+    // This should be only KotlinClassMetadata.read(this) but metadata version 0.6.0 seems not working sometimes (NoSuchMethodError)
+    val header = KotlinClassHeader(kind, metadataVersion, data1, data2, extraString, packageName, extraInt)
+    return KotlinClassMetadata.Companion.read(header) as? KotlinClassMetadata.Class
 }
 
 /**
