@@ -54,7 +54,7 @@ internal class PopKornCompiler : AbstractProcessor() {
             if (roundEnv.processingOver()) mainGenerator.end()
             true
         } catch (e: Throwable) {
-            mainGenerator.logger.error(e.message ?: "")
+            mainGenerator.logger.error(e.message ?: "", e)
             false
         }
     }
