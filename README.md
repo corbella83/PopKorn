@@ -15,15 +15,15 @@ Download
 Get it with Gradle:
 
 ```groovy
-implementation 'cc.popkorn:popkorn:2.3.1'
-kapt 'cc.popkorn:popkorn-compiler:2.3.1'
+implementation 'cc.popkorn:popkorn:2.4.0'
+kapt 'cc.popkorn:popkorn-compiler:2.4.0'
 ```
 
 The Kotlin Gradle Plugin 1.4.0 will automatically resolve platform dependent implementations (jvm, js, iosX64...). But if you are using Kotlin Gradle Plugin below 1.4.0 you will have to specify the platform yourself. In the case of Android/JVM is the following:
 
 ```groovy
-implementation 'cc.popkorn:popkorn-jvm:2.3.1'
-kapt 'cc.popkorn:popkorn-compiler:2.3.1'
+implementation 'cc.popkorn:popkorn-jvm:2.4.0'
+kapt 'cc.popkorn:popkorn-compiler:2.4.0'
 ```
 
 Working with Scopes and Environments
