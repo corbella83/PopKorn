@@ -36,16 +36,13 @@ class InjectorConfigBuilder {
         return this
     }
 
-
     fun holder(holder: Any): InjectorConfigBuilder {
         this.holder = holder
         return this
     }
 
-
     internal fun apply(builder: InjectorConfig.Builder) {
         assisted.forEach { builder.assist(it.instance, it.type, it.environment) }
         holder?.let { builder.holder(it) }
     }
-
 }

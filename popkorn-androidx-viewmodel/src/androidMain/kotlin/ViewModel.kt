@@ -24,7 +24,7 @@ import cc.popkorn.core.config.InjectorConfig
  */
 inline fun <reified T : ViewModel> ViewModelStoreOwner.getViewModel(
     environment: String? = null,
-    noinline config: (InjectorConfig.Builder.() -> Unit)? = null,
+    noinline config: (InjectorConfig.Builder.() -> Unit)? = null
 ): T {
     return ViewModelProvider(this, PopKornViewModelFactory(environment, config)).get(T::class.java)
 }
@@ -47,7 +47,7 @@ inline fun <reified T : ViewModel> ViewModelStoreOwner.getViewModel(
  */
 inline fun <reified T : ViewModel> ViewModelStoreOwner.viewModel(
     environment: String? = null,
-    noinline config: (InjectorConfig.Builder.() -> Unit)? = null,
+    noinline config: (InjectorConfig.Builder.() -> Unit)? = null
 ): Lazy<T> {
     return lazy {
         ViewModelProvider(this, PopKornViewModelFactory(environment, config)).get(T::class.java)

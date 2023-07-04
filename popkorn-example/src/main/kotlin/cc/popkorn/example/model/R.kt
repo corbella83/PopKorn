@@ -38,7 +38,6 @@ class R8A private constructor() : R8i {
     constructor(d1: DiA, @WithEnvironment("env2") d2: DiB, d3: DiC, d4: Wrapper.DiD) : this()
 
     constructor(d1: D3, d2: D5, d3: D7, d4: D10) : this()
-
 }
 
 @Injectable
@@ -61,5 +60,4 @@ class R13(d1: D3, d2: D15) : R9i
 @InjectableProvider
 class RCustom {
     fun create(d0: DiA): R9i = R9()
-
 }

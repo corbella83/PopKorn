@@ -26,7 +26,7 @@ class JavaClass(private val type: String = "class", private val name: String = "
         return if (type == "class" && annotations.any { it.startsWith("@Injectable(") }) {
             "${qualifiedName()}_$PROVIDER_SUFFIX"
         } else if (type == "class" && annotations.any { it.startsWith("@InjectableProvider(") }) {
-            return methods.mapNotNull { it.getReturnType() }.firstOrNull()?.let { "${normalizeQualifiedName(it)}_$PROVIDER_SUFFIX" }
+            return methods.firstNotNullOfOrNull { it.getReturnType() }?.let { "${normalizeQualifiedName(it)}_$PROVIDER_SUFFIX" }
         } else if (type == "interface") {
             "${qualifiedName()}_$RESOLVER_SUFFIX"
         } else {
@@ -100,5 +100,4 @@ class JavaClass(private val type: String = "class", private val name: String = "
         val runMethods = methods.joinToString("\n\n") { it.construct() }
         return "package $pack;\n$runImports\n\n$runAnnotation\n$runModifiers $type $name $runExtends $runImplements{\n$runMethods\n}"
     }
-
 }

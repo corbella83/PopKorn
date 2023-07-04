@@ -27,5 +27,4 @@ class JavaParam(private val name: String, private val type: String) {
     fun construct(): String {
         return "${annotations.joinToString(" ")} $type $name"
     }
-
 }

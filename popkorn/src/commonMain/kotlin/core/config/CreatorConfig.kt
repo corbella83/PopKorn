@@ -26,7 +26,6 @@ class CreatorConfig private constructor(
         fun assist(instance: Any, environment: String? = null) =
             assisted.add(instance, instance::class, environment)
 
-
         fun overrideAll(instances: List<Any>) =
             instances.forEach { overridden.add(it) }
 
@@ -36,9 +35,6 @@ class CreatorConfig private constructor(
         fun override(instance: Any, environment: String? = null) =
             overridden.add(instance, instance::class, environment)
 
-
         internal fun build() = CreatorConfig(assisted.build(), overridden.build())
-
     }
-
 }

@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
     id("pk-publish")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 tasks.dokkaHtml {
@@ -34,9 +35,15 @@ repositories {
     google()
 }
 
+android {
+    namespace = "cc.popkorn.androidx.viewmodel"
+}
+
 android.androidConfig()
 
 kotlin {
+    jvmToolchain(8)
+
     android {
         publishLibraryVariants("release", "debug")
     }

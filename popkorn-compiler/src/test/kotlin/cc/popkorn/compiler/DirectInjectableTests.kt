@@ -108,5 +108,4 @@ class DirectInjectableTests : PopKornCompilerTest() {
         val test2 = JavaClass().modifiers("public").injectable(scope).constructor(null, param)
         assertCompileFail(test, test2)
     }
-
 }

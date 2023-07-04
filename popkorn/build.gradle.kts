@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
     id("pk-publish")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 tasks.dokkaHtml {
@@ -26,9 +27,12 @@ publishing {
 }
 
 kotlin {
-    jvm()
+    jvm {
+        jvmToolchain(8)
+        withJava()
+    }
 
-    js {
+    js(IR) {
         browser {}
         nodejs {}
     }
@@ -103,5 +107,4 @@ kotlin {
             mingwX64Test.dependsOn(this)
         }
     }
-
 }

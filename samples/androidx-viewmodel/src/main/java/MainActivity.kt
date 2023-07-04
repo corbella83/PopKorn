@@ -22,10 +22,9 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.greeting.observe(
-            this,
-            { greeting -> findViewById<TextView>(R.id.textViewGreeting).text = greeting },
-        )
+        viewModel.greeting.observe(this) { greeting ->
+            findViewById<TextView>(R.id.textViewGreeting).text = greeting
+        }
 
         findViewById<Button>(R.id.buttonNext).setOnClickListener {
             val name = findViewById<EditText>(R.id.editTextName).text.toString()

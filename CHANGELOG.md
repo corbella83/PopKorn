@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+Version 2.3.1 *(2023-07-03)*
+-----------------------------
+
+* Fix: Internal classes were crashing sometimes (downgrade metadata)
+* New: Add stacktrace when an error occurs
+* Maintenance: Update apache version
+
+Version 2.3.0 *(2023-07-01)*
+-----------------------------
+
+* Maintenance: Update to Kotlin 1.8.21
+* Maintenance: Update dependencies versions
+* New: Add KTLint
+* Fix: Internal Class sometimes not detected
+
 Version 2.2.0 *(2021-12-09)*
 -----------------------------
 

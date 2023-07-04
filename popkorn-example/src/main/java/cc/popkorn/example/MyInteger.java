@@ -9,5 +9,4 @@ public class MyInteger {
     public int create() {
         return 54;
     }
-
 }

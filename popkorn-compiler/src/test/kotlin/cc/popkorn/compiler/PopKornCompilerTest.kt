@@ -39,7 +39,6 @@ abstract class PopKornCompilerTest {
         }
     }
 
-
     private fun compile(vararg classes: JavaClass): Compilation {
         val files = classes.map { JavaFileObjects.forSourceString(it.qualifiedName(), it.construct()) }
 
@@ -59,5 +58,4 @@ abstract class PopKornCompilerTest {
             .takeIf { files -> files.all { it.exists() } }
             ?: throw RuntimeException("Some providers/resolvers have not been generated")
     }
-
 }

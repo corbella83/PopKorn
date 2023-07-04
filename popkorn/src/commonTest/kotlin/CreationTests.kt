@@ -25,7 +25,6 @@ internal class CreationTests : PopKornTest() {
         assertEquals(0, injector.resolvers.size)
     }
 
-
     @Test
     fun testOverrideOk() {
         val injector = Injector(TestResolverPool(), TestProviderPool())
@@ -43,7 +42,6 @@ internal class CreationTests : PopKornTest() {
         assertEquals(2, injector.instances.size)
         assertEquals(0, injector.resolvers.size)
     }
-
 
     @Test
     fun testWithParamsNotAssisted() {
@@ -126,5 +124,4 @@ internal class CreationTests : PopKornTest() {
         assertEquals(0, injector.instances.size)
         assertEquals(1, injector.resolvers.size) // Resolvers have to be cached
     }
-
 }

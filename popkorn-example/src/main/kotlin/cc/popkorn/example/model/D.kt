@@ -56,7 +56,6 @@ class DCustom6 {
 
     @ForEnvironments("env2")
     fun createEnv2() = D6()
-
 }
 
 @InjectableProvider(scope = Scope.BY_USE, propagation = Propagation.DIRECT, alias = "is7")
@@ -77,5 +76,4 @@ class DCustom9 {
 
     @ForEnvironments("env2")
     fun createEnv2(): DaJ = D13()
-
 }

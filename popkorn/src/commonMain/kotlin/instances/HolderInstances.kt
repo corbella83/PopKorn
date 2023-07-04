@@ -30,5 +30,4 @@ internal class HolderInstances<T : Any>(private val injector: InjectorManager, p
     override fun size() = instances.size
 
     override fun purge() = instances.filter { it.key.get() == null }.forEach { instances.remove(it.key) }
-
 }

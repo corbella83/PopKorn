@@ -1,5 +1,5 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cc.popkorn/popkorn/badge.svg)](https://search.maven.org/artifact/cc.popkorn/popkorn)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.8.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Slack channel](https://img.shields.io/badge/chat-slack-red.svg?logo=slack)](https://kotlinlang.slack.com/messages/popkorn/)
 
@@ -15,15 +15,15 @@ Download
 Get it with Gradle:
 
 ```groovy
-implementation 'cc.popkorn:popkorn:2.2.0'
-kapt 'cc.popkorn:popkorn-compiler:2.2.0'
+implementation 'cc.popkorn:popkorn:2.3.1'
+kapt 'cc.popkorn:popkorn-compiler:2.3.1'
 ```
 
 The Kotlin Gradle Plugin 1.4.0 will automatically resolve platform dependent implementations (jvm, js, iosX64...). But if you are using Kotlin Gradle Plugin below 1.4.0 you will have to specify the platform yourself. In the case of Android/JVM is the following:
 
 ```groovy
-implementation 'cc.popkorn:popkorn-jvm:2.2.0'
-kapt 'cc.popkorn:popkorn-compiler:2.2.0'
+implementation 'cc.popkorn:popkorn-jvm:2.3.1'
+kapt 'cc.popkorn:popkorn-compiler:2.3.1'
 ```
 
 Working with Scopes and Environments
@@ -199,7 +199,6 @@ class MyApplication : Application() {
         super.onCreate()
         popKorn().addInjectable(this, Context::class)
     }
-
 }
 ```
 

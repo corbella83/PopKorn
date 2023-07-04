@@ -24,10 +24,9 @@ class SecondActivity : AppCompatActivity(R.layout.second_activity) {
 
         val viewModel: SecondViewModel = getViewModel { assist(nameArg) }
 
-        viewModel.name.observe(
-            this,
-            { name -> findViewById<TextView>(R.id.textViewName).text = name },
-        )
+        viewModel.name.observe(this) { name ->
+            findViewById<TextView>(R.id.textViewName).text = name
+        }
 
         findViewById<Button>(R.id.buttonThirdActivity).setOnClickListener {
             val intent = Intent(this, ThirdActivity::class.java)

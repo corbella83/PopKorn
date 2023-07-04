@@ -30,5 +30,4 @@ class MappingResolverPool(private val mappings: Set<Mapping>) :
         }
         return null
     }
-
 }

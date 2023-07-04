@@ -30,5 +30,4 @@ class MappingProviderPool(private val mappings: Set<Mapping>) :
         }
         return null
     }
-
 }

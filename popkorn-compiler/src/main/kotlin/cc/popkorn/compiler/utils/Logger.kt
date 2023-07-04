@@ -19,8 +19,8 @@ internal class Logger(private val messenger: Messager) {
         messenger.printMessage(Diagnostic.Kind.WARNING, "PopKorn: $text \r\n")
     }
 
-    fun error(text: String) {
+    fun error(text: String, exception: Throwable?) {
         messenger.printMessage(Diagnostic.Kind.ERROR, "PopKorn: $text \r\n")
+        exception?.printStackTrace()
     }
-
 }

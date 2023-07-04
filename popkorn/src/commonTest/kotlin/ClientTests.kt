@@ -39,5 +39,4 @@ internal class ClientTests : PopKornTest() {
 
         injector.reset()
     }
-
 }

@@ -7,7 +7,7 @@ import cc.popkorn.popKorn
 
 class PopKornViewModelFactory(
     private val environment: String? = null,
-    private val config: (InjectorConfig.Builder.() -> Unit)?,
+    private val config: (InjectorConfig.Builder.() -> Unit)?
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>) =

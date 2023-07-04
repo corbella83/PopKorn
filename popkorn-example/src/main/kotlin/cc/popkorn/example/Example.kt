@@ -1,7 +1,14 @@
 package cc.popkorn.example
 
-import cc.popkorn.*
+import cc.popkorn.annotations.Injectable
 import cc.popkorn.example.model.*
+import cc.popkorn.inject
+import cc.popkorn.injecting
+import cc.popkorn.popKorn
+import cc.popkorn.popkorn
+
+@Injectable
+internal class MyInternalClass
 
 class Example {
 
@@ -12,6 +19,8 @@ class Example {
         popKorn().create(R1i::class) {
             assist(this@Example)
         }
+
+        inject<MyInternalClass>()
 
         val string1 by popkorn<R2i>()
         val string2 by injecting<R2i>()
@@ -59,5 +68,4 @@ class Example {
         popKorn().removeInjectable(d10::class)
         popKorn().reset()
     }
-
 }

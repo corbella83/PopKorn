@@ -3,3 +3,4 @@ credentials.properties
 build/
 .idea/
 .gradle/
+kotlin-js-store

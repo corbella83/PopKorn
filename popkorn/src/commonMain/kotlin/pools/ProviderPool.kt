@@ -1,5 +1,3 @@
-@file:Suppress("UNCHECKED_CAST")
-
 package cc.popkorn.pools
 
 import cc.popkorn.providers.Provider
@@ -16,5 +14,4 @@ interface ProviderPool {
     fun <T : Any> isPresent(clazz: KClass<T>): Boolean
 
     fun <T : Any> create(clazz: KClass<T>): Provider<T>
-
 }

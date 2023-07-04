@@ -9,24 +9,24 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
     google()
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 34
 
     defaultConfig {
-        minSdkVersion(15)
-        targetSdkVersion(30)
+        minSdk = 15
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+    namespace = "cc.popkorn.samples.androidx.viewmodel"
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 dependencies {

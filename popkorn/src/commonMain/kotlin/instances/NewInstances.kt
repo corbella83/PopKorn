@@ -18,5 +18,4 @@ internal class NewInstances<T : Any>(private val injector: InjectorManager, priv
     }
 
     override fun size() = 0
-
 }

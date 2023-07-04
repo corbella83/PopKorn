@@ -13,7 +13,6 @@ import cc.popkorn.compiler.models.DefaultImplementation
 import cc.popkorn.compiler.utils.*
 import cc.popkorn.core.Propagation
 import java.io.File
-import java.util.*
 import javax.annotation.processing.Filer
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.TypeElement
@@ -72,7 +71,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             .close()
     }
 
-
     // Classes annotated with Injectable annotation
     private fun RoundEnvironment.getDirectInjectableClasses(): List<TypeElement> {
         val injectableElements = ElementFilter.typesIn(getElementsAnnotatedWith(Injectable::class.java))
@@ -126,7 +124,6 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         return map.mapValues {
             it.value.singleOrNull()?.asType() ?: throw PopKornException("${it.value.joinToString()} has the same alias: ${it.key}")
         }
-
     }
 
     // Gets a list of all supertypes (of Injectable and InjectableProvider) that will also be injectable
@@ -179,8 +176,7 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
             .mapNotNull { types.asElement(it) as? TypeElement }
             .filterNot { it.has(Exclude::class) }
             .let {
-                if (this.isInterface() || this.isAbstract()) it + this
-                else it
+                if (this.isInterface() || this.isAbstract()) it + this else it
             }
     }
 
@@ -231,5 +227,4 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         val element = types.asElement(this) as? TypeElement
         return element?.isAbstract() ?: false
     }
-
 }
