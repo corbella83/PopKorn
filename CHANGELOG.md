@@ -4,7 +4,7 @@ Change Log
 Version 2.4.0 *(XXXX-XX-XX)*
 -----------------------------
 
-* 
+* Maintenance: Remove unnecessary logs
 
 Version 2.3.1 *(2023-07-03)*
 -----------------------------

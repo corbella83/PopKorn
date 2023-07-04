@@ -40,9 +40,7 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
     private val providerMappings = hashMapOf<TypeElement, String>()
 
     // At the beginning we don't need to do anything
-    fun init() {
-        logger.message("PopKorn Start Compiling")
-    }
+    fun init() = Unit
 
     // For every round, we write all providers and resolvers for the elements received
     fun process(roundEnv: RoundEnvironment) {
@@ -51,17 +49,17 @@ internal class MainGenerator(generatedSourcesDir: File, private val filer: Filer
         val interfacesClasses = getInterfaces(directInjectableClasses, providedInjectableClasses)
         val aliasMapper = getAliasMapper(directInjectableClasses, providedInjectableClasses)
 
-        logger.message("Generating providers of ${directInjectableClasses.size} direct injectable classes")
+        if (directInjectableClasses.isNotEmpty()) logger.message("Generate providers of ${directInjectableClasses.size} direct injectable classes")
         directInjectableClasses.forEach { providerMappings[it] = providerGenerator.writeDirect(it, aliasMapper) }
-        logger.message("Generating providers of ${providedInjectableClasses.size} provided injectable classes")
+        if (providedInjectableClasses.isNotEmpty()) logger.message("Generate providers of ${providedInjectableClasses.size} provided injectable classes")
         providedInjectableClasses.forEach { providerMappings[it.key] = providerGenerator.writeProvided(it.key, it.value, aliasMapper) }
-        logger.message("Generating ${interfacesClasses.size} resolvers")
+        if (interfacesClasses.isNotEmpty()) logger.message("Generate ${interfacesClasses.size} resolvers")
         interfacesClasses.forEach { (i, c) -> resolverMappings[i] = resolverGenerator.write(i, c) }
     }
 
     // At the end, we save the mappings and proguard
     fun end() {
-        logger.message("Generating Mappings")
+        logger.message("Generate Mappings")
         mappingGenerator.write(resolverMappings, RESOLVER_SUFFIX, RESOLVER_MAPPINGS)
         mappingGenerator.write(providerMappings, PROVIDER_SUFFIX, PROVIDER_MAPPINGS)
 
